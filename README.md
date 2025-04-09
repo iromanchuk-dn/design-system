@@ -11,7 +11,7 @@ Run `nx test web` to execute the unit tests via [Vitest](https://vitest.dev/).
 Run the following command to generate a new component:
 
 ```bash
-npx nx g ds-component --name my-component
+npx nx generate @dap-workspace/dap-plugin:ds-component my-component
 ```
 
 ## How this library was created
