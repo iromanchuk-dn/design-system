@@ -6,6 +6,7 @@ const subscriptionTypes = ['basic', 'pro', 'enterprise'] as const satisfies Subs
 export const sampleFormSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   email: z.string().email('Invalid email address'),
+  description: z.string().min(20, 'Short description is required'),
   acceptTerms: z.literal(true, {
     errorMap: () => ({ message: 'You must accept the terms and conditions' }),
   }),

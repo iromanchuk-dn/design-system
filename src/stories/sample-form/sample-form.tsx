@@ -1,12 +1,13 @@
 import React from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DsButton, DsCheckbox, DsRadioGroup, DsTextField } from '@design-system/ui';
+import { DsButton, DsCheckbox, DsRadioGroup, DsTextarea, DsTextField } from '@design-system/ui';
 import { sampleFormSchema, SampleFormValues, SubscriptionType } from './sampleFormSchema';
 
 const defaultValues = {
   name: '',
   email: '',
+  description: '',
   acceptTerms: false as any,
   subscription: undefined,
 };
@@ -72,6 +73,16 @@ const SampleForm = () => {
             onChange: () => trigger('email'),
           })}
           message={touchedFields.email ? errors.email?.message : undefined}
+        />
+
+        <DsTextarea
+          label="Description"
+          required
+          {...register('description', {
+            onBlur: () => trigger('description'),
+            onChange: () => trigger('description'),
+          })}
+          message={touchedFields.description ? errors.description?.message : undefined}
         />
 
         <DsRadioGroup

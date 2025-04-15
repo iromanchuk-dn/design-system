@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import DsTextField from './ds-text-field';
-import { textFieldSchemas } from './ds-text-field.types';
+import DsTextArea from './ds-text-area';
+import { textFieldSchemas } from '@design-system/ui';
 
-const meta: Meta<typeof DsTextField> = {
-  title: 'Design System/TextField',
-  component: DsTextField,
+const meta: Meta<typeof DsTextArea> = {
+  title: 'Design System/TextArea',
+  component: DsTextArea,
   parameters: {
     layout: 'centered',
   },
@@ -40,7 +40,7 @@ const meta: Meta<typeof DsTextField> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof DsTextField>;
+type Story = StoryObj<typeof DsTextArea>;
 
 export const Default: Story = {
   args: {
