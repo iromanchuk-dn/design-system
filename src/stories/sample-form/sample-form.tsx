@@ -1,8 +1,9 @@
 import React from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DsButton, DsCheckbox, DsRadioGroup, DsTextarea, DsTextField } from '@design-system/ui';
+import { DsButton, DsCheckbox, DsRadioGroup } from '@design-system/ui';
 import { sampleFormSchema, SampleFormValues, SubscriptionType } from './sampleFormSchema';
+import DsFormControl from '../../lib/components/ds-form-control/ds-form-control';
 
 const defaultValues = {
   name: '',
@@ -54,7 +55,7 @@ const SampleForm = () => {
         onSubmit={handleSubmit(onSubmit)}
         style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '300px' }}
       >
-        <DsTextField
+        <DsFormControl
           label="Name"
           required
           {...register('name', {
@@ -64,7 +65,7 @@ const SampleForm = () => {
           message={touchedFields.name ? errors.name?.message : undefined}
         />
 
-        <DsTextField
+        <DsFormControl
           label="Email"
           required
           type="email"
@@ -75,7 +76,8 @@ const SampleForm = () => {
           message={touchedFields.email ? errors.email?.message : undefined}
         />
 
-        <DsTextarea
+        <DsFormControl
+          as="textarea"
           label="Description"
           required
           {...register('description', {

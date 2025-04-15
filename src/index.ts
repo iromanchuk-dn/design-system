@@ -3,5 +3,4 @@ export * from './lib/components/ds-button';
 export * from './lib/components/ds-grid';
 export * from './lib/components/ds-checkbox';
 export * from './lib/components/ds-radio-group';
-export * from './lib/components/ds-text-field';
-export * from './lib/components/ds-text-area';
+export * from './lib/components/ds-form-control';

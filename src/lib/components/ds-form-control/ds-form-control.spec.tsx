@@ -1,9 +1,9 @@
 import { render } from '@testing-library/react';
-import DsTextArea from './ds-text-area';
+import DsFormControl from './ds-form-control';
 
-describe('DsTextArea', () => {
+describe('DsFormControl', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<DsTextArea />);
+    const { baseElement } = render(<DsFormControl />);
     expect(baseElement).toBeTruthy();
   });
 });

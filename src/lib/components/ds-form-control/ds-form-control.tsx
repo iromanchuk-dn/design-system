@@ -1,13 +1,10 @@
 import React from 'react';
 import classNames from 'classnames';
-import styles from './ds-text-area.module.scss';
-import { DsTextareaProps } from './ds-text-area.types';
 import { DsIcon } from '../ds-icon';
+import styles from './ds-form-control.module.scss';
+import { DsFormControlProps } from './ds-form-control.types';
 
-/**
- * Design system Textarea component
- */
-const DsTextarea: React.FC<DsTextareaProps> = ({
+const DsFormControl: React.FC<DsFormControlProps> = ({
   id,
   schema = 'info',
   label,
@@ -15,16 +12,18 @@ const DsTextarea: React.FC<DsTextareaProps> = ({
   disabled,
   icon,
   message,
-  messageIcon = <DsIcon name="info" size="small" />,
+  messageIcon = 'info',
   className,
+  as = 'input',
   ...props
 }) => {
-  const textareaId = id || React.useId();
+  const controlId = id || React.useId();
+  const ControlElement = as;
 
   return (
     <div className={classNames(styles.container, styles[schema])}>
       <label
-        htmlFor={textareaId}
+        htmlFor={controlId}
         className={classNames(styles.label, {
           [styles.required]: required,
           [styles.disabled]: disabled,
@@ -33,11 +32,16 @@ const DsTextarea: React.FC<DsTextareaProps> = ({
         {label}
       </label>
 
-      <div className={styles.textareaWrapper}>
+      <div
+        className={classNames(styles.controlWrapper, {
+          [styles.input]: as === 'input',
+          [styles.textarea]: as === 'textarea',
+        })}
+      >
         {icon && <DsIcon className={styles.icon} name={icon} size="medium" />}
-        <textarea
-          id={textareaId}
-          className={classNames(styles.textarea, className, {
+        <ControlElement
+          id={controlId}
+          className={classNames(styles.control, className, {
             [styles.withIcon]: icon,
           })}
           disabled={disabled}
@@ -47,7 +51,7 @@ const DsTextarea: React.FC<DsTextareaProps> = ({
 
       {message && (
         <div className={styles.message}>
-          {messageIcon}
+          <DsIcon name={messageIcon} size="small" />
           <span className={styles.messageText}>{message}</span>
         </div>
       )}
@@ -55,4 +59,4 @@ const DsTextarea: React.FC<DsTextareaProps> = ({
   );
 };
 
-export default DsTextarea;
+export default DsFormControl;
