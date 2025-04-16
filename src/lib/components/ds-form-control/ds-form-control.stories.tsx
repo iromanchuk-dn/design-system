@@ -197,3 +197,20 @@ export const TextareaDisabled: Story = {
     await checkDisabled(canvasElement);
   },
 };
+
+export const Select: Story = {
+  args: {
+    as: 'select',
+    options: [
+      { label: 'Option 1', value: 'option1', icon: 'download' },
+      { label: 'Option 2', value: 'option2', icon: 'save' },
+      { label: 'Option 3', value: 'option3', icon: 'description' },
+    ],
+    label: 'Select Option',
+    placeholder: 'Input',
+    required: true,
+    style: {
+      width: '200px',
+    },
+  },
+};

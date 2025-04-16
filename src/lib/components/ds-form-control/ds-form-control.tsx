@@ -1,6 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 import { DsIcon } from '../ds-icon';
+import { DsSelect } from '../ds-select';
 import styles from './ds-form-control.module.scss';
 import { DsFormControlProps } from './ds-form-control.types';
 
@@ -18,7 +19,26 @@ const DsFormControl: React.FC<DsFormControlProps> = ({
   ...props
 }) => {
   const controlId = id || React.useId();
-  const ControlElement = as;
+
+  const renderControl = () => {
+    if (as === 'select') {
+      const value = props.value || (props as any).defaultValue;
+      const options = props.options || [];
+      return <DsSelect id={controlId} value={value} options={options} disabled={disabled} {...props} />;
+    }
+
+    const ControlElement = as;
+    return (
+      <ControlElement
+        id={controlId}
+        className={classNames(styles.control, className, {
+          [styles.withIcon]: icon,
+        })}
+        disabled={disabled}
+        {...props}
+      />
+    );
+  };
 
   return (
     <div className={classNames(styles.container, styles[schema])}>
@@ -39,14 +59,7 @@ const DsFormControl: React.FC<DsFormControlProps> = ({
         })}
       >
         {icon && <DsIcon className={styles.icon} name={icon} size="medium" />}
-        <ControlElement
-          id={controlId}
-          className={classNames(styles.control, className, {
-            [styles.withIcon]: icon,
-          })}
-          disabled={disabled}
-          {...props}
-        />
+        {renderControl()}
       </div>
 
       {message && (

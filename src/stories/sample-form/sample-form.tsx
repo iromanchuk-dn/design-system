@@ -1,9 +1,8 @@
 import React from 'react';
-import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { DsButton, DsCheckbox, DsRadioGroup } from '@design-system/ui';
+import { DsButton, DsCheckbox, DsFormControl, DsRadioGroup } from '@design-system/ui';
 import { sampleFormSchema, SampleFormValues, SubscriptionType } from './sampleFormSchema';
-import DsFormControl from '../../lib/components/ds-form-control/ds-form-control';
 
 const defaultValues = {
   name: '',
@@ -11,6 +10,7 @@ const defaultValues = {
   description: '',
   acceptTerms: false as any,
   subscription: undefined,
+  contactMethod: '',
 };
 
 const SampleForm = () => {
@@ -28,11 +28,19 @@ const SampleForm = () => {
     watch,
     trigger,
     reset,
+    control,
   } = methods;
 
   const onSubmit: SubmitHandler<SampleFormValues> = (data: SampleFormValues) => {
     alert(JSON.stringify(data, null, 2));
     reset(defaultValues);
+  };
+
+  const handleSelectChange = (val: string) => {
+    setValue('contactMethod', val, {
+      shouldValidate: true,
+      shouldTouch: true,
+    });
   };
 
   const handleRadioChange = (val: string) => {
@@ -57,6 +65,7 @@ const SampleForm = () => {
       >
         <DsFormControl
           label="Name"
+          placeholder="Enter your name"
           required
           {...register('name', {
             onBlur: () => trigger('name'),
@@ -67,6 +76,7 @@ const SampleForm = () => {
 
         <DsFormControl
           label="Email"
+          placeholder="Enter your email"
           required
           type="email"
           {...register('email', {
@@ -76,9 +86,33 @@ const SampleForm = () => {
           message={touchedFields.email ? errors.email?.message : undefined}
         />
 
+        <Controller
+          name="contactMethod"
+          control={control}
+          render={({ field }) => (
+            <DsFormControl
+              as="select"
+              label="Preferred Contact Method"
+              placeholder="Select a contact method"
+              options={[
+                { label: 'Phone Call', value: 'phone', icon: 'call' },
+                { label: 'Email', value: 'email', icon: 'email' },
+                { label: 'SMS', value: 'sms', icon: 'sms' },
+                { label: 'In-App Notification', value: 'in_app', icon: 'notifications' },
+              ]}
+              required
+              value={field.value}
+              onValueChange={handleSelectChange}
+              onBlur={() => handleSelectChange(field.value)}
+              message={touchedFields.contactMethod ? errors.contactMethod?.message : undefined}
+            />
+          )}
+        />
+
         <DsFormControl
           as="textarea"
           label="Description"
+          placeholder="Enter your description"
           required
           {...register('description', {
             onBlur: () => trigger('description'),

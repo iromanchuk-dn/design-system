@@ -1,25 +1,19 @@
-$extra-large: 32px;
-$large: 28px;
-$medium: 24px;
-$small: 20px;
-$tiny: 16px;
+$sizes: (
+  extra-large: 32px,
+  large: 28px,
+  medium: 24px,
+  small: 20px,
+  tiny: 16px,
+);
 
-.extra-large {
-  font-size: $extra-large;
+:root {
+  @each $name, $size in $sizes {
+    --icon-width-#{$name}: #{$size};
+  }
 }
 
-.large {
-  font-size: $large;
-}
-
-.medium {
-  font-size: $medium;
-}
-
-.small {
-  font-size: $small;
-}
-
-.tiny {
-  font-size: $tiny;
+@each $name, $size in $sizes {
+  .#{$name} {
+    font-size: $size;
+  }
 }

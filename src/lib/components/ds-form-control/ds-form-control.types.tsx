@@ -1,6 +1,7 @@
 import React from 'react';
+import { DsSelectOption } from '../ds-select';
 
-export const controlTypes = ['input', 'textarea'] as const;
+export const controlTypes = ['input', 'textarea', 'select'] as const;
 export type ControlType = (typeof controlTypes)[number];
 
 export const controlSchemas = ['info', 'success', 'error', 'warning'] as const;
@@ -37,6 +38,21 @@ export interface DsFormControlProps
    * Icon shown next to message
    */
   messageIcon?: string;
+  /**
+   * Options for select control
+   */
+  options?: DsSelectOption[];
+  /**
+   * Value change event handler
+   * @param value
+   */
+  onValueChange?: (value: string) => void;
+  /**
+   * Event handler called when the select loses focus
+   *
+   * @param event
+   */
+  onBlur?: (event: React.FocusEvent<any>) => void;
   /**
    * Element type to render: 'input' or 'textarea'
    * @default 'input'
