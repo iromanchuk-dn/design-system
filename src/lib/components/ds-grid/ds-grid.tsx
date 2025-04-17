@@ -1,12 +1,18 @@
 import React from 'react';
 import { DsGridItemProps, DsGridProps } from './ds-grid.types';
 
+/**
+ * Design system Grid component
+ */
 export const DsGrid: React.FC<DsGridProps> = ({ children, rows, className = '' }) => {
   const rowsClass = rows ? `ds-grid-rows-${rows}` : '';
 
   return <div className={`ds-grid ${rowsClass} ${className}`.trim()}>{children}</div>;
 };
 
+/**
+ * Design system GridItem component
+ */
 export const DsGridItem: React.FC<DsGridItemProps> = ({
   children,
   colSpan,

@@ -24,7 +24,7 @@ export interface DsGridItemProps {
   children: ReactNode;
 
   /**
-   * Number of columns the item spans (1-12)
+   * Number of columns the item spans (1-12) or 'full'
    */
   colSpan?: number | 'full';
 
@@ -34,7 +34,7 @@ export interface DsGridItemProps {
   colStart?: number;
 
   /**
-   * Number of rows the item spans (1-8)
+   * Number of rows the item spans (1-8) or 'full'
    */
   rowSpan?: number | 'full';
 

@@ -1,9 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { DsGrid, DsGridItem } from '@design-system/ui';
+import './ds-grid.stories.scss';
 
 const meta = {
   title: 'Design System/Grid',
   component: DsGrid,
+  subcomponents: { DsGridItem },
   parameters: {},
   tags: ['autodocs'],
   argTypes: {
@@ -26,30 +28,21 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-/**
- * DsGridItem Props:
- * - children: The content to be rendered inside the grid item
- * - colSpan: Number of columns the item spans (1-12 or 'full')
- * - colStart: Starting column for the item (1-11)
- * - rowSpan: Number of rows the item spans (1-8 or 'full')
- * - rowStart: Starting row for the item (1-7)
- * - className: Custom class names to apply to the grid item
- */
-
 export const Default: Story = {
   args: {
+    className: 'my-grid',
     children: (
       <>
-        <DsGridItem colSpan={4}>
+        <DsGridItem className="card" colSpan={4}>
           <div>Element 1</div>
         </DsGridItem>
-        <DsGridItem colSpan={4} rowSpan={2}>
+        <DsGridItem className="card" colSpan={4} rowSpan={2}>
           <div>Element 2</div>
         </DsGridItem>
-        <DsGridItem colSpan={4} rowSpan={2}>
+        <DsGridItem className="card" colSpan={4} rowSpan={2}>
           <div>Element 3</div>
         </DsGridItem>
-        <DsGridItem colSpan={4} rowSpan={2}>
+        <DsGridItem className="card" colSpan={4} rowSpan={2}>
           <div>Element 4</div>
         </DsGridItem>
       </>
