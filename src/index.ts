@@ -7,3 +7,4 @@ export * from './lib/components/ds-radio-group';
 export * from './lib/components/ds-select';
 export * from './lib/components/ds-table';
 export * from './lib/components/ds-tooltip';
+export * from './lib/components/ds-popover';
