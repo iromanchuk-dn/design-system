@@ -34,7 +34,13 @@ const DsTableHeader = <TData,>({
                   height: 16,
                   width: 16,
                 }}
-                checked={table.getIsAllRowsSelected()}
+                checked={
+                  table.getIsAllRowsSelected()
+                    ? true
+                    : table.getIsSomeRowsSelected()
+                      ? 'indeterminate'
+                      : false
+                }
                 onClick={e => {
                   e.stopPropagation();
                   const toggleHandler = table.getToggleAllRowsSelectedHandler();
