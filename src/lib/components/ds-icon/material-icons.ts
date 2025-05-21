@@ -794,6 +794,7 @@ export const materialIcons = {
   'content::square_foot': 11,
   'content::stacked_bar_chart': 12,
   'content::stream': 11,
+  'content::sweep': 12,
   'content::tag': 10,
   'content::text_format': 12,
   'content::unarchive': 13,
