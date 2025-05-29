@@ -177,12 +177,15 @@ export const Default: Story = {
   },
   decorators: [Story => withTanStackRouter(Story, '/inventory/catalog')],
   render: args => <BreadcrumbStory items={args.items} />,
-  play: async ({ canvasElement, args: { items: initialItems } }) => {
+  play: async ({ canvasElement, args: { items: initialItems } }: { 
+    canvasElement: HTMLElement; 
+    args: { items: DsBreadcrumbItem[] } 
+  }) => {
     const canvas = within(canvasElement);
 
     // 1. Check last item is selected
-    const lastItem = canvas.getByText(initialItems[initialItems.length - 1].label);
-    await expect(lastItem).toHaveClass(styles.active);
+    const lastItemElement = canvas.getByText(initialItems[initialItems.length - 1].label);
+    await expect(lastItemElement).toHaveClass(styles.active);
 
     // 2. Click on previous item and verify last item is hidden
     const previousItem = canvas.getByText(initialItems[initialItems.length - 2].label);
@@ -200,7 +203,9 @@ export const Default: Story = {
     await expect(originalLastItem).not.toBeInTheDocument();
 
     // 3. Reset to initial state
-    (window as any).resetBreadcrumbItems(initialItems[initialItems.length - 1].href);
+    const lastBreadcrumbItem = initialItems[initialItems.length - 1];
+    const lastItemHref = lastBreadcrumbItem.type === 'link' ? lastBreadcrumbItem.href : lastBreadcrumbItem.options[0].href;
+    (window as any).resetBreadcrumbItems(lastItemHref);
 
     // Wait for state update
     await new Promise(resolve => setTimeout(resolve, 100));
