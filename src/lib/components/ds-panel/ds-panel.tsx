@@ -3,17 +3,7 @@ import * as Collapsible from '@radix-ui/react-collapsible';
 import classNames from 'classnames';
 import styles from './ds-panel.module.scss';
 import { DsIcon } from '../ds-icon';
-
-type Variant = 'collapsed' | 'minimized';
-
-export type DsPanelProps = Collapsible.CollapsibleProps & {
-	variant?: Variant;
-};
-
-type Context = {
-	variant: Variant;
-	open?: boolean;
-};
+import type { Context, DsPanelProps } from './ds-panel.types';
 
 const PanelContext = createContext<Context | null>(null);
 
