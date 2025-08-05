@@ -1,42 +1,11 @@
 import React from 'react';
 import classNames from 'classnames';
 import styles from './ds-text-input.module.scss';
-import { DsTextInputAdornmentProps, DsTextInputInputProps, DsTextInputProps } from './ds-text-input.types';
+import { DsTextInputProps } from './ds-text-input.types';
 
-const Adornment: React.FC<DsTextInputAdornmentProps> = ({ position, className, style, children }) => {
-	const adornmentClass = classNames(
-		styles.adornment,
-		{
-			[styles.start]: position === 'start',
-			[styles.end]: position === 'end',
-		},
-		className,
-	);
-
-	return (
-		<div className={adornmentClass} style={style}>
-			{children}
-		</div>
-	);
-};
-
-const Input: React.FC<DsTextInputInputProps> = ({ onChange, onValueChange, className, style, ...props }) => {
-	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		const newValue = event.target.value;
-		onChange?.(event);
-		onValueChange?.(newValue);
-	};
-
-	return (
-		<input className={classNames(styles.input, className)} style={style} onChange={handleChange} {...props} />
-	);
-};
-
-const DsTextInput: React.FC<DsTextInputProps> & {
-	Adornment: typeof Adornment;
-	Input: typeof Input;
-} = ({
+const DsTextInput: React.FC<DsTextInputProps> = ({
 	size = 'default',
+	type = 'text',
 	onChange,
 	onValueChange,
 	className,
@@ -45,8 +14,8 @@ const DsTextInput: React.FC<DsTextInputProps> & {
 	defaultValue,
 	placeholder,
 	disabled = false,
-	children,
-	...props
+	startAdornment,
+	endAdornment,
 }) => {
 	const containerClass = classNames(
 		styles.textInputContainer,
@@ -57,14 +26,6 @@ const DsTextInput: React.FC<DsTextInputProps> & {
 		className,
 	);
 
-	if (children) {
-		return (
-			<div className={containerClass} style={style}>
-				{children}
-			</div>
-		);
-	}
-
 	const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		const newValue = event.target.value;
 		onChange?.(event);
@@ -73,20 +34,19 @@ const DsTextInput: React.FC<DsTextInputProps> & {
 
 	return (
 		<div className={containerClass} style={style}>
+			{startAdornment && <div className={classNames(styles.adornment, styles.start)}>{startAdornment}</div>}
 			<input
 				className={classNames(styles.input)}
+				type={type}
 				value={value}
 				defaultValue={defaultValue}
 				placeholder={placeholder}
 				disabled={disabled}
 				onChange={handleChange}
-				{...props}
 			/>
+			{endAdornment && <div className={classNames(styles.adornment, styles.end)}>{endAdornment}</div>}
 		</div>
 	);
 };
-
-DsTextInput.Adornment = Adornment;
-DsTextInput.Input = Input;
 
 export default DsTextInput;

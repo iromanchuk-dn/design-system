@@ -1,6 +1,6 @@
-import React, { TextareaHTMLAttributes } from 'react';
+import React from 'react';
 
-export interface DsTextareaProps extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, 'onChange'> {
+export interface DsTextareaProps {
 	/**
 	 * Callback when the value changes
 	 */

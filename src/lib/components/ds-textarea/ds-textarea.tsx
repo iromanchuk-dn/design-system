@@ -13,7 +13,8 @@ const DsTextarea: React.FC<DsTextareaProps> = ({
 	disabled = false,
 	rows = 3,
 	placeholder,
-	...props
+	minLength,
+	maxLength,
 }) => {
 	const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
 		const newValue = event.target.value;
@@ -31,7 +32,8 @@ const DsTextarea: React.FC<DsTextareaProps> = ({
 			disabled={disabled}
 			rows={rows}
 			onChange={handleChange}
-			{...props}
+			minLength={minLength}
+			maxLength={maxLength}
 		/>
 	);
 };
