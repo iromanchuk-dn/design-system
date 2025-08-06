@@ -23,7 +23,7 @@ import { RowAction, SecondaryRowAction } from './components/ds-table-cell';
  * const selected = tableRef.current?.getSelectedRows();
  * ```
  */
-export interface TableApi<TData> {
+export interface DsTableApi<TData> {
 	/**
 	 * Selects a single row by its ID.
 	 *
@@ -54,10 +54,10 @@ export interface TableApi<TData> {
 	 *
 	 * @example
 	 * ```tsx
-	 * tableRef.current?.selectAll();
+	 * tableRef.current?.selectAllRows();
 	 * ```
 	 */
-	selectAll: () => void;
+	selectAllRows: () => void;
 
 	/**
 	 * Deselects all rows in the table.
@@ -65,10 +65,10 @@ export interface TableApi<TData> {
 	 *
 	 * @example
 	 * ```tsx
-	 * tableRef.current?.deselectAll();
+	 * tableRef.current?.deselectAllRows();
 	 * ```
 	 */
-	deselectAll: () => void;
+	deselectAllRows: () => void;
 
 	/**
 	 * Selects multiple rows by their IDs.
@@ -116,11 +116,11 @@ export interface Action<TData> {
 	onClick: (rows: TData[]) => void;
 }
 
-export interface DataTableProps<TData, TValue> {
+export interface DsDataTableProps<TData, TValue> {
 	/**
 	 * Ref to the table API
 	 */
-	ref?: React.RefObject<TableApi<TData> | null>;
+	ref?: React.RefObject<DsTableApi<TData> | null>;
 
 	/**
 	 * Columns of the table

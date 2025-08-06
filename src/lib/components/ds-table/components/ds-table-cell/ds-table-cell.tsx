@@ -2,7 +2,7 @@ import { Cell, flexRender } from '@tanstack/react-table';
 import classnames from 'classnames';
 import { DsDropdownMenu, DsIcon } from '@design-system/ui';
 import styles from './ds-table-cell.module.scss';
-import { TableCellProps } from './ds-table-cell.types';
+import { DsTableCellProps } from './ds-table-cell.types';
 
 export const DsDefaultTableCell = <TData, TValue>({ cell }: { cell: Cell<TData, TValue> }) => {
 	return (
@@ -17,7 +17,7 @@ export const DsTableCell = <TData, TValue>({
 	cell,
 	primaryRowActions = [],
 	secondaryRowActions = [],
-}: TableCellProps<TData, TValue>) => {
+}: DsTableCellProps<TData, TValue>) => {
 	if (primaryRowActions.length || secondaryRowActions.length) {
 		const hasSecondaryRowActions = secondaryRowActions.some((action) => !action.disabled?.(row.original));
 		return (

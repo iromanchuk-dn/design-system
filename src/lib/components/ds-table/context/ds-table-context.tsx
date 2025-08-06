@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
-import { DataTableProps } from '@design-system/ui';
+import { DsDataTableProps } from '@design-system/ui';
 
-export interface DsTableContextType<TData, TValue> extends Partial<DataTableProps<TData, TValue>> {
+export interface DsTableContextType<TData, TValue> extends Partial<DsDataTableProps<TData, TValue>> {
 	expandedRows: Record<string, boolean>;
 	toggleRowExpanded: (rowId: string) => void;
 }

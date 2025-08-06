@@ -6,7 +6,7 @@ import classnames from 'classnames';
 import DsIcon from '../ds-icon/ds-icon';
 import { IconType } from '../ds-icon/ds-icon.types';
 import DsTable from './ds-table';
-import { TableApi } from './ds-table.types';
+import { DsTableApi } from './ds-table.types';
 import styles from './ds-table.stories.module.scss';
 
 export enum Status {
@@ -329,7 +329,7 @@ export const ProgrammaticRowSelection: Story = {
 		onSelectionChange: (selectedRows) => console.log('Selected rows:', selectedRows),
 	},
 	render: function Render(args) {
-		const tableRef = useRef<TableApi<Person>>(null);
+		const tableRef = useRef<DsTableApi<Person>>(null);
 		const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
 		const selectRow = (rowId: string) => {
@@ -337,11 +337,11 @@ export const ProgrammaticRowSelection: Story = {
 		};
 
 		const selectAllRows = () => {
-			tableRef.current?.selectAll();
+			tableRef.current?.selectAllRows();
 		};
 
 		const deselectAllRows = () => {
-			tableRef.current?.deselectAll();
+			tableRef.current?.deselectAllRows();
 		};
 
 		const selectSpecificRows = () => {

@@ -4,7 +4,7 @@ import { VirtualItem } from '@tanstack/react-virtual';
 /**
  * Props for the table row component
  */
-export interface TableRowProps<TData> {
+export interface DsTableRowProps<TData> {
 	/**
 	 * The row data from the table
 	 */

@@ -17,7 +17,7 @@ import { Table, TableBody, TableCell, TableRow } from './components/core-table';
 import { DsTableBulkActions } from './components/ds-table-bulk-actions';
 import { DsTableHeader } from './components/ds-table-header';
 import styles from './ds-table.module.scss';
-import type { DataTableProps } from './ds-table.types';
+import type { DsDataTableProps } from './ds-table.types';
 import { DsTableRow } from './components/ds-table-row';
 import { useDragAndDrop } from './hooks/use-drag-and-drop';
 import { DsTableContext, DsTableContextType } from './context/ds-table-context';
@@ -57,7 +57,7 @@ const DsTable = <TData extends { id: string }, TValue>({
 	onOrderChange,
 	columnFilters: externalColumnFilters,
 	onColumnFiltersChange,
-}: DataTableProps<TData, TValue>) => {
+}: DsDataTableProps<TData, TValue>) => {
 	const [data, setData] = React.useState(tableData);
 	const [sorting, setSorting] = React.useState<SortingState>([]);
 	const [internalColumnFilters, setInternalColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -132,11 +132,11 @@ const DsTable = <TData extends { id: string }, TValue>({
 			deselectRow: (rowId: string) => {
 				table.getRow(rowId).toggleSelected(false);
 			},
-			selectAll: () => {
+			selectAllRows: () => {
 				table.toggleAllRowsSelected(true);
 			},
-			deselectAll: () => {
-				table.setRowSelection({});
+			deselectAllRows: () => {
+				table.toggleAllRowsSelected(false);
 			},
 			selectRows: (rowIds: string[]) => {
 				const selection: Record<string, boolean> = {};

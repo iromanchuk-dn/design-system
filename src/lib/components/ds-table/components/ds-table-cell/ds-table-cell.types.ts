@@ -44,7 +44,7 @@ export type SecondaryRowAction<TData> = Omit<RowAction<TData>, 'icon'> & {
 /**
  * Props for the table cell component
  */
-export interface TableCellProps<TData, TValue> {
+export interface DsTableCellProps<TData, TValue> {
 	/**
 	 * The row data from the table
 	 */

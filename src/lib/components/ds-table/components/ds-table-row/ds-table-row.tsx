@@ -6,7 +6,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { DsButton, DsCheckbox, DsIcon } from '@design-system/ui';
 import { TableCell, TableRow } from '../core-table';
 import { DsTableCell } from '../ds-table-cell';
-import { TableRowProps } from './ds-table-row.types';
+import { DsTableRowProps } from './ds-table-row.types';
 import styles from './ds-table-row.module.scss';
 import stylesShared from '../../styles/shared/ds-table-shared.module.scss';
 import { useDsTableContext } from '../../context/ds-table-context';
@@ -36,8 +36,7 @@ const DsRowDragHandle = ({ isDragging, attributes, listeners }: DsRowDragHandleP
 	);
 };
 
-
-const DsTableRow = <TData, TValue>({ row, virtualRow }: TableRowProps<TData>) => {
+const DsTableRow = <TData, TValue>({ row, virtualRow }: DsTableRowProps<TData>) => {
 	const {
 		expandable,
 		expandedRows,
