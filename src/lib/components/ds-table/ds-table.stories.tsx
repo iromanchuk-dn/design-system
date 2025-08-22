@@ -8,6 +8,7 @@ import { IconType } from '../ds-icon/ds-icon.types';
 import { DsSmartTabs } from '../ds-smart-tabs';
 import DsTable from './ds-table';
 import { DsTableApi, ScrollParams } from './ds-table.types';
+import { DsSpinner } from '../ds-spinner';
 import { generatePersonData, simulateApiCall } from './utils/story-data-generator';
 import styles from './ds-table.stories.module.scss';
 
@@ -617,7 +618,7 @@ export const Virtualized: Story = {
 	render: function Render(args) {
 		// Simulate API call using the utility function
 		const fetchData = async (start: number, size: number, sorting: SortingState) => {
-			return simulateApiCall(() => generatePersonData(start, size, sorting));
+			return simulateApiCall(() => generatePersonData(start, size, sorting), 1000000);
 		};
 
 		const pageSize = 50;
@@ -709,7 +710,7 @@ export const Virtualized: Story = {
 					{isLoading && (
 						<div className={styles.loadingOverlay}>
 							<div className={styles.loadingContent}>
-								<div className={styles.spinner} />
+								<DsSpinner size="default" />
 								<span className={styles.loadingText}>Loading data...</span>
 							</div>
 						</div>

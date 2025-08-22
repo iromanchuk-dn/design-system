@@ -1,0 +1,41 @@
+@use 'typography' as typography;
+
+.spinner {
+	border: 2px solid transparent;
+	border-top: 2px solid var(--color-background-selected);
+	border-radius: 50%;
+	//animation: spin 1s linear infinite;
+	display: inline-block;
+
+	&.small {
+		width: 16px;
+		height: 16px;
+		border-width: 4.5px;
+	}
+
+	&.default {
+		width: 24px;
+		height: 24px;
+		border-width: 7px;
+	}
+
+	&.large {
+		width: 92px;
+		height: 92px;
+		border-width: 9px;
+	}
+
+	&.overlay {
+		// Overlay variant styles if needed
+		// This can be used for full-screen or overlay spinners
+	}
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(360deg);
+	}
+}
