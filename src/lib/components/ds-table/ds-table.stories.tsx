@@ -710,7 +710,7 @@ export const Virtualized: Story = {
 					{isLoading && (
 						<div className={styles.loadingOverlay}>
 							<div className={styles.loadingContent}>
-								<DsSpinner size="default" />
+								<DsSpinner size={32} width={4} />
 								<span className={styles.loadingText}>Loading data...</span>
 							</div>
 						</div>
