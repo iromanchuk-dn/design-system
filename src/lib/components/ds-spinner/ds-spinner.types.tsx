@@ -2,15 +2,33 @@ import React, { ReactNode } from 'react';
 
 export interface DsSpinnerProps {
 	/**
-	 * The size of the spinner
-	 * @default 'default'
+	 * The size of the spinner in pixels
+	 * @default 100
 	 */
-	size?: 'small' | 'default' | 'large';
+	size?: number;
 	/**
-	 * The variant of the spinner
-	 * @default 'default'
+	 * The thickness of the progress arc
+	 * @default 9
 	 */
-	variant?: 'default' | 'overlay';
+	width?: number;
+	/**
+	 * Progress percentage (0-100). If not provided, shows a continuous spinning animation
+	 */
+	progress?: number;
+	/**
+	 * Color of the progress arc
+	 * @default 'var(--color-background-selected)'
+	 */
+	color?: string;
+	/**
+	 * Color of the background outline (optional)
+	 */
+	outlineColor?: string;
+	/**
+	 * Rotation speed in seconds
+	 * @default 2
+	 */
+	speed?: number;
 	/**
 	 * Additional CSS class names
 	 */

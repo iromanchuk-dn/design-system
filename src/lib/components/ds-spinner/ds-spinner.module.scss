@@ -1,40 +1,39 @@
 @use 'typography' as typography;
 
-.spinner {
-	border: 2px solid transparent;
-	border-top: 2px solid var(--color-background-selected);
-	border-radius: 50%;
-	//animation: spin 1s linear infinite;
-	display: inline-block;
+.spinnerContainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
 
-	&.small {
-		width: 16px;
-		height: 16px;
-		border-width: 4.5px;
-	}
+.spinnerWrapper {
+	position: relative;
+}
 
-	&.default {
-		width: 24px;
-		height: 24px;
-		border-width: 7px;
-	}
+.backgroundCircle {
+	position: absolute;
+	inset: 0;
+}
 
-	&.large {
-		width: 92px;
-		height: 92px;
-		border-width: 9px;
-	}
+.progressCircle {
+	position: absolute;
+	inset: 0;
+	transform: rotate(-90deg); // Start from top
+}
 
-	&.overlay {
-		// Overlay variant styles if needed
-		// This can be used for full-screen or overlay spinners
-	}
+.spin {
+	animation: spin 2s linear infinite;
+}
+
+.progressArc {
+	transition: stroke-dasharray 0.3s ease-in-out;
 }
 
 @keyframes spin {
 	0% {
 		transform: rotate(0deg);
 	}
+
 	100% {
 		transform: rotate(360deg);
 	}

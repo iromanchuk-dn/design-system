@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import DsSpinner from './ds-spinner';
+import styles from './ds-spinner.stories.module.scss';
 
 const meta: Meta<typeof DsSpinner> = {
 	title: 'Design System/Spinner',
@@ -10,18 +11,28 @@ const meta: Meta<typeof DsSpinner> = {
 	tags: ['autodocs'],
 	argTypes: {
 		size: {
-			control: { type: 'select' },
-			options: ['small', 'default', 'large'],
-			description: 'The size of the spinner',
+			control: { type: 'number' },
+			description: 'The size of the spinner in pixels',
 		},
-		variant: {
-			control: { type: 'select' },
-			options: ['default', 'overlay'],
-			description: 'The variant of the spinner',
+		width: {
+			control: { type: 'number' },
+			description: 'The thickness of the progress arc',
 		},
-		tooltip: {
-			control: 'text',
-			description: 'Tooltip text to display on hover',
+		progress: {
+			control: { type: 'number', min: 0, max: 100 },
+			description: 'Progress percentage (0-100). If not provided, shows a continuous spinning animation',
+		},
+		color: {
+			control: { type: 'color' },
+			description: 'Color of the progress arc',
+		},
+		outlineColor: {
+			control: { type: 'color' },
+			description: 'Color of the background outline (optional)',
+		},
+		speed: {
+			control: { type: 'number', min: 0.1, max: 10, step: 0.1 },
+			description: 'Rotation speed in seconds',
 		},
 		className: {
 			control: 'text',
@@ -38,64 +49,55 @@ export default meta;
 type Story = StoryObj<typeof DsSpinner>;
 
 export const Default: Story = {
+	args: {},
+};
+
+export const WithProgress: Story = {
 	args: {
-		size: 'default',
+		size: 120,
+		width: 16,
+		progress: 75,
+		color: 'var(--color-icon-success)',
 	},
 };
 
 export const Small: Story = {
 	args: {
-		size: 'small',
+		size: 50,
+		width: 4.5,
+		progress: 45,
+		color: 'var(--color-font-warning)',
 	},
 };
 
 export const Large: Story = {
 	args: {
-		size: 'large',
+		size: 160,
+		width: 20,
+		progress: 60,
+		color: 'var(--color-icon-danger)',
 	},
 };
 
-export const WithTooltip: Story = {
+export const WithOutline: Story = {
 	args: {
-		size: 'default',
-		tooltip: 'Loading data...',
+		size: 120,
+		width: 16,
+		progress: 30,
+		color: 'var(--color-border-action-primary)',
+		outlineColor: 'var(--color-background-tertiary-selected-weak)',
 	},
 };
 
-export const AllSizes: Story = {
+export const ModalLoading: Story = {
 	render: () => (
-		<div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
-			<DsSpinner size="small" />
-			<DsSpinner size="default" />
-			<DsSpinner size="large" />
-		</div>
-	),
-};
-
-export const InContext: Story = {
-	render: () => (
-		<div
-			style={{
-				display: 'flex',
-				flexDirection: 'column',
-				gap: '16px',
-				alignItems: 'center',
-				padding: '20px',
-				background: '#f5f5f5',
-				borderRadius: '8px',
-			}}
-		>
-			<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-				<DsSpinner size="small" />
-				<span>Loading small items...</span>
-			</div>
-			<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-				<DsSpinner size="default" />
-				<span>Loading data...</span>
-			</div>
-			<div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-				<DsSpinner size="large" />
-				<span>Loading large dataset...</span>
+		<div className={styles.modalOverlay}>
+			<div className={styles.modalContent}>
+				<DsSpinner />
+				<div className={styles.modalText}>
+					<p className={styles.modalTextPrimary}>Explanation text will describe the process.</p>
+					<p className={styles.modalTextSecondary}>Two lines will be aimed for this.</p>
+				</div>
 			</div>
 		</div>
 	),
