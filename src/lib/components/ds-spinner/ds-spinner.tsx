@@ -3,73 +3,50 @@ import classNames from 'classnames';
 import styles from './ds-spinner.module.scss';
 import { DsSpinnerProps } from './ds-spinner.types';
 
+const sizeMap = {
+	small: 50,
+	default: 75,
+	large: 100,
+};
+
+const widthMap = {
+	small: 4,
+	default: 7,
+	large: 9,
+};
+
 /**
  * Design system Spinner component
  */
-const DsSpinner: React.FC<DsSpinnerProps> = ({
-	size = 100,
-	width = 9,
-	progress = 25,
-	color = 'var(--color-background-selected)',
-	outlineColor,
-	speed = 2,
-	className,
-	style = {},
-	children,
-	...props
-}) => {
-	const radius = (size - width) / 2;
+const DsSpinner: React.FC<DsSpinnerProps> = ({ size = 'default', className, style = {}, ...props }) => {
+	const progress = 25;
+	const actualSize = sizeMap[size];
+	const actualWidth = widthMap[size];
+	const radius = (actualSize - actualWidth) / 2;
 	const circumference = 2 * Math.PI * radius;
+	const strokeDashoffset = 2 * (progress / 100) * circumference;
 	const strokeDasharray = `${(progress / 100) * circumference} ${circumference}`;
 
 	return (
-		<div className={classNames(styles.spinnerContainer, className)} style={style} {...props}>
-			<div
-				className={styles.spinnerWrapper}
-				style={{
-					width: size,
-					height: size,
-				}}
+		<div className={classNames(styles.spinnerContainer, styles[size], className)} style={style} {...props}>
+			<svg
+				className={classNames(styles.progressCircle, styles.spin)}
+				width={actualSize}
+				height={actualSize}
+				viewBox={`0 0 ${actualSize} ${actualSize}`}
 			>
-				{/* Background circle (optional outline) */}
-				{outlineColor && (
-					<svg className={styles.backgroundCircle} width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-						<circle
-							cx={size / 2}
-							cy={size / 2}
-							r={radius}
-							fill="none"
-							stroke={outlineColor}
-							strokeWidth="2"
-							opacity="0.3"
-						/>
-					</svg>
-				)}
-
-				{/* Animated progress circle */}
-				<svg
-					className={classNames(styles.progressCircle, styles.spin)}
-					width={size}
-					height={size}
-					viewBox={`0 0 ${size} ${size}`}
-					style={{
-						animationDuration: `${speed}s`,
-					}}
-				>
-					<circle
-						cx={size / 2}
-						cy={size / 2}
-						r={radius}
-						fill="none"
-						stroke={color}
-						strokeWidth={width}
-						strokeDasharray={strokeDasharray}
-						strokeLinecap="round"
-						className={styles.progressArc}
-					/>
-				</svg>
-			</div>
-			{children}
+				<circle
+					cx={actualSize / 2}
+					cy={actualSize / 2}
+					r={radius}
+					fill="none"
+					strokeWidth={actualWidth}
+					strokeDasharray={strokeDasharray}
+					strokeDashoffset={strokeDashoffset}
+					strokeLinecap="round"
+					className={styles.progressArc}
+				/>
+			</svg>
 		</div>
 	);
 };

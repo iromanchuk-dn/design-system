@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import DsSpinner from './ds-spinner';
+import { spinnerSizes } from './ds-spinner.types';
 import styles from './ds-spinner.stories.module.scss';
 
 const meta: Meta<typeof DsSpinner> = {
@@ -11,28 +12,9 @@ const meta: Meta<typeof DsSpinner> = {
 	tags: ['autodocs'],
 	argTypes: {
 		size: {
-			control: { type: 'number' },
-			description: 'The size of the spinner in pixels',
-		},
-		width: {
-			control: { type: 'number' },
-			description: 'The thickness of the progress arc',
-		},
-		progress: {
-			control: { type: 'number', min: 0, max: 100 },
-			description: 'Progress percentage (0-100). If not provided, shows a continuous spinning animation',
-		},
-		color: {
-			control: { type: 'color' },
-			description: 'Color of the progress arc',
-		},
-		outlineColor: {
-			control: { type: 'color' },
-			description: 'Color of the background outline (optional)',
-		},
-		speed: {
-			control: { type: 'number', min: 0.1, max: 10, step: 0.1 },
-			description: 'Rotation speed in seconds',
+			control: { type: 'select' },
+			options: spinnerSizes,
+			description: 'The size of the spinner',
 		},
 		className: {
 			control: 'text',
@@ -52,41 +34,54 @@ export const Default: Story = {
 	args: {},
 };
 
-export const WithProgress: Story = {
-	args: {
-		size: 120,
-		width: 16,
-		progress: 75,
-		color: 'var(--color-icon-success)',
-	},
+export const AllSizes: Story = {
+	render: () => (
+		<div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+			<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+				<DsSpinner size="small" />
+				<span>Small</span>
+			</div>
+			<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+				<DsSpinner size="default" />
+				<span>Default</span>
+			</div>
+			<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+				<DsSpinner size="large" />
+				<span>Large</span>
+			</div>
+		</div>
+	),
 };
 
-export const Small: Story = {
-	args: {
-		size: 50,
-		width: 4.5,
-		progress: 45,
-		color: 'var(--color-font-warning)',
-	},
-};
-
-export const Large: Story = {
-	args: {
-		size: 160,
-		width: 20,
-		progress: 60,
-		color: 'var(--color-icon-danger)',
-	},
-};
-
-export const WithOutline: Story = {
-	args: {
-		size: 120,
-		width: 16,
-		progress: 30,
-		color: 'var(--color-border-action-primary)',
-		outlineColor: 'var(--color-background-tertiary-selected-weak)',
-	},
+export const ColorCustomization: Story = {
+	render: () => (
+		<div style={{ display: 'flex', gap: '24px', alignItems: 'center' }}>
+			<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+				<div style={{ '--spinner-color': 'var(--color-icon-success)' } as React.CSSProperties}>
+					<DsSpinner size="default" />
+				</div>
+				<span>Success</span>
+			</div>
+			<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+				<div style={{ '--spinner-color': 'var(--color-icon-warning)' } as React.CSSProperties}>
+					<DsSpinner size="default" />
+				</div>
+				<span>Warning</span>
+			</div>
+			<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+				<div style={{ '--spinner-color': 'var(--color-icon-danger)' } as React.CSSProperties}>
+					<DsSpinner size="default" />
+				</div>
+				<span>Danger</span>
+			</div>
+			<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+				<div style={{ '--spinner-color': 'var(--color-border-action-primary)' } as React.CSSProperties}>
+					<DsSpinner size="default" />
+				</div>
+				<span>Primary</span>
+			</div>
+		</div>
+	),
 };
 
 export const ModalLoading: Story = {

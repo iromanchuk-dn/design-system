@@ -84,7 +84,7 @@ export const WithSpinner: Story = {
 		disabled: false,
 		children: (
 			<>
-				<DsSpinner size={20} width={2} color={'var(--color-background)'} />
+				<DsSpinner size="small" />
 				{defaultButtonText}
 				<DsIcon icon="keyboard_arrow_down" size="tiny" aria-hidden="true" />
 			</>

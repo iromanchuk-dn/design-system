@@ -4,29 +4,20 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-}
-
-.spinnerWrapper {
-	position: relative;
-}
-
-.backgroundCircle {
-	position: absolute;
-	inset: 0;
+	flex-shrink: 0;
 }
 
 .progressCircle {
-	position: absolute;
-	inset: 0;
-	transform: rotate(-90deg); // Start from top
 }
 
 .spin {
 	animation: spin 2s linear infinite;
+	animation-delay: 1ms;
 }
 
 .progressArc {
 	transition: stroke-dasharray 0.3s ease-in-out;
+	stroke: var(--spinner-color, var(--color-background-selected));
 }
 
 @keyframes spin {
