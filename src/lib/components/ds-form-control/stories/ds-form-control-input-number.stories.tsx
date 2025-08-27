@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { controlStatuses, DsIcon } from '@design-system/ui';
 import DsFormControl from '../ds-form-control';
 import { DefaultDescription } from './ds-form-control-stories-shared';
 import { expect, userEvent, waitFor, within } from '@storybook/test';
-import { controlStatuses } from '@design-system/ui';
+import styles from './ds-form-control.stories.module.scss';
 
 const meta: Meta<typeof DsFormControl> = {
 	title: 'Design System/FormControl/Number',
@@ -30,9 +31,9 @@ const meta: Meta<typeof DsFormControl> = {
 			control: 'boolean',
 			description: 'Indicates if the field is required',
 		},
-		showHelpIcon: {
-			control: 'boolean',
-			description: 'Show help icon next to the label',
+		endAdornment: {
+			control: 'object',
+			description: 'Adornment to display at the end of the label',
 		},
 		message: {
 			control: 'text',
@@ -174,14 +175,22 @@ export const WithHelpIcon: Story = {
 	args: {
 		label: 'Input label',
 		required: true,
-		showHelpIcon: true,
-		onHelpClick: () => alert('Help clicked!'),
+		endAdornment: (
+			<button
+				type="button"
+				className={styles.helpIcon}
+				onClick={() => alert('Help clicked!')}
+				aria-label="Help"
+			>
+				<DsIcon icon="info" size="small" />
+			</button>
+		),
 		children: (
 			<>
 				<DsFormControl.Description>
 					<DefaultDescription />
 				</DsFormControl.Description>
-				<DsFormControl.NumberInput placeholder="Enter number" min={1} max={100} step={1} defaultValue={10} />
+				<DsFormControl.NumberInput placeholder="Enter number" />
 			</>
 		),
 	},

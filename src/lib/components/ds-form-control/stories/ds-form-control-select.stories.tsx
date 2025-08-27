@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { controlStatuses, DsIcon } from '@design-system/ui';
 import DsFormControl from '../ds-form-control';
 import { DefaultDescription } from './ds-form-control-stories-shared';
-import { controlStatuses } from '@design-system/ui';
+import { expect, screen, userEvent, waitFor, within } from '@storybook/test';
+import { useState } from 'react';
+import styles from './ds-form-control.stories.module.scss';
 
 const meta: Meta<typeof DsFormControl> = {
 	title: 'Design System/FormControl/Select',
@@ -29,9 +32,9 @@ const meta: Meta<typeof DsFormControl> = {
 			control: 'boolean',
 			description: 'Indicates if the field is required',
 		},
-		showHelpIcon: {
-			control: 'boolean',
-			description: 'Show help icon next to the label',
+		endAdornment: {
+			control: 'object',
+			description: 'Adornment to display at the end of the label',
 		},
 		message: {
 			control: 'text',
@@ -55,205 +58,349 @@ const meta: Meta<typeof DsFormControl> = {
 export default meta;
 type Story = StoryObj<typeof DsFormControl>;
 
+const sanityCheck = async (canvasElement: HTMLElement) => {
+	const canvas = within(canvasElement);
+	const selectTrigger = canvas.getByLabelText('Input');
+
+	// Test initial state - should show placeholder
+	await expect(selectTrigger).toHaveTextContent('Select an option');
+
+	// Test opening the dropdown
+	await userEvent.click(selectTrigger);
+
+	// Wait for dropdown to appear and check options
+	await waitFor(async () => {
+		const option1 = screen.getByRole('option', { name: 'Option 1' });
+		const option2 = screen.getByRole('option', { name: 'Option 2' });
+		const option3 = screen.getByRole('option', { name: 'Option 3' });
+
+		await expect(option1).toBeInTheDocument();
+		await expect(option2).toBeInTheDocument();
+		await expect(option3).toBeInTheDocument();
+	});
+
+	// Test selecting an option
+	const option1 = screen.getByRole('option', { name: 'Option 1' });
+	await userEvent.click(option1);
+
+	// Verify the selected value is displayed
+	await waitFor(async () => {
+		await expect(selectTrigger).toHaveTextContent('Option 1');
+	});
+
+	// Test clearing the selection
+	const clearButton = canvas.getByRole('button', { name: /clear value/i });
+	await userEvent.click(clearButton);
+
+	// Verify placeholder is shown again
+	await waitFor(async () => {
+		await expect(selectTrigger).toHaveTextContent('Select an option');
+	});
+
+	// Test selecting another option
+	await userEvent.click(selectTrigger);
+	const option2 = screen.getByRole('option', { name: 'Option 2' });
+	await userEvent.click(option2);
+
+	await waitFor(async () => {
+		await expect(selectTrigger).toHaveTextContent('Option 2');
+	});
+
+	// Reset and verify clear button disappears - get fresh reference
+	const clearButtonAfterSelection = canvas.getByRole('button', { name: /clear value/i });
+	await userEvent.click(clearButtonAfterSelection);
+	await waitFor(async () => {
+		await expect(selectTrigger).toHaveTextContent('Select an option');
+		// Verify clear button is no longer present when no value is selected
+		const clearButtonAfterReset = canvas.queryByRole('button', { name: /clear value/i });
+		await expect(clearButtonAfterReset).not.toBeInTheDocument();
+	});
+};
+
+const checkDisabled = async (canvasElement: HTMLElement) => {
+	const canvas = within(canvasElement);
+	const selectTrigger = canvas.getByRole('combobox');
+
+	// Assert that the select is disabled
+	await expect(selectTrigger).toBeDisabled();
+
+	// Attempt to click on the disabled select
+	await userEvent.click(selectTrigger);
+
+	// Verify that no dropdown appears (disabled state)
+	await waitFor(async () => {
+		const option1 = canvas.queryByText('Option 1');
+		await expect(option1).not.toBeInTheDocument();
+	});
+};
+
 export const Default: Story = {
-	args: {
-		label: 'Select Option',
-		required: true,
-		message: 'This is a message',
-		children: (
-			<DsFormControl.Select
-				placeholder="Input"
-				options={[
-					{ label: 'Option 1', value: 'option1', icon: 'download' },
-					{ label: 'Option 2', value: 'option2', icon: 'save' },
-					{ label: 'Option 3', value: 'option3', icon: 'description' },
-				]}
-			/>
-		),
+	render: function Render() {
+		const [value, setValue] = useState<string>('');
+
+		return (
+			<DsFormControl label="Input" required={true} message="This is a message">
+				<DsFormControl.Select
+					placeholder="Select an option"
+					value={value}
+					onValueChange={setValue}
+					onClear={() => setValue('')}
+					options={[
+						{ label: 'Option 1', value: 'option1', icon: 'download' },
+						{ label: 'Option 2', value: 'option2', icon: 'save' },
+						{ label: 'Option 3', value: 'option3', icon: 'description' },
+					]}
+				/>
+			</DsFormControl>
+		);
 	},
-	play: async ({ canvasElement }) => {},
+	play: async ({ canvasElement }) => {
+		await sanityCheck(canvasElement);
+	},
 };
 
 export const WithCustomWidth: Story = {
-	args: {
-		label: 'Select Option',
-		required: true,
-		style: { width: '300px' },
-		children: (
-			<DsFormControl.Select
-				placeholder="Input"
-				options={[
-					{ label: 'Option 1', value: 'option1', icon: 'download' },
-					{ label: 'Option 2', value: 'option2', icon: 'save' },
-					{ label: 'Option 3', value: 'option3', icon: 'description' },
-				]}
-			/>
-		),
+	render: function Render() {
+		const [value, setValue] = useState<string>('');
+
+		return (
+			<DsFormControl label="Input" required={true} style={{ width: '300px' }}>
+				<DsFormControl.Select
+					placeholder="Select an option"
+					value={value}
+					onValueChange={setValue}
+					onClear={() => setValue('')}
+					options={[
+						{ label: 'Option 1', value: 'option1', icon: 'download' },
+						{ label: 'Option 2', value: 'option2', icon: 'save' },
+						{ label: 'Option 3', value: 'option3', icon: 'description' },
+					]}
+				/>
+			</DsFormControl>
+		);
 	},
-	play: async ({ canvasElement }) => {},
+	play: async ({ canvasElement }) => {
+		await sanityCheck(canvasElement);
+	},
 };
 
 export const WithCustomStyles: Story = {
-	args: {
-		label: 'Select Option',
-		required: true,
-		style: {
-			width: '400px',
-			padding: '16px',
-			border: '2px solid #e0e0e0',
-			borderRadius: '8px',
-			backgroundColor: '#f9f9f9',
-		},
-		children: (
-			<DsFormControl.Select
-				placeholder="Input"
-				options={[
-					{ label: 'Option 1', value: 'option1', icon: 'download' },
-					{ label: 'Option 2', value: 'option2', icon: 'save' },
-					{ label: 'Option 3', value: 'option3', icon: 'description' },
-				]}
-			/>
-		),
+	render: function Render() {
+		const [value, setValue] = useState<string>('');
+
+		return (
+			<DsFormControl
+				label="Input"
+				required={true}
+				style={{
+					width: '400px',
+					padding: '16px',
+					border: '2px solid #e0e0e0',
+					borderRadius: '8px',
+					backgroundColor: '#f9f9f9',
+				}}
+			>
+				<DsFormControl.Select
+					placeholder="Select an option"
+					value={value}
+					onValueChange={setValue}
+					onClear={() => setValue('')}
+					options={[
+						{ label: 'Option 1', value: 'option1', icon: 'download' },
+						{ label: 'Option 2', value: 'option2', icon: 'save' },
+						{ label: 'Option 3', value: 'option3', icon: 'description' },
+					]}
+				/>
+			</DsFormControl>
+		);
 	},
-	play: async ({ canvasElement }) => {},
+	play: async ({ canvasElement }) => {
+		await sanityCheck(canvasElement);
+	},
 };
 
 export const WithDescription: Story = {
-	args: {
-		label: 'Select Option',
-		required: true,
-		style: {
-			width: '300px',
-		},
-		children: (
-			<>
+	render: function Render() {
+		const [value, setValue] = useState<string>('');
+
+		return (
+			<DsFormControl label="Input" required={true} style={{ width: '300px' }}>
 				<DsFormControl.Description>
 					<DefaultDescription />
 				</DsFormControl.Description>
 				<DsFormControl.Select
-					placeholder="Input"
+					placeholder="Select an option"
+					value={value}
+					onValueChange={setValue}
+					onClear={() => setValue('')}
 					options={[
 						{ label: 'Option 1', value: 'option1', icon: 'download' },
 						{ label: 'Option 2', value: 'option2', icon: 'save' },
 						{ label: 'Option 3', value: 'option3', icon: 'description' },
 					]}
 				/>
-			</>
-		),
+			</DsFormControl>
+		);
 	},
-	play: async ({ canvasElement }) => {},
+	play: async ({ canvasElement }) => {
+		await sanityCheck(canvasElement);
+	},
 };
 
 export const WithHelpIcon: Story = {
-	args: {
-		label: 'Select Option',
-		required: true,
-		showHelpIcon: true,
-		onHelpClick: () => alert('Help clicked!'),
-		children: (
-			<>
+	render: function Render() {
+		const [value, setValue] = useState<string>('');
+
+		return (
+			<DsFormControl
+				label="Input"
+				required={true}
+				endAdornment={
+					<button
+						type="button"
+						className={styles.helpIcon}
+						onClick={() => alert('Help clicked!')}
+						aria-label="Help"
+					>
+						<DsIcon icon="info" size="small" />
+					</button>
+				}
+			>
 				<DsFormControl.Description>
 					<DefaultDescription />
 				</DsFormControl.Description>
 				<DsFormControl.Select
-					placeholder="Input"
+					value={value}
+					onValueChange={setValue}
+					onClear={() => setValue('')}
 					options={[
-						{ label: 'Option 1', value: 'option1', icon: 'download' },
-						{ label: 'Option 2', value: 'option2', icon: 'save' },
-						{ label: 'Option 3', value: 'option3', icon: 'description' },
+						{ value: 'option1', label: 'Option 1' },
+						{ value: 'option2', label: 'Option 2' },
+						{ value: 'option3', label: 'Option 3' },
 					]}
+					placeholder="Select an option"
 				/>
-			</>
-		),
+			</DsFormControl>
+		);
 	},
-	play: async ({ canvasElement }) => {},
+	play: async ({ canvasElement }) => {
+		await sanityCheck(canvasElement);
+	},
 };
 
 export const Success: Story = {
-	args: {
-		status: 'success',
-		label: 'Select Option',
-		message: 'This is a success caption under a select input.',
-		messageIcon: 'check_circle',
-		children: (
-			<>
+	render: function Render() {
+		const [value, setValue] = useState<string>('');
+
+		return (
+			<DsFormControl
+				status="success"
+				label="Input"
+				message="This is a success caption under a select input."
+				messageIcon="check_circle"
+			>
 				<DsFormControl.Description>
 					<DefaultDescription />
 				</DsFormControl.Description>
 				<DsFormControl.Select
-					placeholder="Input"
+					placeholder="Select an option"
+					value={value}
+					onValueChange={setValue}
+					onClear={() => setValue('')}
 					options={[
 						{ label: 'Option 1', value: 'option1', icon: 'download' },
 						{ label: 'Option 2', value: 'option2', icon: 'save' },
 						{ label: 'Option 3', value: 'option3', icon: 'description' },
 					]}
 				/>
-			</>
-		),
+			</DsFormControl>
+		);
 	},
-	play: async ({ canvasElement }) => {},
+	play: async ({ canvasElement }) => {
+		await sanityCheck(canvasElement);
+	},
 };
 
 export const Error: Story = {
-	args: {
-		status: 'error',
-		label: 'Select Option',
-		message: 'This is an error caption under a select input.',
-		messageIcon: 'error',
-		children: (
-			<>
+	render: function Render() {
+		const [value, setValue] = useState<string>('');
+
+		return (
+			<DsFormControl
+				status="error"
+				label="Input"
+				message="This is an error caption under a select input."
+				messageIcon="error"
+			>
 				<DsFormControl.Description>
 					<DefaultDescription />
 				</DsFormControl.Description>
 				<DsFormControl.Select
-					placeholder="Input"
+					placeholder="Select an option"
+					value={value}
+					onValueChange={setValue}
+					onClear={() => setValue('')}
 					options={[
 						{ label: 'Option 1', value: 'option1', icon: 'download' },
 						{ label: 'Option 2', value: 'option2', icon: 'save' },
 						{ label: 'Option 3', value: 'option3', icon: 'description' },
 					]}
 				/>
-			</>
-		),
+			</DsFormControl>
+		);
 	},
-	play: async ({ canvasElement }) => {},
+	play: async ({ canvasElement }) => {
+		await sanityCheck(canvasElement);
+	},
 };
 
 export const Warning: Story = {
-	args: {
-		status: 'warning',
-		label: 'Select Option',
-		message: 'This is a warning caption under a select input.',
-		messageIcon: 'info',
-		children: (
-			<>
+	render: function Render() {
+		const [value, setValue] = useState<string>('');
+
+		return (
+			<DsFormControl
+				status="warning"
+				label="Input"
+				message="This is a warning caption under a select input."
+				messageIcon="info"
+			>
 				<DsFormControl.Description>
 					<DefaultDescription />
 				</DsFormControl.Description>
 				<DsFormControl.Select
-					placeholder="Input"
+					placeholder="Select an option"
+					value={value}
+					onValueChange={setValue}
+					onClear={() => setValue('')}
 					options={[
 						{ label: 'Option 1', value: 'option1', icon: 'download' },
 						{ label: 'Option 2', value: 'option2', icon: 'save' },
 						{ label: 'Option 3', value: 'option3', icon: 'description' },
 					]}
 				/>
-			</>
-		),
+			</DsFormControl>
+		);
 	},
-	play: async ({ canvasElement }) => {},
+	play: async ({ canvasElement }) => {
+		await sanityCheck(canvasElement);
+	},
 };
 
 export const Disabled: Story = {
-	args: {
-		label: 'Select Option',
-		children: (
-			<>
+	render: function Render() {
+		const [value, setValue] = useState<string>('');
+
+		return (
+			<DsFormControl label="Input">
 				<DsFormControl.Description>
 					<DefaultDescription />
 				</DsFormControl.Description>
 				<DsFormControl.Select
-					placeholder="Input"
+					placeholder="Select an option"
+					value={value}
+					onValueChange={setValue}
+					onClear={() => setValue('')}
 					options={[
 						{ label: 'Option 1', value: 'option1', icon: 'download' },
 						{ label: 'Option 2', value: 'option2', icon: 'save' },
@@ -261,8 +408,10 @@ export const Disabled: Story = {
 					]}
 					disabled
 				/>
-			</>
-		),
+			</DsFormControl>
+		);
 	},
-	play: async ({ canvasElement }) => {},
+	play: async ({ canvasElement }) => {
+		await checkDisabled(canvasElement);
+	},
 };

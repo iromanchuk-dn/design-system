@@ -34,6 +34,7 @@ const DsSelect: FC<DsSelectProps> = ({
 	};
 
 	const selectedOption = options.find((option) => option.value === value);
+	console.log('selected', selectedOption);
 
 	return (
 		<div className={styles.container} style={style}>

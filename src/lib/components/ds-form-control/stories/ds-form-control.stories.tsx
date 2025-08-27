@@ -30,9 +30,9 @@ const meta: Meta<typeof DsFormControl> = {
 			control: 'boolean',
 			description: 'Indicates if the field is required',
 		},
-		showHelpIcon: {
-			control: 'boolean',
-			description: 'Show help icon next to the label',
+		endAdornment: {
+			control: 'object',
+			description: 'Adornment to display at the end of the label',
 		},
 		message: {
 			control: 'text',
@@ -141,8 +141,28 @@ export const WithHelpIcon: Story = {
 	args: {
 		label: 'Input label',
 		required: true,
-		showHelpIcon: true,
-		onHelpClick: () => alert('Help clicked!'),
+		endAdornment: (
+			<button
+				type="button"
+				onClick={() => alert('Help clicked!')}
+				aria-label="Help"
+				style={{
+					background: 'none',
+					border: 'none',
+					padding: '4px',
+					cursor: 'pointer',
+					color: 'var(--neutral-3)',
+					display: 'flex',
+					alignItems: 'center',
+					justifyContent: 'center',
+					width: '16px',
+					height: '16px',
+					borderRadius: '50%',
+				}}
+			>
+				<DsIcon icon="info" size="small" />
+			</button>
+		),
 		children: (
 			<>
 				<DsFormControl.Description>

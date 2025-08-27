@@ -42,8 +42,7 @@ const DsFormControl = ({
 	status,
 	label,
 	required = false,
-	showHelpIcon = false,
-	onHelpClick,
+	endAdornment,
 	message,
 	messageIcon = 'info',
 	className,
@@ -68,11 +67,7 @@ const DsFormControl = ({
 					>
 						{label}
 					</label>
-					{showHelpIcon && (
-						<button type="button" className={styles.helpIcon} onClick={onHelpClick} aria-label="Help">
-							<DsIcon icon="info" size="small" />
-						</button>
-					)}
+					{endAdornment && <div className={styles.endAdornment}>{endAdornment}</div>}
 				</div>
 
 				{children}

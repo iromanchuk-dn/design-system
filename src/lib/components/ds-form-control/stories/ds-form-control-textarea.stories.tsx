@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { controlStatuses, DsIcon } from '@design-system/ui';
 import DsFormControl from '../ds-form-control';
 import { checkDisabled, DefaultDescription, sanityCheck } from './ds-form-control-stories-shared';
-import { controlStatuses } from '@design-system/ui';
+import styles from './ds-form-control.stories.module.scss';
 
 const meta: Meta<typeof DsFormControl> = {
 	title: 'Design System/FormControl/Textarea',
@@ -29,9 +30,9 @@ const meta: Meta<typeof DsFormControl> = {
 			control: 'boolean',
 			description: 'Indicates if the field is required',
 		},
-		showHelpIcon: {
-			control: 'boolean',
-			description: 'Show help icon next to the label',
+		endAdornment: {
+			control: 'object',
+			description: 'Adornment to display at the end of the label',
 		},
 		message: {
 			control: 'text',
@@ -122,8 +123,16 @@ export const WithHelpIcon: Story = {
 	args: {
 		label: 'Input label',
 		required: true,
-		showHelpIcon: true,
-		onHelpClick: () => alert('Help clicked!'),
+		endAdornment: (
+			<button
+				type="button"
+				className={styles.helpIcon}
+				onClick={() => alert('Help clicked!')}
+				aria-label="Help"
+			>
+				<DsIcon icon="info" size="small" />
+			</button>
+		),
 		children: (
 			<>
 				<DsFormControl.Description>
@@ -132,18 +141,6 @@ export const WithHelpIcon: Story = {
 				<DsFormControl.Textarea placeholder="Search" />
 			</>
 		),
-	},
-	play: async ({ canvasElement }) => {
-		await sanityCheck(canvasElement);
-	},
-};
-
-export const WithIcon: Story = {
-	args: {
-		label: 'Input label',
-		required: true,
-		message: 'This is a message',
-		children: <DsFormControl.Textarea placeholder="Input" />,
 	},
 	play: async ({ canvasElement }) => {
 		await sanityCheck(canvasElement);

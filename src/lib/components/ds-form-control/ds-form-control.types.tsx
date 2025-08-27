@@ -22,13 +22,9 @@ export interface DsFormControlProps extends React.PropsWithChildren {
 	 */
 	required?: boolean;
 	/**
-	 * Show help icon next to the label
+	 * Adornment to display at the end of the label
 	 */
-	showHelpIcon?: boolean;
-	/**
-	 * Callback when help icon is clicked
-	 */
-	onHelpClick?: () => void;
+	endAdornment?: React.ReactNode;
 	/**
 	 * Message under the control
 	 */
