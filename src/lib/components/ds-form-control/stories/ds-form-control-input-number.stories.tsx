@@ -190,7 +190,7 @@ export const WithHelpIcon: Story = {
 				<DsFormControl.Description>
 					<DefaultDescription />
 				</DsFormControl.Description>
-				<DsFormControl.NumberInput placeholder="Enter number" />
+				<DsFormControl.NumberInput placeholder="Enter number" min={1} max={100} step={1} defaultValue={10} />
 			</>
 		),
 	},
