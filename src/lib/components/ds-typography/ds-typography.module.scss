@@ -1,163 +1,93 @@
-@mixin link-base {
-	text-decoration-line: underline;
-	text-decoration-style: solid;
-	text-decoration-skip-ink: none;
-	text-decoration-thickness: auto;
-	text-underline-offset: auto;
-	text-underline-position: from-font;
-}
-
-@mixin code-base {
-	font-family: var(--font-family-code);
-	text-align: start;
-}
+@use 'typography' as typography;
 
 .heading1 {
-	font-family: var(--font-family-base);
-	font-size: var(--font-size-3xl);
-	font-weight: var(--font-weight-semi-bold);
-	line-height: var(--line-height-3xl);
-	letter-spacing: var(--letter-spacing--1percent);
+	@include typography.heading1;
 }
 
 .heading2 {
-	font-family: var(--font-family-base);
-	font-size: var(--font-size-2xl);
-	font-weight: var(--font-weight-semi-bold);
-	line-height: var(--line-height-2xl);
-	letter-spacing: var(--letter-spacing--1percent);
+	@include typography.heading2;
 }
 
 .heading3 {
-	font-family: var(--font-family-base);
-	font-size: var(--font-size-xl);
-	font-weight: var(--font-weight-semi-bold);
-	line-height: var(--line-height-xl);
-	letter-spacing: var(--letter-spacing--1percent);
+	@include typography.heading3;
 }
 
 .heading4 {
-	font-family: var(--font-family-base);
-	font-size: var(--font-size-large);
-	font-weight: var(--font-weight-semi-bold);
-	line-height: var(--line-height-large);
-	letter-spacing: var(--letter-spacing--1percent);
-}
-
-@mixin body-md($font-weight: var(--font-weight-regular)) {
-	font-family: var(--font-family-base);
-	font-size: var(--font-size-md);
-	font-weight: $font-weight;
-	line-height: var(--line-height-md);
-	letter-spacing: var(--letter-spacing--1percent);
+	@include typography.heading4;
 }
 
 .body-md-reg {
-	@include body-md;
+	@include typography.body-md-reg;
 }
 
 .body-md-md {
-	@include body-md(var(--font-weight-medium));
+	@include typography.body-md-reg;
 }
 
 .body-md-semi-bold {
-	@include body-md(var(--font-weight-semi-bold));
+	@include typography.body-md-semi-bold;
 }
 
 .body-md-bold {
-	@include body-md(var(--font-weight-bold));
+	@include typography.body-md-bold;
 }
 
 .body-md-link {
-	@include body-md;
-	@include link-base;
-}
-
-@mixin body-sm($font-weight: var(--font-weight-regular)) {
-	font-family: var(--font-family-base);
-	font-size: var(--font-size-sm);
-	font-weight: $font-weight;
-	line-height: var(--line-height-sm);
-	letter-spacing: var(--letter-spacing--1percent);
+	@include typography.body-md-link;
 }
 
 .body-sm-reg {
-	@include body-sm;
+	@include typography.body-sm-reg;
 }
 
 .body-sm-md {
-	@include body-sm(var(--font-weight-medium));
+	@include typography.body-sm-md;
 }
 
 .body-sm-semi-bold {
-	@include body-sm(var(--font-weight-semi-bold));
+	@include typography.body-sm-semi-bold;
 }
 
 .body-sm-bold {
-	@include body-sm(var(--font-weight-bold));
+	@include typography.body-sm-bold;
 }
 
 .body-sm-link {
-	@include body-sm;
-	@include link-base;
-}
-
-@mixin body-xs($font-weight: var(--font-weight-regular)) {
-	font-family: var(--font-family-base);
-	font-size: var(--font-size-xs);
-	font-weight: $font-weight;
-	line-height: var(--line-height-xs);
+	@include typography.body-sm-link;
 }
 
 .body-xs-reg {
-	@include body-xs;
+	@include typography.body-xs-reg;
 }
 
 .body-xs-md {
-	@include body-xs(var(--font-weight-medium));
+	@include typography.body-xs-md;
 }
 
 .body-xs-semi-bold {
-	@include body-xs(var(--font-weight-semi-bold));
+	@include typography.body-xs-semi-bold;
 }
 
 .body-xs-bold {
-	@include body-xs(var(--font-weight-bold));
+	@include typography.body-xs-bold;
 }
 
 .body-xs-link {
-	@include body-xs;
-	@include link-base;
-}
-
-@mixin code-sm($font-weight: var(--font-weight-regular)) {
-	@include code-base;
-	font-size: var(--font-size-sm);
-	font-weight: $font-weight;
-	line-height: var(--line-height-sm);
-	letter-spacing: var(--letter-spacing--1percent);
+	@include typography.body-xs-link;
 }
 
 .code-sm-reg {
-	@include code-sm;
+	@include typography.code-sm-reg;
 }
 
 .code-sm-semi-bold {
-	@include code-sm(var(--font-weight-semi-bold));
-}
-
-@mixin code-xs($font-weight: var(--font-weight-regular)) {
-	@include code-base;
-	font-size: var(--font-size-xs);
-	font-weight: $font-weight;
-	line-height: var(--line-height-xs);
-	letter-spacing: var(--letter-spacing--1percent);
+	@include typography.code-sm-semi-bold;
 }
 
 .code-xs-reg {
-	@include code-xs;
+	@include typography.code-xs-reg;
 }
 
 .code-xs-semi-bold {
-	@include code-xs(var(--font-weight-semi-bold));
+	@include typography.code-xs-semi-bold;
 }

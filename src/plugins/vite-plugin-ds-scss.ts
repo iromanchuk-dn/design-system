@@ -19,7 +19,6 @@ export function vitePluginDsScss({ projectRoot = process.cwd() }: VitePluginDsSc
 					preprocessorOptions: {
 						scss: {
 							loadPaths: [path.resolve(projectRoot, 'libs/web/src/styles')],
-							additionalData: '@use "@design-system/ui/styles/styles.scss" as *;',
 						},
 					},
 				},

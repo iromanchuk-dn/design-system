@@ -219,36 +219,28 @@ h7,
 	text-align: left;
 }
 
-.heading1 {
+@mixin heading($font-weight: var(--font-size-3xl), $line-height: var(--line-height-3xl)) {
 	@include font-base;
-	font-size: var(--font-size-3xl);
+	font-size: $font-weight;
 	font-weight: var(--font-weight-semi-bold);
-	line-height: var(--line-height-3xl);
+	line-height: $line-height;
 	letter-spacing: var(--letter-spacing--1percent);
 }
 
-.heading2 {
-	@include font-base;
-	font-size: var(--font-size-2xl);
-	font-weight: var(--font-weight-semi-bold);
-	line-height: var(--line-height-2xl);
-	letter-spacing: var(--letter-spacing--1percent);
+@mixin heading1 {
+	@include heading;
 }
 
-.heading3 {
-	@include font-base;
-	font-size: var(--font-size-xl);
-	font-weight: var(--font-weight-semi-bold);
-	line-height: var(--line-height-xl);
-	letter-spacing: var(--letter-spacing--1percent);
+@mixin heading2 {
+	@include heading(var(--font-size-2xl), var(--line-height-2xl));
 }
 
-.heading4 {
-	@include font-base;
-	font-size: var(--font-size-large);
-	font-weight: var(--font-weight-semi-bold);
-	line-height: var(--line-height-large);
-	letter-spacing: var(--letter-spacing--1percent);
+@mixin heading3 {
+	@include heading(var(--font-size-xl), var(--line-height-xl));
+}
+
+@mixin heading4 {
+	@include heading(var(--font-size-large), var(--line-height-large));
 }
 
 @mixin body-md($font-weight: var(--font-weight-regular)) {
@@ -259,23 +251,23 @@ h7,
 	letter-spacing: var(--letter-spacing--1percent);
 }
 
-.body-md-reg {
+@mixin body-md-reg {
 	@include body-md;
 }
 
-.body-md-md {
+@mixin body-md-md {
 	@include body-md(var(--font-weight-medium));
 }
 
-.body-md-semi-bold {
+@mixin body-md-semi-bold {
 	@include body-md(var(--font-weight-semi-bold));
 }
 
-.body-md-bold {
+@mixin body-md-bold {
 	@include body-md(var(--font-weight-bold));
 }
 
-.body-md-link {
+@mixin body-md-link {
 	@include body-md;
 	@include link-base;
 }
@@ -288,23 +280,23 @@ h7,
 	letter-spacing: var(--letter-spacing--1percent);
 }
 
-.body-sm-reg {
+@mixin body-sm-reg {
 	@include body-sm;
 }
 
-.body-sm-md {
+@mixin body-sm-md {
 	@include body-sm(var(--font-weight-medium));
 }
 
-.body-sm-semi-bold {
+@mixin body-sm-semi-bold {
 	@include body-sm(var(--font-weight-semi-bold));
 }
 
-.body-sm-bold {
+@mixin body-sm-bold {
 	@include body-sm(var(--font-weight-bold));
 }
 
-.body-sm-link {
+@mixin body-sm-link {
 	@include body-sm;
 	@include link-base;
 }
@@ -316,23 +308,23 @@ h7,
 	line-height: var(--line-height-xs);
 }
 
-.body-xs-reg {
+@mixin body-xs-reg {
 	@include body-xs;
 }
 
-.body-xs-md {
+@mixin body-xs-md {
 	@include body-xs(var(--font-weight-medium));
 }
 
-.body-xs-semi-bold {
+@mixin body-xs-semi-bold {
 	@include body-xs(var(--font-weight-semi-bold));
 }
 
-.body-xs-bold {
+@mixin body-xs-bold {
 	@include body-xs(var(--font-weight-bold));
 }
 
-.body-xs-link {
+@mixin body-xs-link {
 	@include body-xs;
 	@include link-base;
 }
@@ -345,11 +337,11 @@ h7,
 	letter-spacing: var(--letter-spacing--1percent);
 }
 
-.code-sm-reg {
+@mixin code-sm-reg {
 	@include code-sm;
 }
 
-.code-sm-semi-bold {
+@mixin code-sm-semi-bold {
 	@include code-sm(var(--font-weight-semi-bold));
 }
 
@@ -361,10 +353,10 @@ h7,
 	letter-spacing: var(--letter-spacing--1percent);
 }
 
-.code-xs-reg {
+@mixin code-xs-reg {
 	@include code-xs;
 }
 
-.code-xs-semi-bold {
+@mixin code-xs-semi-bold {
 	@include code-xs(var(--font-weight-semi-bold));
 }
