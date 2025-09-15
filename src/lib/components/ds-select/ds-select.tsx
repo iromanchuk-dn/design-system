@@ -35,7 +35,6 @@ const DsSelect: FC<DsSelectProps> = ({
 	};
 
 	const selectedOption = options.find((option) => option.value === value);
-	console.log('selected', selectedOption);
 
 	return (
 		<div className={`${styles.container} ${className}`} style={style}>
@@ -66,7 +65,10 @@ const DsSelect: FC<DsSelectProps> = ({
 								role="button"
 								tabIndex={0}
 								onPointerDown={(e) => e.stopPropagation()}
-								onClick={onClear}
+								onClick={(event) => {
+									event.preventDefault();
+									onClear?.();
+								}}
 								onKeyDown={(e) => {
 									if (e.key === 'Enter' || e.key === ' ') {
 										e.stopPropagation();

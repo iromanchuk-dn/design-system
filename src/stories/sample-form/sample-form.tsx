@@ -44,6 +44,7 @@ const SampleForm = () => {
 		setValue(name, value, {
 			shouldValidate: true,
 			shouldTouch: true,
+			shouldDirty: true,
 		});
 	};
 
@@ -139,6 +140,7 @@ const SampleForm = () => {
 									{ label: 'SMS', value: 'sms', icon: 'sms' },
 									{ label: 'In-App Notification', value: 'in_app', icon: 'notifications' },
 								]}
+								onClear={() => handleValueChange(field, '')}
 								onValueChange={(value) => handleValueChange(field, value)}
 								onBlur={() => handleValueChange(field, field.value)}
 							/>

@@ -261,7 +261,7 @@ $textarea-height-default: 120px;
 	display: flex;
 	justify-content: space-between;
 	padding: calc(var(--spacing-xs) - 3px) var(--spacing-sm);
-	border: 1px solid var(--form-control-border-color, var(--color-border-secondary));
+	border: 1px solid var(--form-control-border-color, var(--color-border));
 	border-radius: 4px;
 	background-color: var(--color-background);
 	cursor: pointer;
