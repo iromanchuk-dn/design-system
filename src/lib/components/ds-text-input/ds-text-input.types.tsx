@@ -57,6 +57,14 @@ export interface DsTextInputProps {
 	 */
 	value?: string;
 	/**
+	 * The minimum number of characters
+	 */
+	minLength?: number;
+	/**
+	 * The maximum number of characters
+	 */
+	maxLength?: number;
+	/**
 	 * The initial value of the input when rendered.
 	 * Use when you don't need to control the value of the input.
 	 */

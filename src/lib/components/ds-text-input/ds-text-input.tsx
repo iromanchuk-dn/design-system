@@ -16,6 +16,8 @@ const DsTextInput: FC<DsTextInputProps> = ({
 	style = {},
 	value,
 	defaultValue,
+	minLength,
+	maxLength,
 	placeholder,
 	disabled = false,
 	startAdornment,
@@ -47,6 +49,8 @@ const DsTextInput: FC<DsTextInputProps> = ({
 				type={type}
 				value={value}
 				defaultValue={defaultValue}
+				minLength={minLength}
+				maxLength={maxLength}
 				placeholder={placeholder}
 				disabled={disabled}
 				onBlur={onBlur}
