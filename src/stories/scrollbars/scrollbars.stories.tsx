@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
+import { Fragment } from 'react';
 import styles from './scrollbars.stories.module.scss';
 
 const meta: Meta = {
@@ -8,13 +9,8 @@ const meta: Meta = {
 		docs: {
 			description: {
 				component: `
-Global scrollbar styles that can be applied to any element with overflow content.
-
-## Usage
-- \`scrollbar-default\`: default scrollbar width/height
-- \`scrollbar-small\`: thin scrollbar width/height
-
-Apply these classes to any element that has overflow content.
+All scrollbars are styled automatically by the design system.
+You can add a \`.scrollbar-thin\` class to the element in order to make its scrollbar thin.
 				`,
 			},
 		},
@@ -40,20 +36,14 @@ const generateContent = (count: number, direction: 'vertical' | 'horizontal') =>
 export const DefaultScrollbar: Story = {
 	render: () => (
 		<div className={styles.container}>
-			{/* Vertical scrollbar */}
 			<div className={styles.section}>
 				<h3>Vertical Scrollbar (Default)</h3>
-				<div className={`scrollbar-default ${styles.scrollableContainer}`}>
-					{generateContent(20, 'vertical')}
-				</div>
+				<div className={styles.scrollableContainer}>{generateContent(20, 'vertical')}</div>
 			</div>
 
-			{/* Horizontal scrollbar */}
 			<div className={styles.sectionWide}>
 				<h3>Horizontal Scrollbar (Default)</h3>
-				<div className={`scrollbar-default ${styles.scrollableContainer}`}>
-					{generateContent(15, 'horizontal')}
-				</div>
+				<div className={styles.scrollableContainer}>{generateContent(15, 'horizontal')}</div>
 			</div>
 		</div>
 	),
@@ -69,18 +59,16 @@ export const DefaultScrollbar: Story = {
 export const SmallScrollbar: Story = {
 	render: () => (
 		<div className={styles.container}>
-			{/* Vertical scrollbar */}
 			<div className={styles.section}>
-				<h3>Vertical Scrollbar (Small)</h3>
-				<div className={`scrollbar-small ${styles.scrollableContainer}`}>
+				<h3>Vertical Scrollbar (Thin)</h3>
+				<div className={`scrollbar-thin ${styles.scrollableContainer}`}>
 					{generateContent(20, 'vertical')}
 				</div>
 			</div>
 
-			{/* Horizontal scrollbar */}
 			<div className={styles.sectionWide}>
-				<h3>Horizontal Scrollbar (Small)</h3>
-				<div className={`scrollbar-small ${styles.scrollableContainer}`}>
+				<h3>Horizontal Scrollbar (Thin)</h3>
+				<div className={`scrollbar-thin ${styles.scrollableContainer}`}>
 					{generateContent(15, 'horizontal')}
 				</div>
 			</div>
@@ -99,13 +87,13 @@ export const CombinedExample: Story = {
 	render: () => (
 		<div className={styles.sectionExtraWide}>
 			<h3>Combined Example - Both X and Y Overflow</h3>
-			<div className={`scrollbar-default ${styles.scrollableContainerTall}`}>
+			<div className={styles.scrollableContainerTall}>
 				<div className={styles.wideContent}>
 					<h2>Wide Content</h2>
 					<p>This container has both vertical and horizontal overflow, showing both scrollbars.</p>
-					{generateContent(25, 'horizontal')}
-					{generateContent(25, 'horizontal')}
-					{generateContent(25, 'horizontal')}
+					{Array.from({ length: 25 }, (_, i) => (
+						<Fragment key={i}>{generateContent(25, 'horizontal')}</Fragment>
+					))}
 				</div>
 			</div>
 		</div>

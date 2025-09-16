@@ -1,6 +1,6 @@
 $scrollbar-border-radius: 100px;
 $scrollbar-default-size: 12px;
-$scrollbar-small-size: 4px;
+$scrollbar-thin-size: 4px;
 
 @mixin scrollbar-base($size) {
 	&::-webkit-scrollbar {
@@ -25,7 +25,7 @@ $scrollbar-small-size: 4px;
 
 @mixin firefox-scrollbar($size) {
 	@-moz-document url-prefix() {
-		scrollbar-width: if($size == $scrollbar-small-size, thin, auto);
+		scrollbar-width: if($size == $scrollbar-thin-size, thin, auto);
 		scrollbar-color: var(--color-background-deselected-hover) var(--color-background-secondary);
 	}
 }
@@ -35,7 +35,7 @@ $scrollbar-small-size: 4px;
 	@include firefox-scrollbar($scrollbar-default-size);
 }
 
-.scrollbar-small {
-	@include scrollbar-base($scrollbar-small-size);
-	@include firefox-scrollbar($scrollbar-small-size);
+.scrollbar-thin {
+	@include scrollbar-base($scrollbar-thin-size);
+	@include firefox-scrollbar($scrollbar-thin-size);
 }
