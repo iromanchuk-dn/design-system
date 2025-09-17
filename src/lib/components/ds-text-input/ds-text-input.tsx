@@ -16,6 +16,8 @@ const DsTextInput: FC<DsTextInputProps> = ({
 	style = {},
 	value,
 	defaultValue,
+	min,
+	max,
 	minLength,
 	maxLength,
 	placeholder,
@@ -49,6 +51,8 @@ const DsTextInput: FC<DsTextInputProps> = ({
 				type={type}
 				value={value}
 				defaultValue={defaultValue}
+				min={min}
+				max={max}
 				minLength={minLength}
 				maxLength={maxLength}
 				placeholder={placeholder}
