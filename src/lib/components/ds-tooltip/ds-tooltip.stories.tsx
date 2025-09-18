@@ -78,6 +78,16 @@ export const RichContent: Story = {
 		children: <DsIcon icon="info" />,
 	},
 	play: async ({ canvasElement }) => {
-		await sanityCheck(canvasElement, 'Multi-line tooltip with JSX');
+		const canvas = within(canvasElement);
+		const trigger = await canvas.findByText(/info/i);
+		await userEvent.hover(trigger);
+
+		const tooltip = await screen.findByRole('tooltip');
+		await expect(tooltip).toBeVisible();
+		await expect(within(tooltip).getByText(/Multi-line/i)).toBeInTheDocument();
+		await expect(within(tooltip).getByText(/JSX/i)).toBeInTheDocument();
+		await expect(within(tooltip).getByText(/No truncation should occur\./i)).toBeInTheDocument();
+		await userEvent.unhover(trigger);
+		await expect(screen.queryByRole('tooltip')).not.toBeInTheDocument();
 	},
 };
