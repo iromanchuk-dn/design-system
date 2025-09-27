@@ -4,7 +4,7 @@ export interface DsTooltipProps {
 	/**
 	 * Tooltip content
 	 */
-	content: string;
+	content?: string;
 	/**
 	 * The content to be rendered inside the tooltip
 	 */
