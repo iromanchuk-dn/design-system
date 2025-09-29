@@ -1,0 +1,32 @@
+.globalMessages {
+	position: fixed;
+	inset: var(--spacing-md);
+	bottom: auto;
+}
+
+.trigger {
+	margin-bottom: var(--spacing-standard);
+}
+
+.inlineAlertBanner {
+	position: absolute;
+	transform: translateX(-125px);
+	width: 400px;
+}
+
+.inlineActions {
+	display: flex;
+	gap: var(--spacing-xs);
+	margin-top: var(--spacing-xs);
+
+	button.primary {
+		display: flex;
+		padding: var(---exo-spacing-2x-small, 4px) var(--sm, 12px);
+		align-items: center;
+		gap: var(---exo-spacing-2x-small, 4px);
+		align-self: stretch;
+		border-radius: var(---exo-spacing-2x-small, 4px);
+		border: 1px solid var(--color-border);
+		background: var(--color-background);
+	}
+}
