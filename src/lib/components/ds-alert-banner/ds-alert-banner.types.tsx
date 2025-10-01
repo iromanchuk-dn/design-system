@@ -31,10 +31,6 @@ export interface DsAlertBannerProps {
 	 */
 	title?: string;
 	/**
-	 * The description text of the alert banner
-	 */
-	description?: string;
-	/**
 	 * Whether the alert banner can be closed with an X button
 	 */
 	closable?: boolean;

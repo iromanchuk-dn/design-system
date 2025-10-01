@@ -15,6 +15,10 @@
 		border: 1px solid;
 		column-gap: var(--spacing-xs);
 		row-gap: var(--spacing-4xs);
+
+		&:not(:has(.title)) {
+			align-items: center;
+		}
 	}
 
 	&.global {

@@ -1,4 +1,4 @@
-import React from 'react';
+import { CSSProperties, ReactNode } from 'react';
 import classNames from 'classnames';
 import styles from './ds-alert-banner.module.scss';
 import { DsAlertBannerProps } from './ds-alert-banner.types';
@@ -9,19 +9,18 @@ import { DsTypography } from '../ds-typography';
  * Design system AlertBanner component
  * Controlled component that displays alert messages with different variants
  */
-const DsAlertBanner: React.FC<DsAlertBannerProps> = ({
+const DsAlertBanner = ({
 	open,
 	onOpenChange,
 	inline = false,
 	variant,
 	icon,
 	title,
-	description,
 	closable = false,
 	className,
 	style = {},
 	children,
-}) => {
+}: DsAlertBannerProps) => {
 	const variantClass = {
 		'info-neutral': styles.infoNeutral,
 		'info-blue': styles.infoBlue,
@@ -57,13 +56,7 @@ const DsAlertBanner: React.FC<DsAlertBannerProps> = ({
 					{title}
 				</DsTypography>
 			)}
-			{description && (
-				<DsTypography className={styles.description} variant="body-sm-reg">
-					{description}
-				</DsTypography>
-			)}
-			{children && <div className={styles.actions}>{children}</div>}
-
+			{children}
 			{closable && (
 				<button className={styles.closeButton} onClick={handleClose} aria-label="Close alert">
 					<DsIcon icon="close" size="small" />
@@ -72,5 +65,51 @@ const DsAlertBanner: React.FC<DsAlertBannerProps> = ({
 		</div>
 	);
 };
+
+const Title = ({
+	style,
+	className,
+	children,
+}: {
+	style?: CSSProperties;
+	className?: string;
+	children: ReactNode;
+}) => (
+	<DsTypography style={style} className={classNames(styles.title, className)} variant="body-md-md">
+		{children}
+	</DsTypography>
+);
+
+const Body = ({
+	style,
+	className,
+	children,
+}: {
+	style?: CSSProperties;
+	className?: string;
+	children: ReactNode;
+}) => (
+	<DsTypography style={style} className={classNames(styles.description, className)} variant="body-sm-reg">
+		{children}
+	</DsTypography>
+);
+
+const Actions = ({
+	style,
+	className,
+	children,
+}: {
+	style?: CSSProperties;
+	className?: string;
+	children: ReactNode;
+}) => (
+	<div style={style} className={classNames(styles.actions, className)}>
+		{children}
+	</div>
+);
+
+DsAlertBanner.Title = Title;
+DsAlertBanner.Body = Body;
+DsAlertBanner.Actions = Actions;
 
 export default DsAlertBanner;
