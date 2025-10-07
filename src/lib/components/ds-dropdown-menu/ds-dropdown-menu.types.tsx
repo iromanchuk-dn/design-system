@@ -61,4 +61,9 @@ export interface DsDropdownMenuProps {
 	 * @default 'bottom'
 	 */
 	side?: 'top' | 'right' | 'bottom' | 'left';
+	/**
+	 * Whether to append the drawer to the body instead of rendering in place
+	 * @default false
+	 */
+	appendToBody?: boolean;
 }
