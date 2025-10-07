@@ -156,7 +156,7 @@ const DsTableRow = <TData, TValue>({ ref, row, virtualRow }: DsTableRowProps<TDa
 							virtualized && cell.column.getSize() !== defaultColumnSizing.size
 								? {
 										flexBasis: cell.column.getSize(),
-										flexGrow: 0,
+										flexGrow: idx === row.getVisibleCells().length - 1 ? 1 : 0,
 									}
 								: undefined
 						}

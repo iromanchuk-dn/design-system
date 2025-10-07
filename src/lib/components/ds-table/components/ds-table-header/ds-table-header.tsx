@@ -65,7 +65,7 @@ const DsTableHeader = <TData,>({ table }: DsTableHeaderProps<TData>) => {
 							Order
 						</TableHead>
 					)}
-					{headerGroup.headers.map((header) => {
+					{headerGroup.headers.map((header, idx) => {
 						return (
 							<TableHead
 								key={header.id}
@@ -79,7 +79,7 @@ const DsTableHeader = <TData,>({ table }: DsTableHeaderProps<TData>) => {
 									virtualized && header.column.getSize() !== defaultColumnSizing.size
 										? {
 												flexBasis: header.column.getSize(),
-												flexGrow: 0,
+												flexGrow: idx === headerGroup.headers.length - 1 ? 1 : 0,
 											}
 										: undefined
 								}
