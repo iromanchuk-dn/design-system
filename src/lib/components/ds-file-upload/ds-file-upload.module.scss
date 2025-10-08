@@ -1,0 +1,271 @@
+@use '@design-system/ui/src/styles/typography';
+
+.fileUploadRoot {
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-sm);
+	width: 100%;
+
+	&.error {
+		.dropzone {
+			border-color: var(--system-status-error);
+			background-color: var(--utility-error);
+
+			&[data-dragging] {
+				border-color: var(--system-status-error);
+				background-color: var(--utility-error);
+			}
+		}
+	}
+
+	&.disabled {
+		opacity: 0.5;
+		pointer-events: none;
+	}
+}
+
+.label {
+	@include typography.body-sm-md;
+	color: var(--neutral-1);
+	margin-bottom: var(--spacing-xs);
+}
+
+.dropzone {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	gap: var(--spacing-md);
+	padding: var(--spacing-2xl) var(--spacing-lg);
+	border: 2px dashed var(--neutral-8);
+	border-radius: var(--exo-spacing-2x-small);
+	background-color: var(--neutral-10);
+	transition: all 0.2s ease;
+	cursor: pointer;
+	min-height: 200px;
+
+	&:hover:not([data-disabled]) {
+		border-color: var(--action-cta1);
+		background-color: var(--action-hover-light);
+	}
+
+	&[data-dragging] {
+		border-color: var(--action-cta1);
+		background-color: var(--action-active-light);
+		border-style: solid;
+	}
+
+	&[data-disabled] {
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
+
+	&.dropzoneError {
+		border-color: var(--system-status-error);
+		background-color: var(--utility-error);
+
+		&:hover {
+			border-color: var(--system-status-error);
+			background-color: var(--utility-error);
+		}
+	}
+
+	&.dropzoneDisabled {
+		cursor: not-allowed;
+		opacity: 0.5;
+	}
+}
+
+.dropzoneIcon {
+	color: var(--neutral-4);
+}
+
+.dropzoneText {
+	@include typography.body-md;
+	color: var(--neutral-2);
+	text-align: center;
+	max-width: 300px;
+}
+
+.fileList {
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-sm);
+	margin-top: var(--spacing-md);
+}
+
+.fileItem {
+	display: flex;
+	align-items: center;
+	padding: var(--spacing-sm);
+	border: 1px solid var(--neutral-8);
+	border-radius: var(--exo-spacing-2x-small);
+	background-color: var(--white);
+	transition: all 0.2s ease;
+
+	&:hover {
+		background-color: var(--neutral-10);
+		border-color: var(--neutral-7);
+	}
+
+	&[data-disabled] {
+		opacity: 0.5;
+	}
+
+	&.fileItemError {
+		border-color: var(--system-status-error);
+		background-color: var(--utility-error);
+	}
+
+	&.fileItemCompleted {
+		border-color: var(--system-status-ok);
+		background-color: var(--utility-ok);
+	}
+
+	&.fileItemUploading {
+		border-color: var(--action-cta1);
+		background-color: var(--action-hover-light);
+	}
+}
+
+.fileItemContent {
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-md);
+	width: 100%;
+}
+
+.filePreview {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 48px;
+	height: 48px;
+	border-radius: var(--exo-spacing-2x-small);
+	background-color: var(--neutral-10);
+	flex-shrink: 0;
+	overflow: hidden;
+
+	svg {
+		color: var(--neutral-4);
+	}
+}
+
+.imagePreview {
+	width: 100%;
+	height: 100%;
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+}
+
+.fileInfo {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-xs);
+	min-width: 0; // Enable text truncation
+}
+
+.fileName {
+	@include typography.body-md;
+	@include typography.ellipsis;
+	color: var(--neutral-1);
+	font-weight: var(--font-weight-medium);
+}
+
+.fileSize {
+	@include typography.body-sm;
+	color: var(--neutral-3);
+}
+
+.progressContainer {
+	display: flex;
+	flex-direction: column;
+	gap: var(--spacing-xs);
+	width: 100%;
+}
+
+.progressBar {
+	width: 100%;
+	height: 4px;
+}
+
+.progressTrack {
+	width: 100%;
+	height: 100%;
+	background-color: var(--neutral-8);
+	border-radius: 2px;
+	overflow: hidden;
+}
+
+.progressRange {
+	height: 100%;
+	background-color: var(--action-cta1);
+	border-radius: 2px;
+	transition: width 0.3s ease;
+}
+
+.progressText {
+	@include typography.body-xs;
+	color: var(--neutral-3);
+}
+
+.completedText {
+	@include typography.body-sm;
+	color: var(--system-status-ok);
+	font-weight: var(--font-weight-medium);
+}
+
+.errorMessage {
+	@include typography.body-sm;
+	color: var(--system-status-error);
+}
+
+.deleteButton {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border: none;
+	border-radius: var(--exo-spacing-2x-small);
+	background-color: transparent;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	flex-shrink: 0;
+
+	&:hover {
+		background-color: var(--neutral-10);
+	}
+
+	&:active {
+		background-color: var(--neutral-8);
+	}
+
+	svg {
+		color: var(--neutral-4);
+	}
+}
+
+.helperText {
+	@include typography.body-sm;
+	color: var(--neutral-3);
+	margin-top: var(--spacing-xs);
+}
+
+.errorText {
+	@include typography.body-sm;
+	color: var(--system-status-error);
+	display: flex;
+	align-items: center;
+	gap: var(--spacing-xs);
+	margin-top: var(--spacing-xs);
+
+	svg {
+		flex-shrink: 0;
+	}
+}
