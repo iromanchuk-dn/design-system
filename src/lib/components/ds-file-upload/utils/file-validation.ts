@@ -1,21 +1,10 @@
-/**
- * File validation utilities for the DsFileUpload component
- */
-
-export interface FileValidationError {
-	type: 'fileType' | 'fileSize' | 'fileCount';
-	message: string;
-}
-
-export interface FileValidationResult {
-	isValid: boolean;
-	errors: FileValidationError[];
-}
+import { IconType } from '../../ds-icon';
+import { FileError } from '../ds-file-upload.types';
 
 /**
- * Allowed file types for the file upload component
+ * Default allowed file types for the file upload component
  */
-export const ALLOWED_FILE_TYPES: Record<string, string[]> = {
+export const DEFAULT_ALLOWED_FILE_TYPES: Record<string, string[]> = {
 	'application/pdf': ['.pdf'],
 	'text/csv': ['.csv'],
 	'application/zip': ['.zip'],
@@ -23,78 +12,14 @@ export const ALLOWED_FILE_TYPES: Record<string, string[]> = {
 } as const;
 
 /**
- * Maximum file size in bytes (25MB)
+ * Default maximum file size in bytes (25MB)
  */
-export const MAX_FILE_SIZE = 25 * 1024 * 1024; // 25MB
+export const DEFAULT_MAX_FILE_SIZE = 25 * 1024 * 1024; // 25MB
 
 /**
- * Maximum number of files allowed
+ * Default maximum number of files allowed
  */
-export const MAX_FILES = 5;
-
-/**
- * Validate a single file
- */
-export function validateFile(file: File): FileValidationResult {
-	const errors: FileValidationError[] = [];
-
-	// Check file type
-	const isValidType = Object.keys(ALLOWED_FILE_TYPES).some(
-		(mimeType) =>
-			file.type === mimeType ||
-			ALLOWED_FILE_TYPES[mimeType as keyof typeof ALLOWED_FILE_TYPES].some((ext) =>
-				file.name.toLowerCase().endsWith(ext),
-			),
-	);
-
-	if (!isValidType) {
-		errors.push({
-			type: 'fileType',
-			message: 'Only PDF, CSV, and ZIP files are allowed',
-		});
-	}
-
-	// Check file size
-	if (file.size > MAX_FILE_SIZE) {
-		errors.push({
-			type: 'fileSize',
-			message: `File size must not exceed ${formatFileSize(MAX_FILE_SIZE)}`,
-		});
-	}
-
-	return {
-		isValid: errors.length === 0,
-		errors,
-	};
-}
-
-/**
- * Validate multiple files
- */
-export function validateFiles(files: File[]): FileValidationResult {
-	const errors: FileValidationError[] = [];
-
-	// Check file count
-	if (files.length > MAX_FILES) {
-		errors.push({
-			type: 'fileCount',
-			message: `Maximum ${MAX_FILES} files allowed`,
-		});
-	}
-
-	// Validate each file
-	files.forEach((file) => {
-		const fileValidation = validateFile(file);
-		if (!fileValidation.isValid) {
-			errors.push(...fileValidation.errors);
-		}
-	});
-
-	return {
-		isValid: errors.length === 0,
-		errors,
-	};
-}
+export const DEFAULT_MAX_FILES = 5;
 
 /**
  * Format file size to human-readable format
@@ -110,7 +35,7 @@ export function formatFileSize(bytes: number): string {
 /**
  * Get file type icon based on file extension
  */
-export function getFileTypeIcon(fileName: string): string {
+export function getFileTypeIcon(fileName: string): IconType {
 	const extension = fileName.toLowerCase().split('.').pop();
 
 	switch (extension) {
@@ -126,14 +51,23 @@ export function getFileTypeIcon(fileName: string): string {
 }
 
 /**
- * Check if file type is allowed
+ * Map Ark UI FileUploadFileError to user-friendly error message
  */
-export function isFileTypeAllowed(file: File): boolean {
-	return Object.keys(ALLOWED_FILE_TYPES).some(
-		(mimeType) =>
-			file.type === mimeType ||
-			ALLOWED_FILE_TYPES[mimeType as keyof typeof ALLOWED_FILE_TYPES].some((ext) =>
-				file.name.toLowerCase().endsWith(ext),
-			),
-	);
+export function getErrorMessage(error: FileError): string {
+	switch (error) {
+		case 'FILE_TOO_LARGE':
+			return `File size exceeds the maximum limit`;
+		case 'FILE_INVALID_TYPE':
+			return `File type is not allowed`;
+		case 'TOO_MANY_FILES':
+			return `Too many files selected`;
+		case 'FILE_TOO_SMALL':
+			return `File size is too small`;
+		case 'FILE_INVALID':
+			return `File is invalid`;
+		case 'FILE_EXISTS':
+			return `File already exists`;
+		default:
+			return 'File validation failed';
+	}
 }

@@ -1,9 +1,9 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Progress } from '@ark-ui/react';
-import { DsIcon } from '../../ds-icon';
+import { DsIcon, IconType } from '../../ds-icon';
 import { FileUploadState } from '../hooks/use-file-upload';
-import { formatFileSize, getFileTypeIcon } from '../utils/file-validation';
+import { getErrorMessage, getFileTypeIcon } from '../utils/file-validation';
 import styles from '../ds-file-upload.module.scss';
 
 export interface FileItemProps {
@@ -22,13 +22,13 @@ export const FileItem: React.FC<FileItemProps> = ({
 	showProgress = false,
 	className,
 }) => {
-	const { id, file, progress, status, error } = fileState;
+	const { id, file, progress, status, errors } = fileState;
 
 	const handleRemove = () => {
 		onRemove(id);
 	};
 
-	const getStatusIcon = () => {
+	const getStatusIcon = (): IconType => {
 		switch (status) {
 			case 'completed':
 				return 'check_circle';
@@ -89,7 +89,13 @@ export const FileItem: React.FC<FileItemProps> = ({
 
 					{status === 'completed' && <div className={styles.completedText}>Upload complete</div>}
 
-					{status === 'error' && error && <div className={styles.errorMessage}>{error}</div>}
+					{status === 'error' &&
+						errors?.length &&
+						errors.map((error) => (
+							<div key={error} className={styles.errorMessage}>
+								{getErrorMessage(error)}
+							</div>
+						))}
 				</div>
 
 				<button

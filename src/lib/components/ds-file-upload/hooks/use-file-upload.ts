@@ -1,17 +1,23 @@
-import { useState, useCallback } from 'react';
-import { validateFiles } from '../utils/file-validation';
+import { useCallback, useState } from 'react';
+import { FileError } from '../ds-file-upload.types';
+
+export interface FileWithErrors {
+	file: File;
+	errors: FileError[];
+}
 
 export interface FileUploadState {
 	id: string;
 	file: File;
 	progress: number;
 	status: 'pending' | 'uploading' | 'completed' | 'error';
-	error?: string;
+	errors?: FileError[];
 }
 
 export interface UseFileUploadReturn {
 	files: FileUploadState[];
 	addFiles: (newFiles: File[]) => FileUploadState[];
+	addRejectedFiles: (files: FileWithErrors[]) => FileUploadState[];
 	removeFile: (fileId: string) => void;
 	updateFileProgress: (fileId: string, progress: number) => void;
 	updateFileStatus: (fileId: string, status: FileUploadState['status'], error?: string) => void;
@@ -23,23 +29,30 @@ export interface UseFileUploadReturn {
 /**
  * Simple file state management hook
  * No upload logic - just file state
+ * Validation is handled by Ark UI
  */
 export function useFileUpload(): UseFileUploadReturn {
 	const [files, setFiles] = useState<FileUploadState[]>([]);
 
 	const addFiles = useCallback((newFiles: File[]): FileUploadState[] => {
-		// Validate files
-		const validation = validateFiles(newFiles);
-		if (!validation.isValid) {
-			throw new Error(`File validation failed: ${validation.errors.map((e) => e.message).join(', ')}`);
-		}
-
-		// Create file states
 		const newFileStates: FileUploadState[] = newFiles.map((file) => ({
 			id: `${file.name}-${Date.now()}-${Math.random()}`,
 			file,
 			progress: 0,
 			status: 'pending',
+		}));
+
+		setFiles((prev) => [...prev, ...newFileStates]);
+		return newFileStates;
+	}, []);
+
+	const addRejectedFiles = useCallback((filesWithErrors: FileWithErrors[]): FileUploadState[] => {
+		const newFileStates: FileUploadState[] = filesWithErrors.map(({ file, errors }) => ({
+			id: `${file.name}-${Date.now()}-${Math.random()}`,
+			file,
+			progress: 0,
+			status: 'error',
+			errors,
 		}));
 
 		setFiles((prev) => [...prev, ...newFileStates]);
@@ -71,6 +84,7 @@ export function useFileUpload(): UseFileUploadReturn {
 	return {
 		files,
 		addFiles,
+		addRejectedFiles,
 		removeFile,
 		updateFileProgress,
 		updateFileStatus,

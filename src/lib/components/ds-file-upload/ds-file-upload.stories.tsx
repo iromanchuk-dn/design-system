@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { FileUploadFileAcceptDetails } from '@ark-ui/react';
+import { FileUploadFileAcceptDetails, FileUploadFileRejectDetails } from '@ark-ui/react';
 import DsFileUpload from './ds-file-upload';
 import { useFileUpload } from './hooks/use-file-upload';
 
@@ -37,7 +37,8 @@ export const Default: Story = {
 		showProgress: true,
 	},
 	render: function Render(args) {
-		const { files, addFiles, removeFile, updateFileProgress, updateFileStatus } = useFileUpload();
+		const { files, addFiles, addRejectedFiles, removeFile, updateFileProgress, updateFileStatus } =
+			useFileUpload();
 
 		const uploadToS3 = async (file: File, onProgress: (progress: number) => void) => {
 			// Simulate S3 upload with progress
@@ -77,9 +78,19 @@ export const Default: Story = {
 			}
 		};
 
+		const handleFileReject = (details: FileUploadFileRejectDetails) => {
+			addRejectedFiles(details.files);
+		};
+
 		return (
 			<div>
-				<DsFileUpload {...args} files={files} onFileAccept={handleFileAccept} onRemove={removeFile} />
+				<DsFileUpload
+					{...args}
+					files={files}
+					onFileAccept={handleFileAccept}
+					onFileReject={handleFileReject}
+					onRemove={removeFile}
+				/>
 			</div>
 		);
 	},
@@ -92,7 +103,8 @@ export const Manual: Story = {
 		showProgress: true,
 	},
 	render: function Render(args) {
-		const { files, addFiles, removeFile, updateFileProgress, updateFileStatus } = useFileUpload();
+		const { files, addFiles, addRejectedFiles, removeFile, updateFileProgress, updateFileStatus } =
+			useFileUpload();
 
 		const handleFileAccept = (details: FileUploadFileAcceptDetails) => {
 			try {
@@ -100,6 +112,10 @@ export const Manual: Story = {
 			} catch (error) {
 				console.error('File validation failed:', error);
 			}
+		};
+
+		const handleFileReject = (details: FileUploadFileRejectDetails) => {
+			addRejectedFiles(details.files);
 		};
 
 		const uploadToS3 = async (file: File, onProgress: (progress: number) => void) => {
@@ -135,7 +151,13 @@ export const Manual: Story = {
 
 		return (
 			<div>
-				<DsFileUpload {...args} files={files} onFileAccept={handleFileAccept} onRemove={removeFile} />
+				<DsFileUpload
+					{...args}
+					files={files}
+					onFileAccept={handleFileAccept}
+					onFileReject={handleFileReject}
+					onRemove={removeFile}
+				/>
 				{files.length > 0 && (
 					<div style={{ marginTop: '16px' }}>
 						<button onClick={handleS3Upload}>Upload to S3</button>

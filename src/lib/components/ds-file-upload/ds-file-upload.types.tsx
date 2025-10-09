@@ -1,6 +1,13 @@
 import React from 'react';
-import { FileUploadFileAcceptDetails, FileUploadFileRejectDetails, FileUploadRootProps } from '@ark-ui/react';
+import {
+	FileUploadFileAcceptDetails,
+	FileUploadFileError,
+	FileUploadFileRejectDetails,
+	FileUploadRootProps,
+} from '@ark-ui/react';
 import { FileUploadState } from './hooks/use-file-upload';
+
+export type FileError = FileUploadFileError;
 
 export interface DsFileUploadProps extends Omit<FileUploadRootProps, 'children'> {
 	/**
@@ -33,6 +40,11 @@ export interface DsFileUploadProps extends Omit<FileUploadRootProps, 'children'>
 	 * @default true
 	 */
 	allowDrop?: boolean;
+	/**
+	 * Maximum file size in bytes
+	 * @default 25MB
+	 */
+	maxFileSize?: number;
 	/**
 	 * Callback when files are accepted
 	 */

@@ -6,7 +6,11 @@ import { Dropzone } from './components/dropzone';
 import { FileItem } from './components/file-item';
 import styles from './ds-file-upload.module.scss';
 import { DsFileUploadProps } from './ds-file-upload.types';
-import { ALLOWED_FILE_TYPES, MAX_FILES } from './utils';
+import {
+	DEFAULT_ALLOWED_FILE_TYPES,
+	DEFAULT_MAX_FILE_SIZE,
+	DEFAULT_MAX_FILES,
+} from './utils/file-validation';
 
 /**
  * Clean file upload component - minimal UI only
@@ -25,8 +29,9 @@ const DsFileUpload: React.FC<DsFileUploadProps> = ({
 	className,
 	style = {},
 	hasError = false,
-	maxFiles = MAX_FILES,
-	accept = ALLOWED_FILE_TYPES,
+	accept = DEFAULT_ALLOWED_FILE_TYPES,
+	maxFiles = DEFAULT_MAX_FILES,
+	maxFileSize = DEFAULT_MAX_FILE_SIZE,
 	disabled = false,
 	...props
 }) => {
@@ -43,6 +48,7 @@ const DsFileUpload: React.FC<DsFileUploadProps> = ({
 		<div className={rootClass} style={style}>
 			<FileUpload.Root
 				maxFiles={maxFiles}
+				maxFileSize={maxFileSize}
 				accept={accept}
 				disabled={disabled}
 				allowDrop={allowDrop}
