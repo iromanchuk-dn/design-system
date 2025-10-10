@@ -43,7 +43,12 @@ const DsFileUpload: React.FC<DsFileUploadProps> = ({
 		},
 		className,
 	);
-
+	/*
+		const validateFiles = (file: File) => {
+			const duplicate = props.files?.find((f) => isFileEqual(f.file, file));
+			return duplicate ? ['FILE_EXISTS'] : null;
+		};
+	*/
 	return (
 		<div className={rootClass} style={style}>
 			<FileUpload.Root
@@ -52,6 +57,7 @@ const DsFileUpload: React.FC<DsFileUploadProps> = ({
 				accept={accept}
 				disabled={disabled}
 				allowDrop={allowDrop}
+				acceptedFiles={props.acceptedFiles}
 				onFileAccept={onFileAccept}
 				onFileReject={onFileReject}
 				{...props}
@@ -66,10 +72,10 @@ const DsFileUpload: React.FC<DsFileUploadProps> = ({
 
 				{props.files && props.files.length > 0 && (
 					<div className={styles.fileList}>
-						{props.files.map((fileState) => (
+						{props.files.map((uploadFile) => (
 							<FileItem
-								key={fileState.id}
-								fileState={fileState}
+								key={uploadFile.id}
+								uploadFile={uploadFile}
 								onRemove={props.onRemove || (() => {})}
 								showProgress={showProgress}
 							/>

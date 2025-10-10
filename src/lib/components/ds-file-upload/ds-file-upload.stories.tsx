@@ -37,12 +37,20 @@ export const Default: Story = {
 		showProgress: true,
 	},
 	render: function Render(args) {
-		const { files, addFiles, addRejectedFiles, removeFile, updateFileProgress, updateFileStatus } =
-			useFileUpload();
+		const {
+			files,
+			acceptedFiles,
+			addFiles,
+			addRejectedFiles,
+			removeFile,
+			updateFileProgress,
+			updateFileStatus,
+		} = useFileUpload();
 
 		const uploadToS3 = async (file: File, onProgress: (progress: number) => void) => {
 			// Simulate S3 upload with progress
-			const uploadDuration = 2000 + Math.random() * 3000;
+			// const uploadDuration = 2000 + Math.random() * 3000;
+			const uploadDuration = 20000 + Math.random() * 3000;
 			const steps = 20;
 			const stepDuration = uploadDuration / steps;
 
@@ -56,21 +64,21 @@ export const Default: Story = {
 		const handleFileAccept = async (details: FileUploadFileAcceptDetails) => {
 			try {
 				// Add files to state and get the file states back
-				const newFileStates = addFiles(details.files);
+				const uploadFiles = addFiles(details.files);
 
 				// Start upload immediately for each new file
-				for (const fileState of newFileStates) {
+				for (const uploadFile of uploadFiles) {
 					try {
-						updateFileStatus(fileState.id, 'uploading');
+						updateFileStatus(uploadFile.id, 'uploading');
 
-						await uploadToS3(fileState.file, (progress) => {
-							updateFileProgress(fileState.id, progress);
+						await uploadToS3(uploadFile, (progress) => {
+							updateFileProgress(uploadFile.id, progress);
 						});
 
-						updateFileStatus(fileState.id, 'completed');
+						updateFileStatus(uploadFile.id, 'completed');
 					} catch (error) {
 						const errorMessage = error instanceof Error ? error.message : 'unknown error';
-						updateFileStatus(fileState.id, 'error', `Upload failed: ${errorMessage}`);
+						updateFileStatus(uploadFile.id, 'error', `Upload failed: ${errorMessage}`);
 					}
 				}
 			} catch (error) {
@@ -87,6 +95,7 @@ export const Default: Story = {
 				<DsFileUpload
 					{...args}
 					files={files}
+					acceptedFiles={acceptedFiles}
 					onFileAccept={handleFileAccept}
 					onFileReject={handleFileReject}
 					onRemove={removeFile}
@@ -103,8 +112,15 @@ export const Manual: Story = {
 		showProgress: true,
 	},
 	render: function Render(args) {
-		const { files, addFiles, addRejectedFiles, removeFile, updateFileProgress, updateFileStatus } =
-			useFileUpload();
+		const {
+			files,
+			acceptedFiles,
+			addFiles,
+			addRejectedFiles,
+			removeFile,
+			updateFileProgress,
+			updateFileStatus,
+		} = useFileUpload();
 
 		const handleFileAccept = (details: FileUploadFileAcceptDetails) => {
 			try {
@@ -133,11 +149,11 @@ export const Manual: Story = {
 
 		const handleS3Upload = async () => {
 			// User's S3 upload logic
-			for (const fileState of files) {
+			for (const fileState of acceptedFiles) {
 				try {
 					updateFileStatus(fileState.id, 'uploading');
 
-					await uploadToS3(fileState.file, (progress) => {
+					await uploadToS3(fileState, (progress) => {
 						updateFileProgress(fileState.id, progress);
 					});
 
@@ -154,6 +170,7 @@ export const Manual: Story = {
 				<DsFileUpload
 					{...args}
 					files={files}
+					acceptedFiles={acceptedFiles}
 					onFileAccept={handleFileAccept}
 					onFileReject={handleFileReject}
 					onRemove={removeFile}

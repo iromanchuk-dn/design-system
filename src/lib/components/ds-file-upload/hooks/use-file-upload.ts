@@ -1,9 +1,24 @@
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { FileError } from '../ds-file-upload.types';
+import { isFileEqual } from '../utils/file-validation';
 
 export interface FileWithErrors {
 	file: File;
 	errors: FileError[];
+}
+
+export type UploadFileStatus = 'pending' | 'uploading' | 'completed' | 'error';
+export type FileMeta = Pick<File, 'name' | 'type' | 'size'>;
+
+export interface UploadFileMeta extends FileMeta {
+	id: string;
+	progress: number;
+	status: UploadFileStatus;
+	errors?: FileError[];
+}
+
+export interface UploadFile extends File {
+	id: string;
 }
 
 export interface FileUploadState {
@@ -15,12 +30,13 @@ export interface FileUploadState {
 }
 
 export interface UseFileUploadReturn {
-	files: FileUploadState[];
-	addFiles: (newFiles: File[]) => FileUploadState[];
-	addRejectedFiles: (files: FileWithErrors[]) => FileUploadState[];
+	files: UploadFileMeta[];
+	acceptedFiles: UploadFile[];
+	addFiles: (newFiles: File[]) => UploadFile[];
+	addRejectedFiles: (files: FileWithErrors[]) => void;
 	removeFile: (fileId: string) => void;
 	updateFileProgress: (fileId: string, progress: number) => void;
-	updateFileStatus: (fileId: string, status: FileUploadState['status'], error?: string) => void;
+	updateFileStatus: (fileId: string, status: UploadFileStatus, error?: string) => void;
 	clearFiles: () => void;
 	isUploading: boolean;
 	hasFiles: boolean;
@@ -32,57 +48,103 @@ export interface UseFileUploadReturn {
  * Validation is handled by Ark UI
  */
 export function useFileUpload(): UseFileUploadReturn {
-	const [files, setFiles] = useState<FileUploadState[]>([]);
+	const [files, setFiles] = useState<UploadFileMeta[]>([]);
+	const [acceptedFiles, setAcceptedFiles] = useState<UploadFile[]>([]);
 
-	const addFiles = useCallback((newFiles: File[]): FileUploadState[] => {
-		const newFileStates: FileUploadState[] = newFiles.map((file) => ({
-			id: `${file.name}-${Date.now()}-${Math.random()}`,
-			file,
-			progress: 0,
-			status: 'pending',
-		}));
+	const addFiles = (newFiles: File[]): UploadFile[] => {
+		// Find the delta - files that are new
+		const newFilesOnly = newFiles.filter(
+			(file) => !acceptedFiles.some((existing) => isFileEqual(existing, file)),
+		);
+
+		// Find duplicates for feedback
+		const duplicateFiles = newFiles.filter((file) => {
+			const uploadFile = file as UploadFile;
+
+			if (!uploadFile.id) {
+				const found = files.filter((existing) => isFileEqual(existing, file));
+				if (found.length) {
+					const alreadyAdded = found.some((existing) => existing.errors?.includes('FILE_EXISTS'));
+					return !alreadyAdded;
+				}
+			}
+		});
+
+		// Add duplicates as "rejected" files with FILE_EXISTS error
+		if (duplicateFiles.length > 0) {
+			console.log('duplicate files', duplicateFiles);
+			const duplicateFilesWithErrors = duplicateFiles.map((file) => ({
+				file,
+				errors: ['FILE_EXISTS'],
+			}));
+			addRejectedFiles(duplicateFilesWithErrors);
+		}
+
+		const newAcceptedFiles: UploadFile[] = newFilesOnly.map((file) => {
+			Object.assign(file, {
+				id: `${file.name}-${Date.now()}-${Math.random()}`,
+			});
+			return file as UploadFile;
+		});
+		setAcceptedFiles((prev) => [...prev, ...newAcceptedFiles]);
+
+		const newUploadFiles: UploadFileMeta[] = newAcceptedFiles.map(
+			(file) =>
+				({
+					id: file.id,
+					name: file.name,
+					size: file.size,
+					type: file.type,
+					progress: 0,
+					status: 'pending',
+				}) as UploadFileMeta,
+		);
+		setFiles((prev) => [...prev, ...newUploadFiles]);
+
+		return newAcceptedFiles;
+	};
+
+	const addRejectedFiles = (filesWithErrors: FileWithErrors[]) => {
+		const newFileStates: UploadFileMeta[] = filesWithErrors.map(
+			({ file, errors }) =>
+				({
+					id: `${file.name}-${Date.now()}-${Math.random()}`,
+					progress: 0,
+					status: 'error',
+					errors,
+					name: file.name,
+					size: file.size,
+					type: file.type,
+				}) as UploadFileMeta,
+		);
 
 		setFiles((prev) => [...prev, ...newFileStates]);
-		return newFileStates;
-	}, []);
+	};
 
-	const addRejectedFiles = useCallback((filesWithErrors: FileWithErrors[]): FileUploadState[] => {
-		const newFileStates: FileUploadState[] = filesWithErrors.map(({ file, errors }) => ({
-			id: `${file.name}-${Date.now()}-${Math.random()}`,
-			file,
-			progress: 0,
-			status: 'error',
-			errors,
-		}));
-
-		setFiles((prev) => [...prev, ...newFileStates]);
-		return newFileStates;
-	}, []);
-
-	const removeFile = useCallback((fileId: string) => {
+	const removeFile = (fileId: string) => {
+		console.log('removeFile', fileId, files);
 		setFiles((prev) => prev.filter((file) => file.id !== fileId));
-	}, []);
+	};
 
-	const updateFileProgress = useCallback((fileId: string, progress: number) => {
+	const updateFileProgress = (fileId: string, progress: number) => {
 		setFiles((prev) => prev.map((file) => (file.id === fileId ? { ...file, progress } : file)));
-	}, []);
+	};
 
-	const updateFileStatus = useCallback(
-		(fileId: string, status: FileUploadState['status'], error?: string) => {
-			setFiles((prev) => prev.map((file) => (file.id === fileId ? { ...file, status, error } : file)));
-		},
-		[],
-	);
+	const updateFileStatus = (fileId: string, status: UploadFileStatus, error?: string) => {
+		setFiles((prev) => prev.map((file) => (file.id === fileId ? { ...file, status, error } : file)));
+	};
 
-	const clearFiles = useCallback(() => {
+	const clearFiles = () => {
 		setFiles([]);
-	}, []);
+		setAcceptedFiles([]);
+	};
 
 	const isUploading = files.some((file) => file.status === 'uploading');
 	const hasFiles = files.length > 0;
 
 	return {
 		files,
+		acceptedFiles,
 		addFiles,
 		addRejectedFiles,
 		removeFile,

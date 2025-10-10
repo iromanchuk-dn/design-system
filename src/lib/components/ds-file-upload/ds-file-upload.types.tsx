@@ -5,7 +5,7 @@ import {
 	FileUploadFileRejectDetails,
 	FileUploadRootProps,
 } from '@ark-ui/react';
-import { FileUploadState } from './hooks/use-file-upload';
+import { UploadFileMeta } from './hooks/use-file-upload';
 
 export type FileError = FileUploadFileError;
 
@@ -68,9 +68,13 @@ export interface DsFileUploadProps extends Omit<FileUploadRootProps, 'children'>
 	/**
 	 * File states to display (managed externally)
 	 */
-	files?: FileUploadState[];
+	files?: UploadFileMeta[];
 	/**
 	 * Callback to remove a file
 	 */
 	onRemove?: (fileId: string) => void;
+	/**
+	 * Controlled accepted files
+	 */
+	acceptedFiles?: File[];
 }

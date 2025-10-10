@@ -1,5 +1,6 @@
 import { IconType } from '../../ds-icon';
 import { FileError } from '../ds-file-upload.types';
+import { FileMeta } from '../hooks/use-file-upload';
 
 /**
  * Default allowed file types for the file upload component
@@ -48,6 +49,10 @@ export function getFileTypeIcon(fileName: string): IconType {
 		default:
 			return 'insert_drive_file';
 	}
+}
+
+export function isFileEqual(file1: FileMeta, file2: FileMeta): boolean {
+	return file1.name === file2.name && file1.size === file2.size && file1.type === file2.type;
 }
 
 /**

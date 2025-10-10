@@ -2,12 +2,12 @@ import React from 'react';
 import classNames from 'classnames';
 import { Progress } from '@ark-ui/react';
 import { DsIcon, IconType } from '../../ds-icon';
-import { FileUploadState } from '../hooks/use-file-upload';
+import { UploadFileMeta } from '../hooks/use-file-upload';
 import { getErrorMessage, getFileTypeIcon } from '../utils/file-validation';
 import styles from '../ds-file-upload.module.scss';
 
 export interface FileItemProps {
-	fileState: FileUploadState;
+	uploadFile: UploadFileMeta;
 	onRemove: (fileId: string) => void;
 	showProgress?: boolean;
 	className?: string;
@@ -17,12 +17,12 @@ export interface FileItemProps {
  * Individual file item component
  */
 export const FileItem: React.FC<FileItemProps> = ({
-	fileState,
+	uploadFile,
 	onRemove,
 	showProgress = false,
 	className,
 }) => {
-	const { id, file, progress, status, errors } = fileState;
+	const { id, progress, status, errors, ...file } = uploadFile;
 
 	const handleRemove = () => {
 		onRemove(id);
