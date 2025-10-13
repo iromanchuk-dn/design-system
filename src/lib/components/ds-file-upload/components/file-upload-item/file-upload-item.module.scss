@@ -42,6 +42,12 @@
 				background: var(--color-background-selected);
 			}
 		}
+
+		&.fileItemInterrupted {
+			.progressRange {
+				background: var(--color-background-warning-strong);
+			}
+		}
 	}
 }
 

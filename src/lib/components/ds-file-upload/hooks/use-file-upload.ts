@@ -52,12 +52,10 @@ export function useFileUpload(): UseFileUploadReturn {
 	const [acceptedFiles, setAcceptedFiles] = useState<UploadFile[]>([]);
 
 	const addFiles = (newFiles: File[]): UploadFile[] => {
-		// Find the delta - files that are new
 		const newFilesOnly = newFiles.filter(
 			(file) => !acceptedFiles.some((existing) => isFileEqual(existing, file)),
 		);
 
-		// Find duplicates for feedback
 		const duplicateFiles = newFiles.filter((file) => {
 			const uploadFile = file as UploadFile;
 
@@ -70,9 +68,7 @@ export function useFileUpload(): UseFileUploadReturn {
 			}
 		});
 
-		// Add duplicates as "rejected" files with FILE_EXISTS error
 		if (duplicateFiles.length > 0) {
-			console.log('duplicate files', duplicateFiles);
 			const duplicateFilesWithErrors = duplicateFiles.map((file) => ({
 				file,
 				errors: ['FILE_EXISTS'],
@@ -122,7 +118,6 @@ export function useFileUpload(): UseFileUploadReturn {
 	};
 
 	const removeFile = (fileId: string) => {
-		console.log('removeFile', fileId, files);
 		setFiles((prev) => prev.filter((file) => file.id !== fileId));
 	};
 

@@ -27,6 +27,7 @@ export const FileUploadItem: React.FC<FileUploadItemProps> = ({
 		[styles.fileItemError]: status === 'error',
 		[styles.fileItemCompleted]: status === 'completed',
 		[styles.fileItemUploading]: status === 'uploading',
+		[styles.fileItemInterrupted]: status === 'interrupted',
 	});
 
 	return (

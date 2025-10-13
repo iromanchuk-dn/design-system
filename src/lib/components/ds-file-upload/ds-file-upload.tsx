@@ -30,7 +30,10 @@ const DsFileUpload: React.FC<DsFileUploadProps> = ({
 	allowDrop = true,
 	onFileAccept,
 	onFileReject,
-	onRemove,
+	onFileRemove,
+	onFileDelete,
+	onFileCancel,
+	onFileRetry,
 	accept = DEFAULT_ALLOWED_FILE_TYPES,
 	maxFiles = DEFAULT_MAX_FILES,
 	maxFileSize = DEFAULT_MAX_FILE_SIZE,
@@ -91,7 +94,10 @@ const DsFileUpload: React.FC<DsFileUploadProps> = ({
 							showProgress={showProgress}
 							status={uploadFile.status}
 							errors={uploadFile.errors}
-							onRemove={onRemove}
+							onRemove={onFileRemove}
+							onDelete={onFileDelete}
+							onCancel={onFileCancel}
+							onRetry={onFileRetry}
 						/>
 					))}
 				</div>

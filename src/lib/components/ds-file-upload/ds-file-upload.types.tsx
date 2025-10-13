@@ -70,9 +70,21 @@ export interface DsFileUploadProps {
 	 */
 	files?: UploadFileMeta[];
 	/**
-	 * Callback to remove a file
+	 * Callback when files are removed
 	 */
-	onRemove?: (fileId: string) => void;
+	onFileRemove?: (fileId: string) => void;
+	/**
+	 * Callback when files are deleted
+	 */
+	onFileDelete?: (fileId: string) => void;
+	/**
+	 * Callback when files upload is canceled
+	 */
+	onFileCancel?: (fileId: string) => void;
+	/**
+	 * Callback when files upload is retried
+	 */
+	onFileRetry?: (fileId: string) => void;
 	/**
 	 * Controlled accepted files
 	 */

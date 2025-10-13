@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { FileUploadFileAcceptDetails, FileUploadFileRejectDetails } from '@ark-ui/react';
+import { expect, userEvent, waitFor, within } from '@storybook/test';
 import DsFileUpload from './ds-file-upload';
 import { useFileUpload } from './hooks/use-file-upload';
 
@@ -63,8 +64,8 @@ export const Default: Story = {
 				// Add files to state and get the file states back
 				const uploadFiles = addFiles(details.files);
 
-				// Start upload immediately for each new file
-				for (const uploadFile of uploadFiles) {
+				// Start upload immediately for each new file - all simultaneously
+				const uploadPromises = uploadFiles.map(async (uploadFile) => {
 					try {
 						updateFileStatus(uploadFile.id, 'uploading');
 
@@ -77,7 +78,10 @@ export const Default: Story = {
 						const errorMessage = error instanceof Error ? error.message : 'unknown error';
 						updateFileStatus(uploadFile.id, 'error', `Upload failed: ${errorMessage}`);
 					}
-				}
+				});
+
+				// Wait for all uploads to complete (or fail)
+				await Promise.all(uploadPromises);
 			} catch (error) {
 				console.error('File validation failed:', error);
 			}
@@ -95,7 +99,7 @@ export const Default: Story = {
 					acceptedFiles={acceptedFiles}
 					onFileAccept={handleFileAccept}
 					onFileReject={handleFileReject}
-					onRemove={removeFile}
+					onFileRemove={removeFile}
 				/>
 			</div>
 		);
@@ -168,7 +172,7 @@ export const Manual: Story = {
 					acceptedFiles={acceptedFiles}
 					onFileAccept={handleFileAccept}
 					onFileReject={handleFileReject}
-					onRemove={removeFile}
+					onFileRemove={removeFile}
 				/>
 				{files.length > 0 && (
 					<div style={{ marginTop: '16px' }}>
@@ -182,21 +186,11 @@ export const Manual: Story = {
 
 export const Compact: Story = {
 	args: {
+		style: { width: '500px' },
 		compact: true,
-	},
-};
-
-export const SingleFile: Story = {
-	args: {
 		maxFiles: 1,
-		dropzoneText: 'Drop your document here',
+		dropzoneText: 'Drag and drop your document here or',
 		triggerText: 'Choose document',
-	},
-};
-
-export const WithError: Story = {
-	args: {
-		hasError: true,
 	},
 };
 
@@ -204,6 +198,146 @@ export const Disabled: Story = {
 	args: {
 		disabled: true,
 		style: { width: '300px' },
+	},
+};
+
+export const UploadInterrupted: Story = {
+	args: {
+		showProgress: true,
+	},
+	render: function Render(args) {
+		const {
+			files,
+			acceptedFiles,
+			addFiles,
+			addRejectedFiles,
+			removeFile,
+			updateFileProgress,
+			updateFileStatus,
+		} = useFileUpload();
+
+		const uploadToS3 = async (
+			file: File,
+			onProgress: (progress: number) => void,
+			shouldInterrupt = false,
+		) => {
+			const uploadDuration = 2000; // Fast for testing
+			const steps = 10;
+			const stepDuration = uploadDuration / steps;
+
+			for (let i = 0; i <= steps; i++) {
+				await new Promise((resolve) => setTimeout(resolve, stepDuration));
+				const progress = Math.min((i / steps) * 100, 100);
+				onProgress(progress);
+
+				// Interrupt upload at 30% progress
+				if (shouldInterrupt && progress >= 30) {
+					throw new Error('Network connection lost');
+				}
+			}
+		};
+
+		const handleFileAccept = async (details: FileUploadFileAcceptDetails) => {
+			const uploadFiles = addFiles(details.files);
+			const uploadPromises = uploadFiles.map(async (uploadFile) => {
+				try {
+					updateFileStatus(uploadFile.id, 'uploading');
+					await uploadToS3(
+						uploadFile,
+						(progress) => {
+							updateFileProgress(uploadFile.id, progress);
+						},
+						true,
+					);
+					updateFileStatus(uploadFile.id, 'completed');
+				} catch (error) {
+					const errorMessage = error instanceof Error ? error.message : 'unknown error';
+					updateFileStatus(uploadFile.id, 'interrupted', `Upload interrupted: ${errorMessage}`);
+				}
+			});
+			await Promise.all(uploadPromises);
+		};
+
+		const handleFileReject = (details: FileUploadFileRejectDetails) => {
+			addRejectedFiles(details.files);
+		};
+
+		const handleFileRetry = async (fileId: string) => {
+			const fileToRetry = files.find((f) => f.id === fileId);
+			if (!fileToRetry) return;
+
+			try {
+				updateFileStatus(fileId, 'uploading');
+				updateFileProgress(fileId, 0);
+				await uploadToS3(
+					fileToRetry as any,
+					(progress) => {
+						updateFileProgress(fileId, progress);
+					},
+					false,
+				);
+				updateFileStatus(fileId, 'completed');
+			} catch (error) {
+				const errorMessage = error instanceof Error ? error.message : 'unknown error';
+				updateFileStatus(fileId, 'error', `Upload failed: ${errorMessage}`);
+			}
+		};
+
+		return (
+			<DsFileUpload
+				{...args}
+				files={files}
+				acceptedFiles={acceptedFiles}
+				onFileAccept={handleFileAccept}
+				onFileReject={handleFileReject}
+				onFileRetry={handleFileRetry}
+				onFileDelete={removeFile}
+			/>
+		);
+	},
+	play: async ({ canvasElement }) => {
+		const canvas = within(canvasElement);
+
+		const mockFile = new File(['test content'], 'test-file.pdf', { type: 'application/pdf' });
+		const fileInput = canvasElement.querySelector('input[type="file"]') as HTMLInputElement;
+		await userEvent.upload(fileInput, mockFile);
+		/*
+				// Wait for the callback to be called
+				await waitFor(() => {
+					expect(args.onFileAccept).toHaveBeenCalled();
+				});
+		*/
+		// Wait for upload to start and show progress
+		await waitFor(
+			() => {
+				expect(canvas.getByText(/Uploading/)).toBeInTheDocument();
+			},
+			{ timeout: 3000 },
+		);
+
+		// Wait for upload to be interrupted
+		await waitFor(
+			() => {
+				expect(canvas.getByText('Upload interrupted')).toBeInTheDocument();
+			},
+			{ timeout: 5000 },
+		);
+
+		// Test retry button
+		const retryButton = canvas.getByLabelText(/Retry.*upload/);
+		await userEvent.click(retryButton);
+
+		// Wait for retry to complete
+		await waitFor(
+			() => {
+				expect(canvas.getByText('Upload complete')).toBeInTheDocument();
+			},
+			{ timeout: 5000 },
+		);
+
+		// Test retry button
+		const deleteButton = canvas.getByLabelText(/Delete.*/);
+		await userEvent.click(deleteButton);
 	},
 };
 /*
