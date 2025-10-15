@@ -49,7 +49,7 @@ const DsTableRow = <TData, TValue>({ ref, row, virtualRow }: DsTableRowProps<TDa
 		virtualized,
 		bordered,
 		highlightOnHover,
-		rowSize = 'medium',
+		rowSize,
 		toggleRowExpanded,
 		primaryRowActions,
 		secondaryRowActions,

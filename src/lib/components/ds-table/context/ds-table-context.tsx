@@ -20,7 +20,7 @@ export interface DsTableContextType<TData, TValue> extends Partial<DsDataTablePr
 	 * Row size variant
 	 * @default 'medium'
 	 */
-	rowSize?: DsTableRowSize;
+	rowSize: DsTableRowSize;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

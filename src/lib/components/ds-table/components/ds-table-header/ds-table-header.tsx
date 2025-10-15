@@ -19,6 +19,12 @@ const DsTableHeader = <TData,>({ table }: DsTableHeaderProps<TData>) => {
 		rowSize = 'medium',
 	} = useDsTableContext<TData, unknown>();
 
+	const rowSizeClass = {
+		[styles.sizeSmall]: rowSize === 'small',
+		[styles.sizeMedium]: rowSize === 'medium',
+		[styles.sizeLarge]: rowSize === 'large',
+	};
+
 	return (
 		<TableHeader className={classnames(stickyHeader && styles.stickyHeader)}>
 			{table.getHeaderGroups().map((headerGroup) => (
@@ -31,13 +37,7 @@ const DsTableHeader = <TData,>({ table }: DsTableHeaderProps<TData>) => {
 					)}
 				>
 					{selectable && (
-						<TableHead
-							className={classnames(styles.headerCell, styles.selectColumn, {
-								[styles.sizeSmall]: rowSize === 'small',
-								[styles.sizeMedium]: rowSize === 'medium',
-								[styles.sizeLarge]: rowSize === 'large',
-							})}
-						>
+						<TableHead className={classnames(styles.headerCell, styles.selectColumn, rowSizeClass)}>
 							{showSelectAllCheckbox && (
 								<DsCheckbox
 									className={stylesShared.checkboxContainer}
@@ -58,22 +58,10 @@ const DsTableHeader = <TData,>({ table }: DsTableHeaderProps<TData>) => {
 						</TableHead>
 					)}
 					{expandable && (
-						<TableHead
-							className={classnames(styles.headerCell, styles.expandColumn, {
-								[styles.sizeSmall]: rowSize === 'small',
-								[styles.sizeMedium]: rowSize === 'medium',
-								[styles.sizeLarge]: rowSize === 'large',
-							})}
-						/>
+						<TableHead className={classnames(styles.headerCell, styles.expandColumn, rowSizeClass)} />
 					)}
 					{reorderable && (
-						<TableHead
-							className={classnames(styles.headerCell, styles.reorderColumn, {
-								[styles.sizeSmall]: rowSize === 'small',
-								[styles.sizeMedium]: rowSize === 'medium',
-								[styles.sizeLarge]: rowSize === 'large',
-							})}
-						>
+						<TableHead className={classnames(styles.headerCell, styles.reorderColumn, rowSizeClass)}>
 							Order
 						</TableHead>
 					)}
@@ -83,11 +71,7 @@ const DsTableHeader = <TData,>({ table }: DsTableHeaderProps<TData>) => {
 								key={header.id}
 								className={classnames(
 									styles.headerCell,
-									{
-										[styles.sizeSmall]: rowSize === 'small',
-										[styles.sizeMedium]: rowSize === 'medium',
-										[styles.sizeLarge]: rowSize === 'large',
-									},
+									rowSizeClass,
 									header.column.getCanSort() && styles.sortableHeader,
 								)}
 								onClick={header.column.getToggleSortingHandler()}
