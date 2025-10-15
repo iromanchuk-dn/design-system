@@ -44,12 +44,11 @@
 }
 
 .headerCell {
-	@include typography.p-base;
-	@include typography.regular;
-	color: var(--neutral-4);
+	@include typography.body-sm-md;
+	color: var(--color-font-main);
 	text-align: left;
 	vertical-align: middle;
-	padding: vars.$cell-padding-standard-vertical vars.$cell-padding;
+	padding: var(--spacing-sm) var(--spacing-standard);
 
 	&.sortableHeader {
 		cursor: pointer;
@@ -67,6 +66,18 @@
 			color: var(--neutral-4);
 			transition: transform 0.2s ease-in-out;
 		}
+	}
+
+	&.sizeSmall {
+		height: var(--ds-table-row-small);
+	}
+
+	&.sizeMedium {
+		height: var(--ds-table-row-medium);
+	}
+
+	&.sizeLarge {
+		height: var(--ds-table-row-large);
 	}
 }
 

@@ -49,6 +49,7 @@ const DsTableRow = <TData, TValue>({ ref, row, virtualRow }: DsTableRowProps<TDa
 		virtualized,
 		bordered,
 		highlightOnHover,
+		rowSize,
 		toggleRowExpanded,
 		primaryRowActions,
 		secondaryRowActions,
@@ -88,6 +89,11 @@ const DsTableRow = <TData, TValue>({ ref, row, virtualRow }: DsTableRowProps<TDa
 				data-state={row.getIsSelected() && 'selected'}
 				className={classnames(
 					styles.tableRow,
+					{
+						[styles.sizeSmall]: rowSize === 'small',
+						[styles.sizeMedium]: rowSize === 'medium',
+						[styles.sizeLarge]: rowSize === 'large',
+					},
 					virtualized && styles.virtualizedRow,
 					onRowClick && styles.clickableRow,
 					highlightOnHover && styles.highlightHoverRow,
