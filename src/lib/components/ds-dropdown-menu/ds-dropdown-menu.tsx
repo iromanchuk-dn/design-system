@@ -16,10 +16,10 @@ const DsDropdownMenu: React.FC<DsDropdownMenuProps> = ({
 	style,
 	align = 'center',
 	side = 'bottom',
-	portal = false,
+	disablePortal = false,
 }) => {
 	const [open, setOpen] = useState(false);
-	const Wrapper = portal ? DropdownMenu.Portal : Fragment;
+	const Wrapper = disablePortal ? Fragment : DropdownMenu.Portal;
 
 	return (
 		<DropdownMenu.Root open={open} onOpenChange={setOpen}>
