@@ -56,10 +56,6 @@ export interface DsSelectProps {
 	 */
 	onBlur?: (event: React.FocusEvent) => void;
 	/**
-	 * Boolean option to disable the clear button
-	 */
-	hideClearButton?: boolean;
-	/**
 	 * Placeholder text to display when no option is selected
 	 */
 	placeholder?: string;
