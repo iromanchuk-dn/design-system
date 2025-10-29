@@ -1,0 +1,146 @@
+@use '@design-system/ui/src/styles/typography';
+
+.container {
+	display: flex;
+	align-items: center;
+	padding: var(--spacing-3xs) var(--spacing-standard) var(--spacing-3xs) var(--spacing-xs);
+	width: max-content;
+	color: var(--color-icon-inverse);
+	gap: var(--spacing-3xs);
+	border-radius: 100vmax;
+
+	&.compact {
+		padding: var(--spacing-4xs) var(--spacing-xs) var(--spacing-4xs) var(--spacing-3xs);
+		gap: var(--spacing-4xs);
+	}
+}
+
+.active {
+	color: var(--color-background-success-strong);
+	background: var(--color-status-bg-success);
+
+	.label {
+		color: var(--color-font-main);
+	}
+
+	&.filled {
+		color: var(--color-font-on-action);
+		background: var(--color-background-success-strong);
+
+		.label {
+			color: var(--color-font-on-action);
+		}
+	}
+}
+
+.running {
+	color: var(--color-icon-information-secondary);
+	background: var(--color-status-bg-progress);
+
+	.label {
+		color: var(--color-font-main);
+	}
+
+	&.filled {
+		color: var(--color-font-on-action);
+		background: var(--color-background-active-moderate);
+
+		.label {
+			color: var(--color-font-on-action);
+		}
+	}
+}
+
+.pending {
+	color: var(--color-data-purple);
+	background: var(--color-data-light-purple);
+
+	.label {
+		color: var(--color-font-main);
+	}
+
+	&.filled {
+		color: var(--color-font-on-action);
+		background: var(--color-data-fuchsia);
+
+		.label {
+			color: var(--color-font-on-action);
+		}
+	}
+}
+
+.draft {
+	color: var(--color-icon-secondary);
+	background: var(--color-status-bg-neutral);
+
+	.label {
+		color: var(--color-font-main);
+	}
+
+	&.filled {
+		color: var(--color-font-on-action);
+		background: var(--color-icon-information-main);
+
+		.label {
+			color: var(--color-font-on-action);
+		}
+	}
+}
+
+.inactive {
+	color: var(--color-icon-secondary);
+	background: var(--color-status-bg-inactive);
+
+	.label {
+		color: var(--color-font-main);
+	}
+
+	&.filled {
+		color: var(--color-icon-secondary);
+		background: var(--color-background-disable);
+
+		.label {
+			color: var(--color-font-on-disabled);
+		}
+	}
+}
+
+.warning {
+	color: var(--color-background-warning-strong);
+	background: var(--color-status-bg-warning);
+
+	.label {
+		color: var(--color-font-main);
+	}
+
+	&.filled {
+		color: var(--color-font-on-action);
+		background: var(--color-background-warning-strong);
+
+		.label {
+			color: var(--color-font-on-action);
+		}
+	}
+}
+
+.failed {
+	color: var(--color-background-danger-strong-hover);
+	background: var(--color-status-bg-failed);
+
+	.label {
+		color: var(--color-font-main);
+	}
+
+	&.filled {
+		color: var(--color-font-on-action);
+		background: var(--color-background-danger-strong);
+
+		.label {
+			color: var(--color-font-on-action);
+		}
+	}
+}
+
+.label {
+	text-transform: capitalize;
+}
