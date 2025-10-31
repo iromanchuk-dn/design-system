@@ -1,5 +1,25 @@
 @use '@design-system/ui/src/styles/typography';
 
+@mixin status-base($color, $background) {
+	color: $color;
+	background: $background;
+
+	.label {
+		color: var(--color-font-main);
+	}
+}
+
+@mixin status-filled($color, $background, $label-color: var(--color-font-on-action)) {
+	&.filled {
+		color: $color;
+		background: $background;
+
+		.label {
+			color: $label-color;
+		}
+	}
+}
+
 .container {
 	display: flex;
 	align-items: center;
@@ -16,129 +36,42 @@
 }
 
 .active {
-	color: var(--color-background-success-strong);
-	background: var(--color-status-bg-success);
-
-	.label {
-		color: var(--color-font-main);
-	}
-
-	&.filled {
-		color: var(--color-font-on-action);
-		background: var(--color-background-success-strong);
-
-		.label {
-			color: var(--color-font-on-action);
-		}
-	}
+	@include status-base(var(--color-background-success-strong), var(--color-status-bg-success));
+	@include status-filled(var(--color-font-on-action), var(--color-background-success-strong));
 }
 
 .running {
-	color: var(--color-icon-information-secondary);
-	background: var(--color-status-bg-progress);
-
-	.label {
-		color: var(--color-font-main);
-	}
-
-	&.filled {
-		color: var(--color-font-on-action);
-		background: var(--color-background-active-moderate);
-
-		.label {
-			color: var(--color-font-on-action);
-		}
-	}
+	@include status-base(var(--color-icon-information-secondary), var(--color-status-bg-progress));
+	@include status-filled(var(--color-font-on-action), var(--color-background-active-moderate));
 }
 
 .pending {
-	color: var(--color-data-purple);
-	background: var(--color-data-light-purple);
-
-	.label {
-		color: var(--color-font-main);
-	}
-
-	&.filled {
-		color: var(--color-font-on-action);
-		background: var(--color-data-fuchsia);
-
-		.label {
-			color: var(--color-font-on-action);
-		}
-	}
+	@include status-base(var(--color-data-purple), var(--color-data-light-purple));
+	@include status-filled(var(--color-font-on-action), var(--color-data-fuchsia));
 }
 
 .draft {
-	color: var(--color-icon-secondary);
-	background: var(--color-status-bg-neutral);
-
-	.label {
-		color: var(--color-font-main);
-	}
-
-	&.filled {
-		color: var(--color-font-on-action);
-		background: var(--color-icon-information-main);
-
-		.label {
-			color: var(--color-font-on-action);
-		}
-	}
+	@include status-base(var(--color-icon-secondary), var(--color-status-bg-neutral));
+	@include status-filled(var(--color-font-on-action), var(--color-icon-information-main));
 }
 
 .inactive {
-	color: var(--color-icon-secondary);
-	background: var(--color-status-bg-inactive);
-
-	.label {
-		color: var(--color-font-main);
-	}
-
-	&.filled {
-		color: var(--color-icon-secondary);
-		background: var(--color-background-disable);
-
-		.label {
-			color: var(--color-font-on-disabled);
-		}
-	}
+	@include status-base(var(--color-icon-secondary), var(--color-status-bg-inactive));
+	@include status-filled(
+		var(--color-icon-secondary),
+		var(--color-background-disable),
+		var(--color-font-on-disabled)
+	);
 }
 
 .warning {
-	color: var(--color-background-warning-strong);
-	background: var(--color-status-bg-warning);
-
-	.label {
-		color: var(--color-font-main);
-	}
-
-	&.filled {
-		color: var(--color-font-on-action);
-		background: var(--color-background-warning-strong);
-
-		.label {
-			color: var(--color-font-on-action);
-		}
-	}
+	@include status-base(var(--color-background-warning-strong), var(--color-status-bg-warning));
+	@include status-filled(var(--color-font-on-action), var(--color-background-warning-strong));
 }
 
 .failed {
-	color: var(--color-background-danger-strong-hover);
-	background: var(--color-status-bg-failed);
-
-	.label {
-		color: var(--color-font-main);
-	}
-
-	&.filled {
-		color: var(--color-font-on-action);
-		background: var(--color-background-danger-strong);
-
-		.label {
-			color: var(--color-font-on-action);
-		}
-	}
+	@include status-base(var(--color-background-danger-strong-hover), var(--color-status-bg-failed));
+	@include status-filled(var(--color-font-on-action), var(--color-background-danger-strong));
 }
 
 .label {

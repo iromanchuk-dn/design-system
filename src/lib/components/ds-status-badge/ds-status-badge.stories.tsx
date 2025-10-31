@@ -3,6 +3,7 @@ import { expect, within } from '@storybook/test';
 import DsStatusBadge from './ds-status-badge';
 import { DsStatus } from './ds-status-badge.types';
 import { IconType } from '../ds-icon';
+import styles from './ds-status-badge.stories.module.scss';
 
 const meta: Meta<typeof DsStatusBadge> = {
 	title: 'Design System/StatusBadge',
@@ -79,12 +80,12 @@ export const All: Story = {
 		];
 
 		return (
-			<div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-				<div style={{ display: 'flex', gap: '64px' }}>
+			<div className={styles.storiesContainer}>
+				<div className={styles.storiesRow}>
 					{/* Filled variants - Default */}
-					<div>
-						<div style={{ marginBottom: '12px', fontWeight: 500 }}>Filled</div>
-						<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+					<div className={styles.storiesSection}>
+						<div className={styles.sectionTitle}>Filled</div>
+						<div className={styles.storiesList}>
 							{statuses.map(({ status, icon }) => (
 								<DsStatusBadge
 									key={`filled-24-${status}`}
@@ -98,9 +99,9 @@ export const All: Story = {
 					</div>
 
 					{/* Light variants - Default */}
-					<div>
-						<div style={{ marginBottom: '12px', fontWeight: 500 }}>Light</div>
-						<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+					<div className={styles.storiesSection}>
+						<div className={styles.sectionTitle}>Light</div>
+						<div className={styles.storiesList}>
 							{statuses.map(({ status, icon }) => (
 								<DsStatusBadge
 									key={`light-24-${status}`}
@@ -114,11 +115,11 @@ export const All: Story = {
 					</div>
 				</div>
 
-				<div style={{ display: 'flex', gap: '64px' }}>
+				<div className={styles.storiesRow}>
 					{/* Filled variants - Compact */}
-					<div>
-						<div style={{ marginBottom: '12px', fontWeight: 500 }}>Filled - Compact</div>
-						<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+					<div className={styles.storiesSection}>
+						<div className={styles.sectionTitle}>Filled - Compact</div>
+						<div className={styles.storiesList}>
 							{statuses.map(({ status, icon }) => (
 								<DsStatusBadge
 									key={`filled-20-${status}`}
@@ -132,9 +133,9 @@ export const All: Story = {
 					</div>
 
 					{/* Light variants - Compact */}
-					<div>
-						<div style={{ marginBottom: '12px', fontWeight: 500 }}>Light - Compact</div>
-						<div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+					<div className={styles.storiesSection}>
+						<div className={styles.sectionTitle}>Light - Compact</div>
+						<div className={styles.storiesList}>
 							{statuses.map(({ status, icon }) => (
 								<DsStatusBadge
 									key={`light-20-${status}`}
