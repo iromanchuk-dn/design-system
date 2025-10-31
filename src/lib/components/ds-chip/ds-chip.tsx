@@ -1,0 +1,76 @@
+import React from 'react';
+import classNames from 'classnames';
+import styles from './ds-chip.module.scss';
+import { DsChipProps } from './ds-chip.types';
+import { DsIcon } from '../ds-icon';
+import { DsTypography } from '../ds-typography';
+
+/**
+ * Design system Chip component
+ */
+const DsChip: React.FC<DsChipProps> = ({
+	ref,
+	label,
+	className,
+	style = {},
+	onClick,
+	onDelete,
+	compact = false,
+	deleteIcon,
+	selected = false,
+}) => {
+	const chipClass = classNames(
+		styles.chip,
+		{
+			[styles.clickable]: onClick !== undefined,
+			[styles.compact]: compact,
+		},
+		className,
+	);
+
+	const handleDeleteClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+		event.stopPropagation();
+		onDelete?.(event);
+	};
+
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+		if (onDelete && (event.key === 'Backspace' || event.key === 'Delete')) {
+			event.preventDefault();
+			onDelete(event as unknown as React.MouseEvent<HTMLButtonElement>);
+		}
+		if (event.key === 'Escape') {
+			(event.currentTarget as HTMLElement).blur();
+		}
+	};
+
+	return (
+		<div
+			ref={ref}
+			className={chipClass}
+			style={style}
+			onClick={onClick}
+			onKeyDown={handleKeyDown}
+			role={onClick || onDelete ? 'button' : undefined}
+			tabIndex={onClick || onDelete ? 0 : undefined}
+			aria-label={label}
+			aria-pressed={onClick && selected ? 'true' : undefined}
+		>
+			<DsTypography variant={compact ? 'body-xs-reg' : 'body-sm-reg'} className={styles.label}>
+				{label}
+			</DsTypography>
+			{onDelete && (
+				<button
+					type="button"
+					className={styles.deleteButton}
+					onClick={handleDeleteClick}
+					aria-label="Delete chip"
+					tabIndex={-1}
+				>
+					{deleteIcon || <DsIcon icon="cancel" size="tiny" />}
+				</button>
+			)}
+		</div>
+	);
+};
+
+export default DsChip;
