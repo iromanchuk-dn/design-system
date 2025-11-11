@@ -1,5 +1,6 @@
 import type { StorybookConfig } from '@storybook/react-vite';
 import { vitePluginDsMaterialIconsFont } from '../src/plugins';
+import { withoutVitePlugins } from '@storybook/builder-vite';
 
 const config: StorybookConfig = {
 	stories: ['../src/**/*.mdx', '../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
@@ -13,11 +14,19 @@ const config: StorybookConfig = {
 		name: '@storybook/react-vite',
 		options: {},
 	},
+	core: {
+		builder: '@storybook/builder-vite',
+	},
 	viteFinal: async (config) => {
 		if (!Array.isArray(config.plugins)) {
 			config.plugins = [];
 		}
+
 		config.plugins.push(vitePluginDsMaterialIconsFont() as never);
+
+		// Exclude plugins that clash with Storybook.
+		config.plugins = await withoutVitePlugins(config.plugins, ['vite:dts', 'nx-copy-assets-plugin']);
+
 		return config;
 	},
 };
