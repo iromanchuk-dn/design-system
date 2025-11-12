@@ -20,6 +20,7 @@ import type { DsDataTableProps, DsTableRowSize } from './ds-table.types';
 import { DsTableRow } from './components/ds-table-row';
 import { useDragAndDrop } from './hooks/use-drag-and-drop';
 import { DsTableContext, DsTableContextType } from './context/ds-table-context';
+import { createColumnsGridTemplate } from './utils/create-columns-grid-template';
 
 // Row size to pixel height mapping (matches CSS variables)
 const ROW_SIZE_HEIGHT_MAP: Record<DsTableRowSize, number> = {
@@ -217,20 +218,6 @@ const DsTable = <TData extends { id: string }, TValue>({
 		toggleRowExpanded,
 	};
 
-	// In virtualized tables, the rows should all be positioned at the top with a `translateY` offset.
-	// We're using a Grid for this rather than `position: absolute` to ensure that each cell align with
-	// other cells in the same column (mimicking the native table behavior).
-	const columnsGridTemplate = columns
-		.reduce<string[]>(
-			(acc, col) => {
-				acc.push(col.size ? `${col.size}px` : 'auto');
-
-				return acc;
-			},
-			selectable ? ['max-content'] : [],
-		)
-		.join(' ');
-
 	return (
 		<DsTableContext.Provider value={contextValue}>
 			<div
@@ -244,7 +231,13 @@ const DsTable = <TData extends { id: string }, TValue>({
 			>
 				<DragWrapper>
 					<Table
-						style={{ '--ds-table-columns-template': columnsGridTemplate } as React.CSSProperties}
+						style={
+							virtualized
+								? ({
+										'--ds-table-columns-template': createColumnsGridTemplate({ columns, selectable }),
+									} as React.CSSProperties)
+								: undefined
+						}
 						className={classnames(
 							fullWidth && styles.fullWidth,
 							!bordered && styles.tableNoBorder,
