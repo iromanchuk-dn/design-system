@@ -1,16 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
-import { ColumnDef, ColumnFilter } from '@tanstack/react-table';
+import { ColumnDef } from '@tanstack/react-table';
 import DsIcon from '../../ds-icon/ds-icon';
-import { IconType } from '../../ds-icon/ds-icon.types';
 import DsTable from '../ds-table';
 import DsButton from '../../ds-button/ds-button';
-import DsStatusBadge from '../../ds-status-badge/ds-status-badge';
-import { DsStatus } from '../../ds-status-badge/ds-status-badge.types';
-import { TableFilterModal, TableFilterNavItem } from './components/table-filter-modal';
-import { ChipFilterPanel, FilterChipItem } from '../../../../widgets';
-import { CheckboxFilter, CheckboxFilterItem } from './components/select-filter/select-filter';
-import { RangeFilter, RangeFilterValue } from './components/range-filter/range-filter';
+import { TableFilterModal } from './components/table-filter-modal';
+import { ChipFilterPanel } from '../../../../widgets';
+import { useTableFilters } from '../filters/hooks/use-table-filters';
+import { Workflow, workflowFilters } from './filters-panel/workflow-filters.config';
+import { FilterRenderer } from './filters-panel/FilterRenderer';
 import styles from '../ds-table.stories.module.scss';
 
 export enum WorkflowCategory {
@@ -18,19 +16,6 @@ export enum WorkflowCategory {
 	OpticalOptimization = 'Optical Optimization',
 	ServiceProvisioning = 'Service Provisioning',
 }
-
-type Workflow = {
-	id: string;
-	name: string;
-	status: DsStatus;
-	runningCompleted: {
-		running: number;
-		completed: number;
-	};
-	category: WorkflowCategory;
-	version: string;
-	lastEdited: string;
-};
 
 const columns: ColumnDef<Workflow>[] = [
 	{
@@ -179,8 +164,6 @@ const defaultData: Workflow[] = [
 	},
 ];
 
-// --- Storybook Meta ---
-// IMPORTANT: Keep the same title as ds-table.stories.tsx to group under same section
 const meta: Meta<typeof DsTable<Workflow, unknown>> = {
 	title: 'Design System/Table',
 	component: DsTable,
@@ -216,255 +199,22 @@ const meta: Meta<typeof DsTable<Workflow, unknown>> = {
 export default meta;
 type Story = StoryObj<typeof DsTable<Workflow, unknown>>;
 
-// --- Stories ---
-
 export const FiltersPanel: Story = {
 	name: 'With Filters Panel',
 	render: function Render(args) {
-		const statusItems = [
-			{ value: 'active' as DsStatus, label: 'Active' },
-			{ value: 'running' as DsStatus, label: 'Running' },
-			{ value: 'pending' as DsStatus, label: 'Pending' },
-			{ value: 'draft' as DsStatus, label: 'Draft' },
-			{ value: 'inactive' as DsStatus, label: 'Inactive' },
-			{ value: 'warning' as DsStatus, label: 'Warning' },
-			{ value: 'failed' as DsStatus, label: 'Failed' },
-		];
-
 		const [isOpen, setIsOpen] = useState(false);
-		const [columnFilters, setColumnFilters] = useState<ColumnFilter[]>([]);
-		const [modalFilters, setModalFilters] = useState<TableFilterNavItem[]>([
-			{ id: 'status', label: 'Status', count: 0 },
-			{ id: 'runningCompleted', label: 'Running/Completed', count: 0 },
-		]);
-		const [filterChips, setFilterChips] = useState<FilterChipItem[]>([]);
 
-		const [selectedStatuses, setSelectedStatuses] = useState<CheckboxFilterItem[]>(statusItems);
-		const [runningRange, setRunningRange] = useState<RangeFilterValue>({});
-		const [completedRange, setCompletedRange] = useState<RangeFilterValue>({});
-
-		const getStatusIcon = (status: DsStatus): IconType => {
-			switch (status) {
-				case 'active':
-					return 'check_circle';
-				case 'running':
-					return 'change_circle';
-				case 'pending':
-					return 'pause_circle';
-				case 'draft':
-					return 'stylus_note';
-				case 'inactive':
-					return 'stop_circle';
-				case 'warning':
-					return 'warning';
-				case 'failed':
-					return 'cancel';
-				default:
-					return 'check_circle';
-			}
-		};
-
-		const renderStatus = (status: DsStatus) => {
-			const icon = getStatusIcon(status);
-			return <DsStatusBadge icon={icon} status={status} size="small" />;
-		};
-
-		const formatNumber = (num: number) => {
-			return num.toLocaleString('en-US');
-		};
-
-		const statusColumnDef: ColumnDef<Workflow> = {
-			accessorKey: 'status',
-			header: 'Status',
-			filterFn: (row, columnId, filterValue) => filterValue.includes(row.getValue(columnId)),
-			cell: (info) => renderStatus(info.getValue() as DsStatus),
-		};
-
-		const runningCompletedColumnDef: ColumnDef<Workflow> = {
-			accessorKey: 'runningCompleted',
-			header: 'Running/completed',
-			filterFn: (row, columnId, filterValue) => {
-				const value = row.getValue(columnId) as { running: number; completed: number };
-				const { runningFrom, runningTo, completedFrom, completedTo } = filterValue;
-
-				let runningMatch = true;
-				let completedMatch = true;
-
-				if (runningFrom !== undefined || runningTo !== undefined) {
-					runningMatch =
-						(runningFrom === undefined || value.running >= runningFrom) &&
-						(runningTo === undefined || value.running <= runningTo);
-				}
-
-				if (completedFrom !== undefined || completedTo !== undefined) {
-					completedMatch =
-						(completedFrom === undefined || value.completed >= completedFrom) &&
-						(completedTo === undefined || value.completed <= completedTo);
-				}
-
-				return runningMatch && completedMatch;
-			},
-			cell: (info) => {
-				const value = info.getValue() as { running: number; completed: number };
-				return `${value.running}/${value.completed}`;
-			},
-		};
-
-		const tableColumns = args.columns.map((col) => {
-			const accessorKey = (col as { accessorKey: string }).accessorKey;
-			if (accessorKey === 'status') {
-				return statusColumnDef;
-			}
-			if (accessorKey === 'runningCompleted') {
-				return runningCompletedColumnDef;
-			}
-			return col;
-		});
+		const { columnFilters, filterChips, filterNavItems, enhancedColumns, handlers, renderFilterContent } =
+			useTableFilters(workflowFilters, args.columns);
 
 		const handleApply = () => {
-			const filters: ColumnFilter[] = [];
-			const chips: FilterChipItem[] = [];
-
-			if (selectedStatuses.length < statusItems.length) {
-				filters.push({
-					id: 'status',
-					value: selectedStatuses.map((s) => s.value),
-				});
-				chips.push(
-					...selectedStatuses.map((status) => ({
-						id: `status_${status.value}`,
-						label: `Status: ${status.label}`,
-						metadata: {
-							key: 'status',
-							value: status.value,
-						},
-					})),
-				);
-			}
-
-			const hasRunningFilter = runningRange.from !== undefined || runningRange.to !== undefined;
-			const hasCompletedFilter = completedRange.from !== undefined || completedRange.to !== undefined;
-
-			if (hasRunningFilter || hasCompletedFilter) {
-				filters.push({
-					id: 'runningCompleted',
-					value: {
-						runningFrom: runningRange.from,
-						runningTo: runningRange.to,
-						completedFrom: completedRange.from,
-						completedTo: completedRange.to,
-					},
-				});
-
-				if (hasRunningFilter) {
-					const fromText = runningRange.from !== undefined ? formatNumber(runningRange.from) : '';
-					const toText = runningRange.to !== undefined ? formatNumber(runningRange.to) : '';
-					chips.push({
-						id: 'running_range',
-						label: `Running: From ${fromText} to ${toText}`,
-						metadata: {
-							key: 'running',
-							from: runningRange.from,
-							to: runningRange.to,
-						},
-					});
-				}
-
-				if (hasCompletedFilter) {
-					const fromText = completedRange.from !== undefined ? formatNumber(completedRange.from) : '';
-					const toText = completedRange.to !== undefined ? formatNumber(completedRange.to) : '';
-					chips.push({
-						id: 'completed_range',
-						label: `Completed: From ${fromText} to ${toText}`,
-						metadata: {
-							key: 'completed',
-							from: completedRange.from,
-							to: completedRange.to,
-						},
-					});
-				}
-			}
-
-			setColumnFilters(filters);
-			setFilterChips(chips);
+			handlers.applyFilters();
 			setIsOpen(false);
 		};
 
 		const handleClearAll = () => {
-			setSelectedStatuses(statusItems);
-			setRunningRange({});
-			setCompletedRange({});
-			setColumnFilters([]);
-			setFilterChips([]);
+			handlers.clearAll();
 			setIsOpen(false);
-		};
-
-		const handleFilterDelete = (filter: FilterChipItem) => {
-			if (filter.metadata?.key === 'status') {
-				const newSelectedStatuses = selectedStatuses.filter((item) => item.value !== filter.metadata?.value);
-				setSelectedStatuses(newSelectedStatuses);
-
-				const newFilters = columnFilters.map((cf) => {
-					if (cf.id === 'status') {
-						return {
-							...cf,
-							value: newSelectedStatuses.map((s) => s.value),
-						};
-					}
-					return cf;
-				});
-
-				setColumnFilters(newFilters.filter((cf) => cf.id !== 'status' || newSelectedStatuses.length > 0));
-				setFilterChips((prev) => prev.filter((item) => item.id !== filter.id));
-			} else if (filter.metadata?.key === 'running') {
-				setRunningRange({});
-				const hasCompleted = completedRange.from !== undefined || completedRange.to !== undefined;
-
-				if (!hasCompleted) {
-					setColumnFilters((prev) => prev.filter((cf) => cf.id !== 'runningCompleted'));
-				} else {
-					setColumnFilters((prev) =>
-						prev.map((cf) => {
-							if (cf.id === 'runningCompleted') {
-								return {
-									...cf,
-									value: {
-										...cf.value,
-										runningFrom: undefined,
-										runningTo: undefined,
-									},
-								};
-							}
-							return cf;
-						}),
-					);
-				}
-				setFilterChips((prev) => prev.filter((item) => item.id !== filter.id));
-			} else if (filter.metadata?.key === 'completed') {
-				setCompletedRange({});
-				const hasRunning = runningRange.from !== undefined || runningRange.to !== undefined;
-
-				if (!hasRunning) {
-					setColumnFilters((prev) => prev.filter((cf) => cf.id !== 'runningCompleted'));
-				} else {
-					setColumnFilters((prev) =>
-						prev.map((cf) => {
-							if (cf.id === 'runningCompleted') {
-								return {
-									...cf,
-									value: {
-										...cf.value,
-										completedFrom: undefined,
-										completedTo: undefined,
-									},
-								};
-							}
-							return cf;
-						}),
-					);
-				}
-				setFilterChips((prev) => prev.filter((item) => item.id !== filter.id));
-			}
 		};
 
 		return (
@@ -478,53 +228,21 @@ export const FiltersPanel: Story = {
 					<ChipFilterPanel
 						filters={filterChips}
 						onClearAll={handleClearAll}
-						onFilterDelete={handleFilterDelete}
+						onFilterDelete={handlers.deleteChip}
 					/>
 				)}
-				<DsTable
-					{...args}
-					columns={tableColumns}
-					columnFilters={columnFilters}
-					onColumnFiltersChange={setColumnFilters}
-				/>
+				<DsTable {...args} columns={enhancedColumns} columnFilters={columnFilters} />
 				<TableFilterModal
 					open={isOpen}
 					onOpenChange={setIsOpen}
 					columns={8}
-					filterNavItems={modalFilters}
+					filterNavItems={filterNavItems}
 					onApply={handleApply}
 					onClearAll={handleClearAll}
 				>
 					{(selectedFilter) => {
-						if (selectedFilter.id === 'status') {
-							return (
-								<CheckboxFilter
-									items={statusItems}
-									renderer={(item) => renderStatus(item.value as DsStatus)}
-									selectedItems={selectedStatuses}
-									onSelectionChange={setSelectedStatuses}
-								/>
-							);
-						}
-						if (selectedFilter.id === 'runningCompleted') {
-							return (
-								<div>
-									<RangeFilter
-										label="Running"
-										value={runningRange}
-										onChange={setRunningRange}
-										onClear={() => setRunningRange({})}
-									/>
-									<RangeFilter
-										label="Completed"
-										value={completedRange}
-										onChange={setCompletedRange}
-										onClear={() => setCompletedRange({})}
-									/>
-								</div>
-							);
-						}
-						return JSON.stringify(selectedFilter);
+						const filterConfig = renderFilterContent(selectedFilter);
+						return <FilterRenderer filterConfig={filterConfig} />;
 					}}
 				</TableFilterModal>
 			</div>

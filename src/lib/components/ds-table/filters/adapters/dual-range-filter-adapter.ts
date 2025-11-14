@@ -1,0 +1,160 @@
+import { Row } from '@tanstack/react-table';
+import { FilterAdapter } from '../types/filter-adapter.types';
+import { FilterChipItem } from '../../../../../widgets';
+
+export interface RangeValue {
+	from?: number;
+	to?: number;
+}
+
+export interface DualRangeFilterValue {
+	[fieldName: string]: RangeValue;
+}
+
+export interface DualRangeFilterAdapterConfig<TData> {
+	/**
+	 * Unique identifier (should match column accessorKey)
+	 */
+	id: string;
+
+	/**
+	 * Display label for filter navigation
+	 */
+	label: string;
+
+	/**
+	 * Field configurations: { fieldKey: displayLabel }
+	 * Example: { running: 'Running', completed: 'Completed' }
+	 */
+	fields: Record<string, string>;
+
+	/**
+	 * Optional formatter for chip display
+	 * @default (num) => num.toLocaleString('en-US')
+	 */
+	formatNumber?: (num: number) => string;
+
+	/**
+	 * How to extract the value object from a row
+	 * @default (row) => row.getValue(id)
+	 */
+	getRowValue?: (row: Row<TData>) => Record<string, number>;
+}
+
+/**
+ * Factory function to create a dual-range filter adapter
+ * Handles filtering on multiple numeric ranges within a single column
+ */
+export function createDualRangeFilterAdapter<TData>(
+	config: DualRangeFilterAdapterConfig<TData>,
+): FilterAdapter<TData, DualRangeFilterValue> {
+	const {
+		id,
+		label,
+		fields,
+		formatNumber = (num) => num.toLocaleString('en-US'),
+		getRowValue = (row) => row.getValue(id) as Record<string, number>,
+	} = config;
+
+	const initialValue: DualRangeFilterValue = {};
+	Object.keys(fields).forEach((key) => {
+		initialValue[key] = {};
+	});
+
+	return {
+		id,
+		label,
+		initialValue,
+
+		columnFilterFn: (row, columnId, filterValue) => {
+			const rowValue = getRowValue(row);
+
+			// Check each field's range
+			for (const [fieldKey, range] of Object.entries(filterValue)) {
+				const hasFilter = range.from !== undefined || range.to !== undefined;
+
+				if (hasFilter) {
+					const fieldValue = rowValue[fieldKey];
+					const matchesFrom = range.from === undefined || fieldValue >= range.from;
+					const matchesTo = range.to === undefined || fieldValue <= range.to;
+
+					if (!matchesFrom || !matchesTo) {
+						return false; // AND logic: all ranges must match
+					}
+				}
+			}
+
+			return true;
+		},
+
+		cellRenderer: undefined, // Let the column definition handle rendering
+
+		toChips: (value) => {
+			const chips: FilterChipItem[] = [];
+
+			Object.entries(value).forEach(([fieldKey, range]) => {
+				const hasFilter = range.from !== undefined || range.to !== undefined;
+
+				if (hasFilter) {
+					const fieldLabel = fields[fieldKey] || fieldKey;
+					const fromText = range.from !== undefined ? formatNumber(range.from) : '';
+					const toText = range.to !== undefined ? formatNumber(range.to) : '';
+
+					chips.push({
+						id: `${id}_${fieldKey}`,
+						label: `${fieldLabel}: From ${fromText} to ${toText}`,
+						metadata: {
+							key: id,
+							field: fieldKey,
+							from: range.from,
+							to: range.to,
+						},
+					});
+				}
+			});
+
+			return chips;
+		},
+
+		fromChip: (chip, currentValue) => {
+			const fieldKey = chip.metadata?.field;
+			if (!fieldKey) return currentValue;
+
+			return {
+				...currentValue,
+				[fieldKey]: {},
+			};
+		},
+
+		getActiveCount: (value) => {
+			let count = 0;
+			Object.values(value).forEach((range) => {
+				if (range.from !== undefined || range.to !== undefined) {
+					count++;
+				}
+			});
+			return count;
+		},
+
+		hasActiveFilters: (value) => {
+			return Object.values(value).some((range) => range.from !== undefined || range.to !== undefined);
+		},
+
+		reset: () => {
+			const resetValue: DualRangeFilterValue = {};
+			Object.keys(fields).forEach((key) => {
+				resetValue[key] = {};
+			});
+			return resetValue;
+		},
+
+		renderFilter: (value, onChange) => {
+			return {
+				type: 'dual-range' as const,
+				fields,
+				value,
+				onChange,
+			};
+		},
+	};
+}
