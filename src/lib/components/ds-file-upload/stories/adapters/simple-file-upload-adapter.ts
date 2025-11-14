@@ -50,7 +50,7 @@ export function getSimpleFileUploadAdapter(uploadEndpoint: string): FileUploadAd
 								url: response.url,
 								metadata: response.metadata,
 							});
-						} catch (error) {
+						} catch {
 							reject(new FatalFileUploadError('Invalid server response'));
 						}
 					} else if (xhr.status >= 400 && xhr.status < 500) {
