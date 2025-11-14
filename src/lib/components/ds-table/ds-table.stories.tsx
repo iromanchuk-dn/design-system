@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useMemo, useRef, useState } from 'react';
-import { ColumnDef, ColumnFilter, ColumnFiltersState, SortingState } from '@tanstack/react-table';
+import { ColumnDef, ColumnFiltersState, SortingState } from '@tanstack/react-table';
 import { keepPreviousData, QueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import classnames from 'classnames';
 import DsIcon from '../ds-icon/ds-icon';
@@ -11,10 +11,6 @@ import { DsTableApi, ScrollParams } from './ds-table.types';
 import { DsSpinner } from '../ds-spinner';
 import { generatePersonData, simulateApiCall } from './utils/story-data-generator';
 import styles from './ds-table.stories.module.scss';
-import DsButton from '../ds-button/ds-button';
-import { TableFilterModal, TableFilterNavItem } from './stories/components/table-filter-modal';
-import { ChipFilterPanel, FilterChipItem } from '../../../widgets';
-import { CheckboxFilter, CheckboxFilterItem } from './stories/components/select-filter/select-filter';
 import { StatusItem } from './stories/components/status-item/status-item';
 
 export enum Status {
@@ -561,7 +557,7 @@ export const TabFilters: Story = {
 			cell: (info) => {
 				const status = info.getValue() as Status;
 				const icon = getStatusIcon(status);
-				return <StatusItem icon={icon} status={status} />;
+				return <StatusItem icon={icon} label={status} />;
 			},
 		};
 
@@ -607,160 +603,6 @@ export const TabFilters: Story = {
 					columnFilters={columnFilters}
 					onColumnFiltersChange={setColumnFilters}
 				/>
-			</div>
-		);
-	},
-	args: {},
-};
-
-export const FiltersPanel: Story = {
-	name: 'With Filters Panel',
-	render: function Render(args) {
-		const statusItems = [
-			{ value: Status.Relationship, label: 'In a Relationship' },
-			{ value: Status.Complicated, label: "It's Complicated" },
-			{ value: Status.Single, label: 'Single' },
-		];
-
-		const [isOpen, setIsOpen] = useState(false);
-		const [columnFilters, setColumnFilters] = useState<ColumnFilter[]>([]);
-		const [modalFilters, setModalFilters] = useState<TableFilterNavItem[]>(
-			args.columns.map((col) => ({
-				id: col.accessorKey,
-				label: col.header,
-				count: 0,
-			})),
-		);
-		const [filterChips, setFilterChips] = useState<FilterChipItem[]>([]);
-
-		const [selectedStatuses, setSelectedStatuses] = useState<CheckboxFilterItem[]>(statusItems);
-
-		const getStatusIcon = (status: Status): IconType => {
-			switch (status) {
-				case Status.Relationship:
-					return 'favorite';
-				case Status.Complicated:
-					return 'psychology';
-				default:
-					return 'person';
-			}
-		};
-
-		const renderStatus = (status: Status) => {
-			const icon = getStatusIcon(status);
-			const label = statusItems.find((item) => item.value === status)?.label || status;
-			return <StatusItem icon={icon} label={label} />;
-		};
-
-		const statusColumnDef: ColumnDef<Person> = {
-			accessorKey: 'status',
-			header: 'Status',
-			filterFn: (row, columnId, filterValue) => filterValue.includes(row.getValue(columnId)),
-			cell: (info) => renderStatus(info.getValue() as Status),
-		};
-
-		const tableColumns = args.columns.map((col) =>
-			(col as { accessorKey: string }).accessorKey === 'status' ? statusColumnDef : col,
-		);
-
-		const handleApply = () => {
-			setColumnFilters([
-				{
-					id: 'status',
-					value: selectedStatuses.map((s) => s.value),
-				},
-			]);
-			setFilterChips([
-				...selectedStatuses.map((status) => ({
-					id: `status_${status.value}`,
-					label: `Status: ${status.label}`,
-					metadata: {
-						key: 'status',
-						value: status.value,
-					},
-				})),
-			]);
-			setIsOpen(false);
-		};
-
-		const handleClearAll = () => {
-			setSelectedStatuses(statusItems);
-			setColumnFilters([
-				{
-					id: 'status',
-					value: statusItems.map((s) => s.value),
-				},
-			]);
-			setFilterChips([]);
-			setIsOpen(false);
-		};
-
-		const handleFilterDelete = (filter: FilterChipItem) => {
-			const filteredChips = filterChips.filter((item) => item.id !== filter.id);
-			if (filteredChips.length > 0) {
-				setFilterChips((prev) => prev.filter((item) => item.id !== filter.id));
-				setSelectedStatuses((prev) => prev.filter((item) => item.value !== filter.metadata?.value));
-				setColumnFilters([
-					{
-						id: 'status',
-						value: selectedStatuses.filter((s) => s.value !== filter.metadata?.value).map((s) => s.value),
-					},
-				]);
-			} else {
-				setSelectedStatuses(statusItems);
-				setColumnFilters([
-					{
-						id: 'status',
-						value: statusItems.map((s) => s.value),
-					},
-				]);
-				setFilterChips([]);
-			}
-		};
-
-		return (
-			<div className={styles.tableFilterContainer}>
-				<div className={styles.toolbar}>
-					<DsButton design="v1.2" buttonType="secondary" onClick={() => setIsOpen(true)}>
-						<DsIcon size="tiny" icon="filter_list" />
-					</DsButton>
-				</div>
-				{filterChips.length > 0 && (
-					<ChipFilterPanel
-						filters={filterChips}
-						onClearAll={handleClearAll}
-						onFilterDelete={handleFilterDelete}
-					/>
-				)}
-				<DsTable
-					{...args}
-					columns={tableColumns}
-					columnFilters={columnFilters}
-					onColumnFiltersChange={setColumnFilters}
-				/>
-				<TableFilterModal
-					open={isOpen}
-					onOpenChange={setIsOpen}
-					columns={8}
-					filterNavItems={modalFilters}
-					onApply={handleApply}
-					onClearAll={handleClearAll}
-				>
-					{(selectedFilter) => {
-						if (selectedFilter.id === 'status') {
-							return (
-								<CheckboxFilter
-									items={statusItems}
-									renderer={(item) => renderStatus(item.value as Status)}
-									selectedItems={selectedStatuses}
-									onSelectionChange={setSelectedStatuses}
-								/>
-							);
-						}
-						// return null;
-						return JSON.stringify(selectedFilter);
-					}}
-				</TableFilterModal>
 			</div>
 		);
 	},
