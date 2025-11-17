@@ -1,11 +1,7 @@
 import { ReactNode } from 'react';
 import { Row } from '@tanstack/react-table';
 import { FilterAdapter } from '../types/filter-adapter.types';
-
-export interface CheckboxFilterItem<TValue = any> {
-	value: TValue;
-	label: string;
-}
+import { CheckboxFilter, CheckboxFilterItem } from '../../stories/components/select-filter/select-filter';
 
 export interface CheckboxFilterAdapterConfig<TData, TValue> {
 	/**
@@ -106,15 +102,14 @@ export function createCheckboxFilterAdapter<TData, TValue = string>(
 		reset: () => items,
 
 		renderFilter: (value, onChange) => {
-			// Return a render function that will be used by the component
-			// The actual CheckboxFilter component will be imported and used in the story
-			return {
-				type: 'checkbox' as const,
-				items,
-				renderer,
-				selectedItems: value,
-				onSelectionChange: onChange,
-			};
+			return (
+				<CheckboxFilter
+					items={items}
+					renderer={renderer}
+					selectedItems={value}
+					onSelectionChange={onChange}
+				/>
+			);
 		},
 	};
 }

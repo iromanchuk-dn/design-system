@@ -57,7 +57,6 @@ export const workflowFilters = [
 ```typescript
 import { useTableFilters } from '../filters/hooks/use-table-filters';
 import { workflowFilters } from './workflow-filters.config';
-import { FilterRenderer } from './FilterRenderer';
 
 function MyTable() {
   const [isOpen, setIsOpen] = useState(false);
@@ -84,9 +83,7 @@ function MyTable() {
         onApply={handlers.applyFilters}
         onClearAll={handlers.clearAll}
       >
-        {(selectedFilter) => (
-          <FilterRenderer filterConfig={renderFilterContent(selectedFilter)} />
-        )}
+        {(selectedFilter) => renderFilterContent(selectedFilter)}
       </TableFilterModal>
     </>
   );

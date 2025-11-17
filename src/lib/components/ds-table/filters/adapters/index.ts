@@ -1,5 +1,5 @@
 export { createCheckboxFilterAdapter } from './checkbox-filter-adapter';
-export type { CheckboxFilterItem, CheckboxFilterAdapterConfig } from './checkbox-filter-adapter';
+export type { CheckboxFilterAdapterConfig } from './checkbox-filter-adapter';
 
 export { createDualRangeFilterAdapter } from './dual-range-filter-adapter';
 export type {

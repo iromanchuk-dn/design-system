@@ -1,9 +1,9 @@
 import { ReactNode } from 'react';
 import { DsCheckbox } from '@design-system/ui';
 
-export interface CheckboxFilterItem {
+export interface CheckboxFilterItem<TValue = any> {
+	value: TValue;
 	label: string;
-	value: string;
 }
 
 export interface CheckboxFilterProps {

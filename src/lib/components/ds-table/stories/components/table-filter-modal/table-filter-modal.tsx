@@ -38,7 +38,7 @@ const TableFilterModal = ({
 
 			<DsModal.Body className={styles.filterBody}>
 				<FilterNav items={filterNavItems} selectedItem={selectedFilter} onSelect={setSelectedFilter} />
-				<div className={styles.filterContent}>{children(selectedFilter)}</div>
+				<div className={styles.filterContent}>{children?.(selectedFilter)}</div>
 			</DsModal.Body>
 
 			<DsModal.Footer className={styles.filterFooter}>
@@ -82,11 +82,11 @@ const FilterNav = ({
 			<button
 				key={item.id}
 				className={classNames(styles.filterNavItem, {
-					[styles.selected]: item.id === selectedItem.id,
+					[styles.selected]: item.id === selectedItem?.id,
 				})}
 				disabled={item.disabled}
 				onClick={() => onSelect?.(item)}
-				aria-current={item.id === selectedItem.id ? 'true' : undefined}
+				aria-current={item.id === selectedItem?.id ? 'true' : undefined}
 			>
 				<span className={styles.filterNavItemLabel}>{item.label}</span>
 				{item.count !== undefined && item.count > 0 && (

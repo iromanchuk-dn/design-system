@@ -8,7 +8,6 @@ import { TableFilterModal } from './components/table-filter-modal';
 import { ChipFilterPanel } from '../../../../widgets';
 import { useTableFilters } from '../filters/hooks/use-table-filters';
 import { Workflow, workflowFilters } from './filters-panel/workflow-filters.config';
-import { FilterRenderer } from './filters-panel/FilterRenderer';
 import styles from '../ds-table.stories.module.scss';
 
 export enum WorkflowCategory {
@@ -240,10 +239,7 @@ export const FiltersPanel: Story = {
 					onApply={handleApply}
 					onClearAll={handleClearAll}
 				>
-					{(selectedFilter) => {
-						const filterConfig = renderFilterContent(selectedFilter);
-						return <FilterRenderer filterConfig={filterConfig} />;
-					}}
+					{(selectedFilter) => renderFilterContent(selectedFilter)}
 				</TableFilterModal>
 			</div>
 		);

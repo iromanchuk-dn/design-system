@@ -1,6 +1,7 @@
 import { Row } from '@tanstack/react-table';
 import { FilterAdapter } from '../types/filter-adapter.types';
 import { FilterChipItem } from '../../../../../widgets';
+import { RangeFilter } from '../../stories/components/range-filter/range-filter';
 
 export interface RangeValue {
 	from?: number;
@@ -149,12 +150,29 @@ export function createDualRangeFilterAdapter<TData>(
 		},
 
 		renderFilter: (value, onChange) => {
-			return {
-				type: 'dual-range' as const,
-				fields,
-				value,
-				onChange,
-			};
+			return (
+				<div>
+					{Object.entries(fields).map(([fieldKey, fieldLabel]) => (
+						<RangeFilter
+							key={fieldKey}
+							label={fieldLabel as string}
+							value={value[fieldKey] || {}}
+							onChange={(rangeValue) =>
+								onChange({
+									...value,
+									[fieldKey]: rangeValue,
+								})
+							}
+							onClear={() =>
+								onChange({
+									...value,
+									[fieldKey]: {},
+								})
+							}
+						/>
+					))}
+				</div>
+			);
 		},
 	};
 }

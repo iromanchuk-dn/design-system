@@ -42,7 +42,6 @@ export const myFilters = [statusFilter, countFilter];
 ```typescript
 import { useTableFilters } from '../filters/hooks/use-table-filters';
 import { myFilters, MyData } from './my-table-filters.config';
-import { FilterRenderer } from './FilterRenderer';
 
 function MyTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -87,9 +86,7 @@ function MyTable() {
         onApply={handlers.applyFilters}
         onClearAll={handlers.clearAll}
       >
-        {(selectedFilter) => (
-          <FilterRenderer filterConfig={renderFilterContent(selectedFilter)} />
-        )}
+        {(selectedFilter) => renderFilterContent(selectedFilter)}
       </TableFilterModal>
     </>
   );

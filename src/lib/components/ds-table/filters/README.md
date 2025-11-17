@@ -42,8 +42,8 @@ filters/
 ├── types/
 │   └── filter-adapter.types.ts  ← Core interfaces
 ├── adapters/
-│   ├── checkbox-filter-adapter.ts      ← Generic checkbox filter
-│   ├── dual-range-filter-adapter.ts    ← Generic dual-range filter
+│   ├── checkbox-filter-adapter.tsx      ← Generic checkbox filter
+│   ├── dual-range-filter-adapter.tsx    ← Generic dual-range filter
 │   ├── custom-filter-adapter.ts        ← For app-specific filters
 │   └── index.ts
 ├── hooks/

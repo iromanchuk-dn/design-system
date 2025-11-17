@@ -1,4 +1,3 @@
-// AI Generated file
 import { useState } from 'react';
 import DsTextInput from '../../../../ds-text-input/ds-text-input';
 import DsButton from '../../../../ds-button/ds-button';
