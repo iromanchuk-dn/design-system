@@ -8,6 +8,7 @@ import { TableFilterModal } from './components/table-filter-modal';
 import { ChipFilterPanel } from '../../../../widgets';
 import { useTableFilters } from '../filters/hooks/use-table-filters';
 import { Workflow, workflowFilters } from './filters-panel/workflow-filters.config';
+import { LastEditedCell } from './components/last-edited-cell/last-edited-cell';
 import styles from '../ds-table.stories.module.scss';
 
 export enum WorkflowCategory {
@@ -15,6 +16,12 @@ export enum WorkflowCategory {
 	OpticalOptimization = 'Optical Optimization',
 	ServiceProvisioning = 'Service Provisioning',
 }
+
+const sampleUsers = [
+	{ name: 'Neil Sims', colorIndex: 0 },
+	{ name: 'Bonnie Green', colorIndex: 1 },
+	{ name: 'Michael Gough', colorIndex: 2 },
+];
 
 const columns: ColumnDef<Workflow>[] = [
 	{
@@ -48,7 +55,12 @@ const columns: ColumnDef<Workflow>[] = [
 	{
 		accessorKey: 'lastEdited',
 		header: 'Last edited',
-		cell: (info) => info.getValue(),
+		cell: (info) => {
+			const value = info.getValue() as { editor: string; timestamp: string; colorIndex: number };
+			return (
+				<LastEditedCell editor={value.editor} timestamp={value.timestamp} colorIndex={value.colorIndex} />
+			);
+		},
 	},
 ];
 
@@ -60,7 +72,11 @@ const defaultData: Workflow[] = [
 		runningCompleted: { running: 3, completed: 41 },
 		category: WorkflowCategory.NetworkBuilt,
 		version: '000.0003',
-		lastEdited: '23-05-2024 04:47 PM',
+		lastEdited: {
+			editor: sampleUsers[0].name,
+			timestamp: '23-05-2024 04:47 PM',
+			colorIndex: sampleUsers[0].colorIndex,
+		},
 	},
 	{
 		id: '2',
@@ -69,7 +85,11 @@ const defaultData: Workflow[] = [
 		runningCompleted: { running: 8, completed: 14 },
 		category: WorkflowCategory.NetworkBuilt,
 		version: '000.0002',
-		lastEdited: '23-05-2024 04:47 PM',
+		lastEdited: {
+			editor: sampleUsers[1].name,
+			timestamp: '23-05-2024 03:32 PM',
+			colorIndex: sampleUsers[1].colorIndex,
+		},
 	},
 	{
 		id: '3',
@@ -78,7 +98,11 @@ const defaultData: Workflow[] = [
 		runningCompleted: { running: 0, completed: 243 },
 		category: WorkflowCategory.NetworkBuilt,
 		version: '000.0033',
-		lastEdited: '23-05-2024 04:47 PM',
+		lastEdited: {
+			editor: sampleUsers[2].name,
+			timestamp: '22-05-2024 11:15 AM',
+			colorIndex: sampleUsers[2].colorIndex,
+		},
 	},
 	{
 		id: '4',
@@ -87,7 +111,11 @@ const defaultData: Workflow[] = [
 		runningCompleted: { running: 14, completed: 123 },
 		category: WorkflowCategory.NetworkBuilt,
 		version: '000.0001',
-		lastEdited: '23-05-2024 04:47 PM',
+		lastEdited: {
+			editor: sampleUsers[0].name,
+			timestamp: '23-05-2024 02:20 PM',
+			colorIndex: sampleUsers[0].colorIndex,
+		},
 	},
 	{
 		id: '5',
@@ -96,7 +124,11 @@ const defaultData: Workflow[] = [
 		runningCompleted: { running: 45, completed: 45 },
 		category: WorkflowCategory.OpticalOptimization,
 		version: '000.0022',
-		lastEdited: '23-05-2024 04:47 PM',
+		lastEdited: {
+			editor: sampleUsers[1].name,
+			timestamp: '23-05-2024 01:05 PM',
+			colorIndex: sampleUsers[1].colorIndex,
+		},
 	},
 	{
 		id: '6',
@@ -105,7 +137,11 @@ const defaultData: Workflow[] = [
 		runningCompleted: { running: 99, completed: 23 },
 		category: WorkflowCategory.OpticalOptimization,
 		version: '000.0001',
-		lastEdited: '23-05-2024 04:47 PM',
+		lastEdited: {
+			editor: sampleUsers[2].name,
+			timestamp: '21-05-2024 09:30 AM',
+			colorIndex: sampleUsers[2].colorIndex,
+		},
 	},
 	{
 		id: '7',
@@ -114,7 +150,11 @@ const defaultData: Workflow[] = [
 		runningCompleted: { running: 49, completed: 100 },
 		category: WorkflowCategory.OpticalOptimization,
 		version: '000.0012',
-		lastEdited: '23-05-2024 04:47 PM',
+		lastEdited: {
+			editor: sampleUsers[0].name,
+			timestamp: '23-05-2024 12:45 PM',
+			colorIndex: sampleUsers[0].colorIndex,
+		},
 	},
 	{
 		id: '8',
@@ -123,7 +163,11 @@ const defaultData: Workflow[] = [
 		runningCompleted: { running: 25, completed: 75 },
 		category: WorkflowCategory.ServiceProvisioning,
 		version: '000.0010',
-		lastEdited: '23-05-2024 04:47 PM',
+		lastEdited: {
+			editor: sampleUsers[1].name,
+			timestamp: '22-05-2024 05:10 PM',
+			colorIndex: sampleUsers[1].colorIndex,
+		},
 	},
 	{
 		id: '9',
@@ -132,7 +176,11 @@ const defaultData: Workflow[] = [
 		runningCompleted: { running: 77, completed: 88 },
 		category: WorkflowCategory.ServiceProvisioning,
 		version: '000.0001',
-		lastEdited: '23-05-2024 04:47 PM',
+		lastEdited: {
+			editor: sampleUsers[2].name,
+			timestamp: '23-05-2024 10:22 AM',
+			colorIndex: sampleUsers[2].colorIndex,
+		},
 	},
 	{
 		id: '10',
@@ -141,7 +189,11 @@ const defaultData: Workflow[] = [
 		runningCompleted: { running: 65, completed: 200 },
 		category: WorkflowCategory.ServiceProvisioning,
 		version: '000.0001',
-		lastEdited: '23-05-2024 04:47 PM',
+		lastEdited: {
+			editor: sampleUsers[0].name,
+			timestamp: '20-05-2024 03:15 PM',
+			colorIndex: sampleUsers[0].colorIndex,
+		},
 	},
 	{
 		id: '11',
@@ -150,7 +202,11 @@ const defaultData: Workflow[] = [
 		runningCompleted: { running: 49, completed: 142 },
 		category: WorkflowCategory.ServiceProvisioning,
 		version: '000.0001',
-		lastEdited: '23-05-2024 04:47 PM',
+		lastEdited: {
+			editor: sampleUsers[1].name,
+			timestamp: '19-05-2024 08:40 AM',
+			colorIndex: sampleUsers[1].colorIndex,
+		},
 	},
 	{
 		id: '12',
@@ -159,7 +215,11 @@ const defaultData: Workflow[] = [
 		runningCompleted: { running: 90, completed: 300 },
 		category: WorkflowCategory.NetworkBuilt,
 		version: '000.0001',
-		lastEdited: '03-05-2024 04:47 PM',
+		lastEdited: {
+			editor: sampleUsers[2].name,
+			timestamp: '03-05-2024 04:47 PM',
+			colorIndex: sampleUsers[2].colorIndex,
+		},
 	},
 ];
 

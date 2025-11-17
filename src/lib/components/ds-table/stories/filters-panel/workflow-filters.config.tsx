@@ -18,7 +18,11 @@ export interface Workflow {
 	};
 	category: string;
 	version: string;
-	lastEdited: string;
+	lastEdited: {
+		editor: string;
+		timestamp: string;
+		colorIndex: number;
+	};
 }
 
 /**
