@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import classNames from 'classnames';
-import { DsButton, DsIcon, DsModal } from '@design-system/ui';
-import { FilterModalProps, FilterNavItem } from './filter-modal.types';
+import { DsButton, DsIcon, DsModal, DsNavMenu, NavMenuItem } from '@design-system/ui';
+import { FilterModalProps } from './filter-modal.types';
 import styles from './filter-modal.module.scss';
 
 /**
@@ -19,7 +19,7 @@ const FilterModal = ({
 	applyDisabled = false,
 	clearAllDisabled = false,
 }: FilterModalProps) => {
-	const [selectedFilter, setSelectedFilter] = useState<FilterNavItem>(filterNavItems[0]);
+	const [selectedFilter, setSelectedFilter] = useState<NavMenuItem>(filterNavItems[0]);
 
 	return (
 		<DsModal
@@ -37,7 +37,12 @@ const FilterModal = ({
 			</DsModal.Header>
 
 			<DsModal.Body className={styles.filterBody}>
-				<FilterNav items={filterNavItems} selectedItem={selectedFilter} onSelect={setSelectedFilter} />
+				<DsNavMenu
+					items={filterNavItems}
+					selectedItem={selectedFilter}
+					onSelect={setSelectedFilter}
+					className={styles.filterNav}
+				/>
 				<div className={styles.filterContent}>{children?.(selectedFilter)}</div>
 			</DsModal.Body>
 
@@ -67,34 +72,5 @@ const FilterModal = ({
 		</DsModal>
 	);
 };
-
-const FilterNav = ({
-	items,
-	selectedItem,
-	onSelect,
-}: {
-	items: FilterNavItem[];
-	selectedItem?: FilterNavItem;
-	onSelect?: (item: FilterNavItem) => void;
-}) => (
-	<nav className={styles.filterNav}>
-		{items.map((item) => (
-			<button
-				key={item.id}
-				className={classNames(styles.filterNavItem, {
-					[styles.selected]: item.id === selectedItem?.id,
-				})}
-				disabled={item.disabled}
-				onClick={() => onSelect?.(item)}
-				aria-current={item.id === selectedItem?.id ? 'true' : undefined}
-			>
-				<span className={styles.filterNavItemLabel}>{item.label}</span>
-				{item.count !== undefined && item.count > 0 && (
-					<span className={styles.filterNavItemCount}>{item.count}</span>
-				)}
-			</button>
-		))}
-	</nav>
-);
 
 export default FilterModal;

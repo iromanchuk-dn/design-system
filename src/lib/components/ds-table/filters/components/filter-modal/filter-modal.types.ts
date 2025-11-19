@@ -1,23 +1,5 @@
 import { ReactNode } from 'react';
-
-export interface FilterNavItem {
-	/**
-	 * Unique identifier for the filter category
-	 */
-	id: string;
-	/**
-	 * Display label for the filter category
-	 */
-	label: string;
-	/**
-	 * Number of active filters in this category
-	 */
-	count?: number;
-	/**
-	 * Whether this category is disabled
-	 */
-	disabled?: boolean;
-}
+import { NavMenuItem } from '@design-system/ui';
 
 export interface FilterModalProps {
 	/**
@@ -48,7 +30,7 @@ export interface FilterModalProps {
 	/**
 	 * Array of filter navigation items
 	 */
-	filterNavItems?: FilterNavItem[];
+	filterNavItems?: NavMenuItem[];
 	/**
 	 * Currently selected filter category ID
 	 */
@@ -60,7 +42,7 @@ export interface FilterModalProps {
 	/**
 	 * Content to display in the filter panel (right side)
 	 */
-	children?: (item: FilterNavItem) => ReactNode;
+	children?: (item: NavMenuItem) => ReactNode;
 	/**
 	 * Whether apply button is disabled
 	 */
