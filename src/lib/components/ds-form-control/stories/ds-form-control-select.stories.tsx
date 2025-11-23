@@ -128,8 +128,7 @@ const checkDisabled = async (canvasElement: HTMLElement) => {
 	await userEvent.click(selectTrigger);
 
 	// Verify that no dropdown appears (disabled state)
-	const option1 = canvas.queryByText('Option 1');
-	await expect(option1).not.toBeVisible();
+	await expect(canvas.queryByText('Option 1')).not.toBeVisible();
 };
 
 export const Default: Story = {

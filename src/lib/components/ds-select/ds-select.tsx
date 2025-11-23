@@ -139,7 +139,7 @@ const DsSelect = ({
 			<Portal>
 				<Select.Positioner className={styles.viewport}>
 					<Select.Content className={styles.content}>
-						{internalOptions.length > SEARCH_THRESHOLD && (
+						{userOptions.length > SEARCH_THRESHOLD && (
 							<div className={styles.searchInput}>
 								<DsIcon className={styles.searchIcon} icon="search" size="tiny" />
 								<input

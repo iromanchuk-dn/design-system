@@ -137,6 +137,7 @@ const mockOptions = [
 	{ value: 'jackfruit', label: 'Jackfruit' },
 	{ value: 'kiwi', label: 'Kiwi' },
 	{ value: 'lemon', label: 'Lemon' },
+	{ value: 'melon', label: 'Melon' },
 ];
 
 export const Default: Story = {
@@ -170,6 +171,23 @@ export const WithIcons: Story = {
 	},
 };
 
+export const WithSearch: Story = {
+	render: (args) => <ControlledSelectWrapper {...args} />,
+	args: {
+		options: [
+			...mockOptions,
+			{
+				value: 'nectarine',
+				label: 'Nectarine',
+			},
+		],
+		style: {
+			width: '250px',
+		},
+		clearable: true,
+	},
+};
+
 export const MultiSelect: Story = {
 	render: (args) => <ControlledSelectWrapper {...args} />,
 	args: {
@@ -188,8 +206,8 @@ export const MultiSelectWithSearch: Story = {
 		options: [
 			...mockOptions,
 			{
-				value: 'melon',
-				label: 'Melon',
+				value: 'nectarine',
+				label: 'Nectarine',
 			},
 		],
 		style: {
