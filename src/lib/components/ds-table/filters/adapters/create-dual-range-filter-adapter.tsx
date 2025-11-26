@@ -2,6 +2,7 @@ import { Row } from '@tanstack/react-table';
 import { ChipItem } from '@design-system/ui';
 import { FilterAdapter } from '../types/filter-adapter.types';
 import { RangeFilter } from '../components/range-filter';
+import { createFilterAdapter } from './create-filter-adapter';
 
 export interface RangeValue {
 	from?: number;
@@ -48,7 +49,7 @@ export interface DualRangeFilterAdapterConfig<TData> {
  */
 export function createDualRangeFilterAdapter<TData>(
 	config: DualRangeFilterAdapterConfig<TData>,
-): FilterAdapter<TData, DualRangeFilterValue> {
+): FilterAdapter<TData, DualRangeFilterValue, Record<string, number>> {
 	const {
 		id,
 		label,
@@ -62,12 +63,12 @@ export function createDualRangeFilterAdapter<TData>(
 		initialValue[key] = {};
 	});
 
-	return {
+	return createFilterAdapter<TData, DualRangeFilterValue, Record<string, number>>({
 		id,
 		label,
 		initialValue,
 
-		columnFilterFn: (row, columnId, filterValue) => {
+		filterFn: (row, columnId, filterValue) => {
 			const rowValue = getRowValue(row);
 
 			// Check each field's range
@@ -127,7 +128,7 @@ export function createDualRangeFilterAdapter<TData>(
 			};
 		},
 
-		getActiveCount: (value) => {
+		getActiveFiltersCount: (value) => {
 			let count = 0;
 			Object.values(value).forEach((range) => {
 				if (range.from !== undefined || range.to !== undefined) {
@@ -135,18 +136,6 @@ export function createDualRangeFilterAdapter<TData>(
 				}
 			});
 			return count;
-		},
-
-		hasActiveFilters: (value) => {
-			return Object.values(value).some((range) => range.from !== undefined || range.to !== undefined);
-		},
-
-		reset: () => {
-			const resetValue: DualRangeFilterValue = {};
-			Object.keys(fields).forEach((key) => {
-				resetValue[key] = {};
-			});
-			return resetValue;
 		},
 
 		renderFilter: (value, onChange) => {
@@ -174,5 +163,5 @@ export function createDualRangeFilterAdapter<TData>(
 				</div>
 			);
 		},
-	};
+	});
 }

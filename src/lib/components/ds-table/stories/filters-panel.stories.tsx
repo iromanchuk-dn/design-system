@@ -4,9 +4,12 @@ import { ColumnDef } from '@tanstack/react-table';
 import DsIcon from '../../ds-icon/ds-icon';
 import DsTable from '../ds-table';
 import DsButton from '../../ds-button/ds-button';
-import { FilterModal } from '../filters/components/filter-modal';
+import { DsModal } from '../../ds-modal';
+import { DsVerticalTabs } from '@design-system/ui';
+import { DsTypography } from '../../ds-typography';
 import { DsChipGroup } from '../../ds-chip-group';
 import { useTableFilters } from '../filters/hooks/use-table-filters';
+import { FilterNavItem } from '../filters/types/filter-adapter.types';
 import { Workflow, workflowFilters } from './filters-panel/workflow-filters.config';
 import styles from '../ds-table.stories.module.scss';
 
@@ -76,7 +79,7 @@ const defaultData: Workflow[] = [
 		version: '000.0003',
 		lastEdited: {
 			editor: sampleUsers[0].name,
-			timestamp: '23-05-2024 04:47 PM',
+			timestamp: '2025-11-26T16:47:00',
 			colorIndex: sampleUsers[0].colorIndex,
 		},
 	},
@@ -89,7 +92,7 @@ const defaultData: Workflow[] = [
 		version: '000.0002',
 		lastEdited: {
 			editor: sampleUsers[1].name,
-			timestamp: '23-05-2024 03:32 PM',
+			timestamp: '2025-11-26T15:32:00',
 			colorIndex: sampleUsers[1].colorIndex,
 		},
 	},
@@ -102,7 +105,7 @@ const defaultData: Workflow[] = [
 		version: '000.0033',
 		lastEdited: {
 			editor: sampleUsers[2].name,
-			timestamp: '22-05-2024 11:15 AM',
+			timestamp: '2025-11-25T11:15:00',
 			colorIndex: sampleUsers[2].colorIndex,
 		},
 	},
@@ -115,7 +118,7 @@ const defaultData: Workflow[] = [
 		version: '000.0001',
 		lastEdited: {
 			editor: sampleUsers[3].name,
-			timestamp: '23-05-2024 02:20 PM',
+			timestamp: '2025-11-24T14:20:00',
 			colorIndex: sampleUsers[3].colorIndex,
 		},
 	},
@@ -128,7 +131,7 @@ const defaultData: Workflow[] = [
 		version: '000.0022',
 		lastEdited: {
 			editor: sampleUsers[4].name,
-			timestamp: '23-05-2024 01:05 PM',
+			timestamp: '2025-11-23T13:05:00',
 			colorIndex: sampleUsers[4].colorIndex,
 		},
 	},
@@ -141,7 +144,7 @@ const defaultData: Workflow[] = [
 		version: '000.0001',
 		lastEdited: {
 			editor: sampleUsers[5].name,
-			timestamp: '21-05-2024 09:30 AM',
+			timestamp: '2025-11-20T09:30:00',
 			colorIndex: sampleUsers[5].colorIndex,
 		},
 	},
@@ -154,7 +157,7 @@ const defaultData: Workflow[] = [
 		version: '000.0012',
 		lastEdited: {
 			editor: sampleUsers[0].name,
-			timestamp: '23-05-2024 12:45 PM',
+			timestamp: '2025-11-18T12:45:00',
 			colorIndex: sampleUsers[0].colorIndex,
 		},
 	},
@@ -167,7 +170,7 @@ const defaultData: Workflow[] = [
 		version: '000.0010',
 		lastEdited: {
 			editor: sampleUsers[1].name,
-			timestamp: '22-05-2024 05:10 PM',
+			timestamp: '2025-11-15T17:10:00',
 			colorIndex: sampleUsers[1].colorIndex,
 		},
 	},
@@ -180,7 +183,7 @@ const defaultData: Workflow[] = [
 		version: '000.0001',
 		lastEdited: {
 			editor: sampleUsers[2].name,
-			timestamp: '23-05-2024 10:22 AM',
+			timestamp: '2025-11-10T10:22:00',
 			colorIndex: sampleUsers[2].colorIndex,
 		},
 	},
@@ -193,7 +196,7 @@ const defaultData: Workflow[] = [
 		version: '000.0001',
 		lastEdited: {
 			editor: sampleUsers[3].name,
-			timestamp: '20-05-2024 03:15 PM',
+			timestamp: '2025-11-05T15:15:00',
 			colorIndex: sampleUsers[3].colorIndex,
 		},
 	},
@@ -206,7 +209,7 @@ const defaultData: Workflow[] = [
 		version: '000.0001',
 		lastEdited: {
 			editor: sampleUsers[4].name,
-			timestamp: '19-05-2024 08:40 AM',
+			timestamp: '2025-10-28T08:40:00',
 			colorIndex: sampleUsers[4].colorIndex,
 		},
 	},
@@ -219,17 +222,158 @@ const defaultData: Workflow[] = [
 		version: '000.0001',
 		lastEdited: {
 			editor: sampleUsers[5].name,
-			timestamp: '03-05-2024 04:47 PM',
+			timestamp: '2025-10-15T16:47:00',
 			colorIndex: sampleUsers[5].colorIndex,
 		},
 	},
 ];
 
 const meta: Meta<typeof DsTable<Workflow, unknown>> = {
-	title: 'Design System/Table',
+	title: 'Design System/Table/Filters',
 	component: DsTable,
 	parameters: {
 		layout: 'fullscreen',
+		docs: {
+			description: {
+				component: `
+# Table Filters System
+
+A plug-and-play filter system using the **Filter Adapter Pattern** that eliminates boilerplate and centralizes filter logic.
+
+## Features
+
+- **Plug-and-play**: Add filters by adding to config array
+- **Type-safe**: Full TypeScript support
+- **Automatic**: Chip generation, nav items, column enhancement
+- **Reusable**: Generic adapters work across tables
+- **Extensible**: Custom adapters for complex scenarios
+
+## Quick Start
+
+### 1. Define Filters (config file)
+
+\`\`\`typescript
+// my-filters.config.tsx
+import { createCheckboxFilterAdapter, createDualRangeFilterAdapter } from '../filters';
+
+export const statusFilter = createCheckboxFilterAdapter({
+  id: 'status',
+  label: 'Status',
+  items: [
+    { value: 'active', label: 'Active' },
+    { value: 'inactive', label: 'Inactive' },
+  ],
+});
+
+export const rangeFilter = createDualRangeFilterAdapter({
+  id: 'count',
+  label: 'Count',
+  fields: { count: 'Count' },
+});
+
+export const myFilters = [statusFilter, rangeFilter];
+\`\`\`
+
+### 2. Use in Component
+
+\`\`\`typescript
+import { useTableFilters } from '../filters/hooks/use-table-filters';
+import { myFilters } from './my-filters.config';
+
+function MyTable() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState<FilterNavItem>();
+
+  const {
+    columnFilters,       // For TanStack Table
+    filterChips,         // For DsChipGroup
+    filterNavItems,      // For filter navigation (FilterNavItem[])
+    enhancedColumns,     // Columns with filters
+    handlers,            // { applyFilters, clearAll, deleteChip }
+    renderFilterContent, // Render function
+  } = useTableFilters(myFilters, baseColumns);
+
+  return (
+    <>
+      <DsButton onClick={() => setIsModalOpen(true)}>
+        <DsIcon icon="filter_list" />
+      </DsButton>
+
+      {filterChips.length > 0 && (
+        <DsChipGroup
+          items={filterChips}
+          onClearAll={handlers.clearAll}
+          onItemDelete={handlers.deleteChip}
+        />
+      )}
+
+      <DsTable
+        columns={enhancedColumns}
+        columnFilters={columnFilters}
+        data={myData}
+      />
+
+      {/* See "Filter Modal Layout Pattern" section below for complete modal implementation */}
+      <DsModal open={isModalOpen} onOpenChange={setIsModalOpen} columns={8}>
+        {/* ... two-column layout with DsVerticalTabs ... */}
+      </DsModal>
+    </>
+  );
+}
+\`\`\`
+
+## Available Filter Types
+
+### Checkbox Filter (Multi-select)
+\`\`\`typescript
+createCheckboxFilterAdapter({
+  id: 'columnName',
+  label: 'Display Label',
+  items: [{ value: 'val1', label: 'Label 1' }],
+  renderer?: (item) => <CustomComponent />,      // Optional
+  chipLabelTemplate?: (item) => \`\${item.label}\`, // Optional
+  cellRenderer?: (value) => <CustomCell />,      // Optional
+});
+\`\`\`
+
+### Dual-Range Filter (Numeric ranges)
+\`\`\`typescript
+createDualRangeFilterAdapter({
+  id: 'columnName',
+  label: 'Display Label',
+  fields: {
+    field1: 'Field 1 Label',
+    field2: 'Field 2 Label',
+  },
+  formatNumber?: (num) => num.toFixed(2),        // Optional
+});
+\`\`\`
+
+### Custom Filter (Full control)
+\`\`\`typescript
+createCustomFilterAdapter({
+  id: 'columnName',
+  label: 'Display Label',
+  initialValue: { /* your state */ },
+  filterFn: (row, columnId, filterValue) => boolean,
+  toChips: (value) => FilterChipItem[],
+  fromChip: (chip, currentValue) => newValue,
+  getActiveFiltersCount: (value) => number,              // 0 means none active
+  renderFilter: (value, onChange) => ReactNode,
+  cellRenderer?: (value) => ReactNode,           // Optional
+});
+\`\`\`
+
+## What You Get Automatically
+
+- Chip generation from filter state
+- Filter nav items with active counts
+- Column enhancement with filter functions
+- State management across all filters
+- Type-safe filtering
+`,
+			},
+		},
 	},
 	tags: ['autodocs'],
 	args: {
@@ -262,11 +406,137 @@ type Story = StoryObj<typeof DsTable<Workflow, unknown>>;
 
 export const FiltersPanel: Story = {
 	name: 'With Filters Panel',
-	render: function Render(args) {
-		const [isOpen, setIsOpen] = useState(false);
+	parameters: {
+		docs: {
+			description: {
+				story: `
+### Interactive Filter Example
 
+This story demonstrates the complete filter system with:
+
+- **Status Filter**: Checkbox multi-select with custom rendering (status badges)
+- **Running/Completed Filter**: Dual-range numeric filter
+- **Category Filter**: Simple checkbox multi-select
+- **Version Filter**: Checkbox with custom chip labels
+
+#### Key Implementation Details:
+
+1. **Filter Configuration** (see \`workflow-filters.config.tsx\`):
+   - Centralized filter definitions
+   - Custom renderers for status badges
+   - Format functions for numbers
+
+2. **Hook Usage**:
+   \`\`\`typescript
+   const {
+     columnFilters,       // Pass to DsTable
+     filterChips,         // Pass to DsChipGroup
+     filterNavItems,      // Pass to DsVerticalTabs in modal
+     enhancedColumns,     // Pass to DsTable (includes filter functions)
+     handlers,            // { applyFilters, clearAll, deleteChip }
+     renderFilterContent, // Render function for modal content
+   } = useTableFilters(workflowFilters, columns);
+   \`\`\`
+
+3. **What's Handled Automatically**:
+   - Filter state management
+   - Chip generation and deletion
+   - Nav item counts (updates in real-time)
+   - Column enhancement with filter functions
+   - Type-safe filter values
+
+#### Filter Modal Layout Pattern:
+
+The modal uses a two-column layout with DsModal + DsVerticalTabs:
+
+\`\`\`tsx
+// State for selected filter tab
+const [selectedFilterId, setSelectedFilterId] = useState<string>(filterNavItems[0]?.id);
+
+const handleValueChange = (value: string | null) => {
+  if (value) setSelectedFilterId(value);
+};
+
+<DsModal open={open} onOpenChange={setOpen}>
+  <DsModal.Header className={styles.filterHeader}>
+    <div className={styles.headerLeft}>
+      <DsIcon icon="filter_list" />
+      <DsModal.Title>Filters</DsModal.Title>
+    </div>
+    <DsModal.CloseTrigger />
+  </DsModal.Header>
+
+  {/* Two-column body: nav (40%) + content (60%) */}
+  <DsModal.Body className={styles.filterBody}>
+    <DsVerticalTabs value={selectedFilterId} onValueChange={handleValueChange}>
+      <DsVerticalTabs.List className={styles.filterNav}>
+        {filterNavItems.map((item) => (
+          <DsVerticalTabs.Tab key={item.id} value={item.id} disabled={item.disabled}>
+            <DsTypography variant="body-sm-md">{item.label}</DsTypography>
+            {!!item.count && (
+              <div className={styles.filterTabBadge}>
+                <span className={styles.filterTabDot} />
+                <DsTypography variant="body-sm-reg">{item.count}</DsTypography>
+              </div>
+            )}
+          </DsVerticalTabs.Tab>
+        ))}
+      </DsVerticalTabs.List>
+      {filterNavItems.map((item) => (
+        <DsVerticalTabs.Content key={item.id} value={item.id} className={styles.filterContent}>
+          {renderFilterContent({ id: item.id })}
+        </DsVerticalTabs.Content>
+      ))}
+    </DsVerticalTabs>
+  </DsModal.Body>
+
+  <DsModal.Footer className={styles.filterFooter}>
+    <DsButton onClick={handleClearAll}>Clear all</DsButton>
+    <DsModal.Actions>
+      <DsButton onClick={handleApply}>Apply</DsButton>
+    </DsModal.Actions>
+  </DsModal.Footer>
+</DsModal>
+\`\`\`
+
+**Note**: DsVerticalTabs now uses compound components for maximum flexibility. You can customize tab content with labels, icons, badges, etc.
+
+See the story code for complete implementation with styles.
+
+#### Try It:
+1. Click the filter icon to open the modal
+2. Select filters in different categories
+3. Notice the nav item counts update as you make changes
+4. Click "Apply" to see filtered data and chips
+5. Delete individual chips or clear all filters
+
+#### Adding More Filters:
+To add a new filter, just add one adapter to \`workflowFilters\` array. No other changes needed!
+`,
+			},
+		},
+	},
+	render: function Render(args) {
+		// useTableFilters hook orchestrates all filter logic
 		const { columnFilters, filterChips, filterNavItems, enhancedColumns, handlers, renderFilterContent } =
 			useTableFilters(workflowFilters, args.columns);
+
+		const [isOpen, setIsOpen] = useState(false);
+		const [selectedFilterId, setSelectedFilterId] = useState<string>(filterNavItems[0]?.id || '');
+
+		// Set initial selected filter when modal opens
+		const handleOpenChange = (open: boolean) => {
+			if (open && !selectedFilterId && filterNavItems.length > 0) {
+				setSelectedFilterId(filterNavItems[0].id);
+			}
+			setIsOpen(open);
+		};
+
+		const handleValueChange = (value: string | null) => {
+			if (value) {
+				setSelectedFilterId(value);
+			}
+		};
 
 		const handleApply = () => {
 			handlers.applyFilters();
@@ -278,27 +548,83 @@ export const FiltersPanel: Story = {
 			setIsOpen(false);
 		};
 
+		// Helper component for filter tab content (label + count badge)
+		const TabLabel = ({ item }: { item: FilterNavItem }) => (
+			<>
+				<DsTypography variant="body-sm-md" className={styles.filterTabLabel}>
+					{item.label}
+				</DsTypography>
+				{!!item.count && (
+					<div className={styles.filterTabBadge}>
+						<span className={styles.filterTabDot} />
+						<DsTypography variant="body-sm-reg" className={styles.filterTabCount}>
+							{item.count}
+						</DsTypography>
+					</div>
+				)}
+			</>
+		);
+
 		return (
 			<div className={styles.tableFilterContainer}>
+				{/* Toolbar with filter button */}
 				<div className={styles.toolbar}>
 					<DsButton design="v1.2" buttonType="secondary" onClick={() => setIsOpen(true)}>
 						<DsIcon size="tiny" icon="filter_list" />
 					</DsButton>
 				</div>
+
+				{/* Filter chips (automatically generated from filter state) */}
 				{filterChips.length > 0 && (
 					<DsChipGroup items={filterChips} onClearAll={handleClearAll} onItemDelete={handlers.deleteChip} />
 				)}
+
+				{/* Table with enhanced columns (includes filter functions) */}
 				<DsTable {...args} columns={enhancedColumns} columnFilters={columnFilters} />
-				<FilterModal
-					open={isOpen}
-					onOpenChange={setIsOpen}
-					columns={8}
-					filterNavItems={filterNavItems}
-					onApply={handleApply}
-					onClearAll={handleClearAll}
-				>
-					{(selectedFilter) => renderFilterContent(selectedFilter)}
-				</FilterModal>
+
+				{/* Filter modal with two-column layout pattern */}
+				<DsModal style={{ height: '600px' }} open={isOpen} onOpenChange={handleOpenChange}>
+					<DsModal.Header className={styles.filterHeader}>
+						<div className={styles.headerLeft}>
+							<DsIcon icon="filter_list" size="small" />
+							<DsModal.Title>Filters</DsModal.Title>
+						</div>
+						<DsModal.CloseTrigger />
+					</DsModal.Header>
+
+					<DsModal.Body className={styles.filterBody}>
+						<DsVerticalTabs
+							className={styles.filterTabs}
+							value={selectedFilterId}
+							onValueChange={handleValueChange}
+						>
+							<DsVerticalTabs.List className={styles.filterTabList}>
+								{filterNavItems.map((item) => (
+									<DsVerticalTabs.Tab key={item.id} value={item.id} disabled={item.disabled}>
+										<TabLabel item={item} />
+									</DsVerticalTabs.Tab>
+								))}
+							</DsVerticalTabs.List>
+							{filterNavItems.map((item) => (
+								<DsVerticalTabs.Content key={item.id} value={item.id} className={styles.filterContent}>
+									{renderFilterContent(item)}
+								</DsVerticalTabs.Content>
+							))}
+						</DsVerticalTabs>
+					</DsModal.Body>
+
+					<DsModal.Footer className={styles.filterFooter}>
+						<DsButton design="v1.2" variant="filled" buttonType="secondary" onClick={handleClearAll}>
+							<DsIcon icon="close" size="tiny" />
+							Clear all
+						</DsButton>
+						<DsModal.Actions>
+							<DsButton design="v1.2" variant="filled" buttonType="primary" onClick={handleApply}>
+								Apply
+							</DsButton>
+						</DsModal.Actions>
+					</DsModal.Footer>
+				</DsModal>
 			</div>
 		);
 	},
