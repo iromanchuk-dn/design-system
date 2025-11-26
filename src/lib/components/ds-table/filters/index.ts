@@ -38,7 +38,6 @@
  * - `FilterAdapter` - Core adapter interface
  * - `CheckboxFilterItem` - Item type for checkbox filters
  * - `RangeFilterValue` - Value type for range filters
- * - `FilterModalProps` - Props for filter modal component
  *
  * ## Example:
  * See `stories/filters-panel.stories.tsx` and `stories/filters-panel/workflow-filters.config.tsx`
@@ -49,4 +48,3 @@ export * from './types/filter-adapter.types';
 export * from './hooks';
 export type { CheckboxFilterItem, CheckboxFilterProps } from './components/checkbox-filter';
 export type { RangeFilterValue, RangeFilterProps } from './components/range-filter';
-export type { FilterModalProps } from './components/filter-modal';

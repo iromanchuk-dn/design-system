@@ -1,57 +1,76 @@
 import classNames from 'classnames';
 import { Tabs } from '@ark-ui/react/tabs';
-import { DsTypography } from '@design-system/ui';
-import { DsVerticalTabsProps } from './ds-vertical-tabs.types';
+import {
+	DsVerticalTabsContentProps,
+	DsVerticalTabsListProps,
+	DsVerticalTabsRootProps,
+	DsVerticalTabsTabProps,
+} from './ds-vertical-tabs.types';
 import styles from './ds-vertical-tabs.module.scss';
 
 /**
- * Design system vertical tabs component displays vertical navigation menu with count badges and states
- * Commonly used in sidebars, filter panels, settings, and multisection UIs
+ * Design system vertical tabs component - compound component for flexible vertical navigation
+ *
+ * @example
+ * ```tsx
+ * <DsVerticalTabs value={selected} onValueChange={handleChange}>
+ *   <DsVerticalTabs.List>
+ *     <DsVerticalTabs.Tab value="status">
+ *       <span>Status</span>
+ *       <span className={styles.badge}>5</span>
+ *     </DsVerticalTabs.Tab>
+ *     <DsVerticalTabs.Tab value="date">Date</DsVerticalTabs.Tab>
+ *   </DsVerticalTabs.List>
+ *   <DsVerticalTabs.Content value="status">Status filters...</DsVerticalTabs.Content>
+ *   <DsVerticalTabs.Content value="date">Date filters...</DsVerticalTabs.Content>
+ * </DsVerticalTabs>
+ * ```
  */
-const DsVerticalTabs = ({ items, selectedItem, onSelect, className, style }: DsVerticalTabsProps) => {
-	const handleValueChange = (details: { value: string | null }) => {
-		if (details.value && onSelect) {
-			const item = items.find((i) => i.id === details.value);
-			if (item) {
-				onSelect(item);
-			}
-		}
-	};
-
+const DsVerticalTabs = ({ value, onValueChange, className, style, children }: DsVerticalTabsRootProps) => {
 	return (
 		<Tabs.Root
 			orientation="vertical"
-			style={style}
+			value={value}
+			onValueChange={onValueChange}
 			className={className}
-			value={selectedItem?.id}
-			onValueChange={handleValueChange}
+			style={style}
 		>
-			<Tabs.List className={styles.tabList}>
-				{items.map((item) => (
-					<Tabs.Trigger
-						key={item.id}
-						value={item.id}
-						disabled={item.disabled}
-						className={classNames(styles.tabItem, {
-							[styles.selected]: item.id === selectedItem?.id,
-						})}
-					>
-						<DsTypography variant="body-sm-md" className={styles.tabItemLabel}>
-							{item.label}
-						</DsTypography>
-						{item.count !== undefined && item.count > 0 && (
-							<div className={styles.tabItemCount}>
-								<span className={styles.tabItemDot} />
-								<DsTypography variant="body-sm-reg" className={styles.tabItemCountText}>
-									{item.count}
-								</DsTypography>
-							</div>
-						)}
-					</Tabs.Trigger>
-				))}
-			</Tabs.List>
+			{children}
 		</Tabs.Root>
 	);
 };
+
+/**
+ * Container for tab triggers
+ */
+const DsVerticalTabsList = ({ className, children }: DsVerticalTabsListProps) => {
+	return <Tabs.List className={classNames(styles.tabList, className)}>{children}</Tabs.List>;
+};
+
+/**
+ * Individual tab trigger - fully customizable content
+ */
+const DsVerticalTabsTab = ({ value, disabled, className, children }: DsVerticalTabsTabProps) => {
+	return (
+		<Tabs.Trigger value={value} disabled={disabled} className={classNames(styles.tabItem, className)}>
+			{children}
+		</Tabs.Trigger>
+	);
+};
+
+/**
+ * Tab content panel - displays when corresponding tab is active
+ */
+const DsVerticalTabsContent = ({ value, className, children }: DsVerticalTabsContentProps) => {
+	return (
+		<Tabs.Content value={value} className={className}>
+			{children}
+		</Tabs.Content>
+	);
+};
+
+DsVerticalTabs.List = DsVerticalTabsList;
+DsVerticalTabs.Tab = DsVerticalTabsTab;
+DsVerticalTabs.Content = DsVerticalTabsContent;
 
 export default DsVerticalTabs;

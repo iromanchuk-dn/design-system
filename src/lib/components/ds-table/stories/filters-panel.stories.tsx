@@ -4,9 +4,12 @@ import { ColumnDef } from '@tanstack/react-table';
 import DsIcon from '../../ds-icon/ds-icon';
 import DsTable from '../ds-table';
 import DsButton from '../../ds-button/ds-button';
-import { FilterModal } from '../filters/components/filter-modal';
+import { DsModal } from '../../ds-modal';
+import { DsVerticalTabs } from '@design-system/ui';
+import { DsTypography } from '../../ds-typography';
 import { DsChipGroup } from '../../ds-chip-group';
 import { useTableFilters } from '../filters/hooks/use-table-filters';
+import { FilterNavItem } from '../filters/types/filter-adapter.types';
 import { Workflow, workflowFilters } from './filters-panel/workflow-filters.config';
 import styles from '../ds-table.stories.module.scss';
 
@@ -239,11 +242,11 @@ A plug-and-play filter system using the **Filter Adapter Pattern** that eliminat
 
 ## Features
 
-- ✅ **Plug-and-play**: Add filters by adding to config array
-- ✅ **Type-safe**: Full TypeScript support
-- ✅ **Automatic**: Chip generation, nav items, column enhancement
-- ✅ **Reusable**: Generic adapters work across tables
-- ✅ **Extensible**: Custom adapters for complex scenarios
+- **Plug-and-play**: Add filters by adding to config array
+- **Type-safe**: Full TypeScript support
+- **Automatic**: Chip generation, nav items, column enhancement
+- **Reusable**: Generic adapters work across tables
+- **Extensible**: Custom adapters for complex scenarios
 
 ## Quick Start
 
@@ -279,11 +282,12 @@ import { myFilters } from './my-filters.config';
 
 function MyTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState<FilterNavItem>();
 
   const {
     columnFilters,       // For TanStack Table
     filterChips,         // For DsChipGroup
-    filterNavItems,      // For FilterModal nav
+    filterNavItems,      // For filter navigation (FilterNavItem[])
     enhancedColumns,     // Columns with filters
     handlers,            // { applyFilters, clearAll, deleteChip }
     renderFilterContent, // Render function
@@ -309,15 +313,10 @@ function MyTable() {
         data={myData}
       />
 
-      <FilterModal
-        open={isModalOpen}
-        onOpenChange={setIsModalOpen}
-        filterNavItems={filterNavItems}
-        onApply={handlers.applyFilters}
-        onClearAll={handlers.clearAll}
-      >
-        {(selectedFilter) => renderFilterContent(selectedFilter)}
-      </FilterModal>
+      {/* See "Filter Modal Layout Pattern" section below for complete modal implementation */}
+      <DsModal open={isModalOpen} onOpenChange={setIsModalOpen} columns={8}>
+        {/* ... two-column layout with DsVerticalTabs ... */}
+      </DsModal>
     </>
   );
 }
@@ -332,7 +331,7 @@ createCheckboxFilterAdapter({
   label: 'Display Label',
   items: [{ value: 'val1', label: 'Label 1' }],
   renderer?: (item) => <CustomComponent />,      // Optional
-  chipLabelTemplate?: (item) => \`Custom: \${item.label}\`, // Optional
+  chipLabelTemplate?: (item) => \`\${item.label}\`, // Optional
   cellRenderer?: (value) => <CustomCell />,      // Optional
 });
 \`\`\`
@@ -368,11 +367,11 @@ createCustomFilterAdapter({
 
 ## What You Get Automatically
 
-- ✅ Chip generation from filter state
-- ✅ Filter nav items with active counts
-- ✅ Column enhancement with filter functions
-- ✅ State management across all filters
-- ✅ Type-safe filtering
+- Chip generation from filter state
+- Filter nav items with active counts
+- Column enhancement with filter functions
+- State management across all filters
+- Type-safe filtering
 `,
 			},
 		},
@@ -433,10 +432,10 @@ This story demonstrates the complete filter system with:
    const {
      columnFilters,       // Pass to DsTable
      filterChips,         // Pass to DsChipGroup
-     filterNavItems,      // Pass to FilterModal
+     filterNavItems,      // Pass to DsVerticalTabs in modal
      enhancedColumns,     // Pass to DsTable (includes filter functions)
      handlers,            // { applyFilters, clearAll, deleteChip }
-     renderFilterContent, // Pass to FilterModal children
+     renderFilterContent, // Render function for modal content
    } = useTableFilters(workflowFilters, columns);
    \`\`\`
 
@@ -446,6 +445,64 @@ This story demonstrates the complete filter system with:
    - ✅ Nav item counts (updates in real-time)
    - ✅ Column enhancement with filter functions
    - ✅ Type-safe filter values
+
+#### Filter Modal Layout Pattern:
+
+The modal uses a two-column layout with DsModal + DsVerticalTabs:
+
+\`\`\`tsx
+// State for selected filter tab
+const [selectedFilterId, setSelectedFilterId] = useState<string>(filterNavItems[0]?.id);
+
+const handleValueChange = (details: { value: string | null }) => {
+  if (details.value) setSelectedFilterId(details.value);
+};
+
+<DsModal open={open} onOpenChange={setOpen}>
+  <DsModal.Header className={styles.filterHeader}>
+    <div className={styles.headerLeft}>
+      <DsIcon icon="filter_list" />
+      <DsModal.Title>Filters</DsModal.Title>
+    </div>
+    <DsModal.CloseTrigger />
+  </DsModal.Header>
+
+  {/* Two-column body: nav (40%) + content (60%) */}
+  <DsModal.Body className={styles.filterBody}>
+    <DsVerticalTabs value={selectedFilterId} onValueChange={handleValueChange}>
+      <DsVerticalTabs.List className={styles.filterNav}>
+        {filterNavItems.map((item) => (
+          <DsVerticalTabs.Tab key={item.id} value={item.id} disabled={item.disabled}>
+            <DsTypography variant="body-sm-md">{item.label}</DsTypography>
+            {!!item.count && (
+              <div className={styles.filterTabBadge}>
+                <span className={styles.filterTabDot} />
+                <DsTypography variant="body-sm-reg">{item.count}</DsTypography>
+              </div>
+            )}
+          </DsVerticalTabs.Tab>
+        ))}
+      </DsVerticalTabs.List>
+      {filterNavItems.map((item) => (
+        <DsVerticalTabs.Content key={item.id} value={item.id} className={styles.filterContent}>
+          {renderFilterContent({ id: item.id })}
+        </DsVerticalTabs.Content>
+      ))}
+    </DsVerticalTabs>
+  </DsModal.Body>
+
+  <DsModal.Footer className={styles.filterFooter}>
+    <DsButton onClick={handleClearAll}>Clear all</DsButton>
+    <DsModal.Actions>
+      <DsButton onClick={handleApply}>Apply</DsButton>
+    </DsModal.Actions>
+  </DsModal.Footer>
+</DsModal>
+\`\`\`
+
+**Note**: DsVerticalTabs now uses compound components for maximum flexibility. You can customize tab content with labels, icons, badges, etc.
+
+See the story code for complete implementation with styles.
 
 #### Try It:
 1. Click the filter icon to open the modal
@@ -461,11 +518,26 @@ To add a new filter, just add one adapter to \`workflowFilters\` array. No other
 		},
 	},
 	render: function Render(args) {
-		const [isOpen, setIsOpen] = useState(false);
-
 		// useTableFilters hook orchestrates all filter logic
 		const { columnFilters, filterChips, filterNavItems, enhancedColumns, handlers, renderFilterContent } =
 			useTableFilters(workflowFilters, args.columns);
+
+		const [isOpen, setIsOpen] = useState(false);
+		const [selectedFilterId, setSelectedFilterId] = useState<string>(filterNavItems[0]?.id || '');
+
+		// Set initial selected filter when modal opens
+		const handleOpenChange = (open: boolean) => {
+			if (open && !selectedFilterId && filterNavItems.length > 0) {
+				setSelectedFilterId(filterNavItems[0].id);
+			}
+			setIsOpen(open);
+		};
+
+		const handleValueChange = (details: { value: string | null }) => {
+			if (details.value) {
+				setSelectedFilterId(details.value);
+			}
+		};
 
 		const handleApply = () => {
 			handlers.applyFilters();
@@ -476,6 +548,23 @@ To add a new filter, just add one adapter to \`workflowFilters\` array. No other
 			handlers.clearAll();
 			setIsOpen(false);
 		};
+
+		// Helper component for filter tab content (label + count badge)
+		const FilterTabContent = ({ item }: { item: FilterNavItem }) => (
+			<>
+				<DsTypography variant="body-sm-md" className={styles.filterTabLabel}>
+					{item.label}
+				</DsTypography>
+				{!!item.count && (
+					<div className={styles.filterTabBadge}>
+						<span className={styles.filterTabDot} />
+						<DsTypography variant="body-sm-reg" className={styles.filterTabCount}>
+							{item.count}
+						</DsTypography>
+					</div>
+				)}
+			</>
+		);
 
 		return (
 			<div className={styles.tableFilterContainer}>
@@ -494,18 +583,49 @@ To add a new filter, just add one adapter to \`workflowFilters\` array. No other
 				{/* Table with enhanced columns (includes filter functions) */}
 				<DsTable {...args} columns={enhancedColumns} columnFilters={columnFilters} />
 
-				{/* Filter modal (renders filter UI for selected category) */}
-				<FilterModal
-					style={{ height: '600px' }}
-					open={isOpen}
-					onOpenChange={setIsOpen}
-					columns={8}
-					filterNavItems={filterNavItems}
-					onApply={handleApply}
-					onClearAll={handleClearAll}
-				>
-					{(selectedFilter) => renderFilterContent(selectedFilter)}
-				</FilterModal>
+				{/* Filter modal with two-column layout pattern */}
+				<DsModal style={{ height: '600px' }} open={isOpen} onOpenChange={handleOpenChange}>
+					<DsModal.Header className={styles.filterHeader}>
+						<div className={styles.headerLeft}>
+							<DsIcon icon="filter_list" size="small" />
+							<DsModal.Title>Filters</DsModal.Title>
+						</div>
+						<DsModal.CloseTrigger />
+					</DsModal.Header>
+
+					<DsModal.Body className={styles.filterBody}>
+						<DsVerticalTabs
+							className={styles.filterTabs}
+							value={selectedFilterId}
+							onValueChange={handleValueChange}
+						>
+							<DsVerticalTabs.List className={styles.filterTabList}>
+								{filterNavItems.map((item) => (
+									<DsVerticalTabs.Tab key={item.id} value={item.id} disabled={item.disabled}>
+										<FilterTabContent item={item} />
+									</DsVerticalTabs.Tab>
+								))}
+							</DsVerticalTabs.List>
+							{filterNavItems.map((item) => (
+								<DsVerticalTabs.Content key={item.id} value={item.id} className={styles.filterContent}>
+									{renderFilterContent(item)}
+								</DsVerticalTabs.Content>
+							))}
+						</DsVerticalTabs>
+					</DsModal.Body>
+
+					<DsModal.Footer className={styles.filterFooter}>
+						<DsButton design="v1.2" variant="filled" buttonType="secondary" onClick={handleClearAll}>
+							<DsIcon icon="close" size="tiny" />
+							Clear all
+						</DsButton>
+						<DsModal.Actions>
+							<DsButton design="v1.2" variant="filled" buttonType="primary" onClick={handleApply}>
+								Apply
+							</DsButton>
+						</DsModal.Actions>
+					</DsModal.Footer>
+				</DsModal>
 			</div>
 		);
 	},

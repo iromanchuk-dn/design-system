@@ -1,27 +1,56 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
 import DsVerticalTabs from './ds-vertical-tabs';
-import { VerticalTabItem } from './ds-vertical-tabs.types';
+import { DsTypography } from '../ds-typography';
+import styles from './ds-vertical-tabs.stories.module.scss';
+
+// Example tab item structure
+interface TabItem {
+	id: string;
+	label: string;
+	count?: number;
+	disabled?: boolean;
+}
 
 const meta: Meta<typeof DsVerticalTabs> = {
 	title: 'Design System/Vertical Tabs',
 	component: DsVerticalTabs,
 	parameters: {
 		layout: 'centered',
+		docs: {
+			description: {
+				component: `
+DsVerticalTabs is a compound component for creating flexible vertical tab navigation.
+Built on Ark UI Tabs with vertical orientation, providing full accessibility support.
+
+## Usage Pattern
+
+\`\`\`tsx
+<DsVerticalTabs value={selected} onValueChange={handleChange}>
+  <DsVerticalTabs.List>
+    <DsVerticalTabs.Tab value="tab1">
+      <DsTypography variant="body-sm-md">Tab 1</DsTypography>
+      {/* Optional: badges, icons, etc. */}
+    </DsVerticalTabs.Tab>
+    <DsVerticalTabs.Tab value="tab2">Tab 2</DsVerticalTabs.Tab>
+  </DsVerticalTabs.List>
+  <DsVerticalTabs.Content value="tab1">Content 1</DsVerticalTabs.Content>
+  <DsVerticalTabs.Content value="tab2">Content 2</DsVerticalTabs.Content>
+</DsVerticalTabs>
+\`\`\`
+				`,
+			},
+		},
 	},
 	tags: ['autodocs'],
 	argTypes: {
-		items: {
-			control: 'object',
-			description: 'Array of tab items',
+		value: {
+			control: 'text',
+			description: 'Currently selected tab value (controlled)',
 		},
-		selectedItem: {
-			control: 'object',
-			description: 'Currently selected item',
-		},
-		onSelect: {
-			action: 'selected',
-			description: 'Callback when an item is selected',
+		onValueChange: {
+			action: 'valueChange',
+			description: 'Callback when tab selection changes',
 		},
 		className: {
 			control: 'text',
@@ -33,7 +62,7 @@ const meta: Meta<typeof DsVerticalTabs> = {
 export default meta;
 type Story = StoryObj<typeof DsVerticalTabs>;
 
-const sampleItems: VerticalTabItem[] = [
+const sampleItems: TabItem[] = [
 	{ id: 'status', label: 'Status', count: 2 },
 	{ id: 'running', label: 'Running/Completed' },
 	{ id: 'category', label: 'Category' },
@@ -43,7 +72,7 @@ const sampleItems: VerticalTabItem[] = [
 	{ id: 'nextRun', label: 'Next run' },
 ];
 
-const sampleItemsWithDisabled: VerticalTabItem[] = [
+const sampleItemsWithDisabled: TabItem[] = [
 	{ id: 'status', label: 'Status', count: 2, disabled: true },
 	{ id: 'running', label: 'Running/Completed' },
 	{ id: 'category', label: 'Category' },
@@ -51,57 +80,95 @@ const sampleItemsWithDisabled: VerticalTabItem[] = [
 	{ id: 'lastEdited', label: 'Last edited', count: 5 },
 ];
 
-export const Default: Story = {
-	args: {
-		items: sampleItems,
-		selectedItem: sampleItems[0],
-	},
-	decorators: [
-		(Story) => (
-			<div style={{ width: '364px', height: '400px', border: '1px solid #e0e0e0' }}>
-				<Story />
+// Helper component for consistent tab rendering with count badge
+const FilterTabContent = ({ item }: { item: TabItem }) => (
+	<>
+		<DsTypography variant="body-sm-md" className={styles.tabItemLabel}>
+			{item.label}
+		</DsTypography>
+		{!!item.count && (
+			<div className={styles.tabItemCount}>
+				<span className={styles.tabItemDot} />
+				<DsTypography variant="body-sm-reg" className={styles.tabItemCountText}>
+					{item.count}
+				</DsTypography>
 			</div>
-		),
-	],
+		)}
+	</>
+);
+
+export const Default: Story = {
+	render: () => (
+		<div className={styles.storyContainer}>
+			<DsVerticalTabs value="status">
+				<DsVerticalTabs.List>
+					{sampleItems.map((item) => (
+						<DsVerticalTabs.Tab key={item.id} value={item.id} disabled={item.disabled}>
+							<FilterTabContent item={item} />
+						</DsVerticalTabs.Tab>
+					))}
+				</DsVerticalTabs.List>
+			</DsVerticalTabs>
+		</div>
+	),
 };
 
 export const WithoutSelection: Story = {
-	args: {
-		items: sampleItems,
-	},
-	decorators: [
-		(Story) => (
-			<div style={{ width: '364px', height: '400px', border: '1px solid #e0e0e0' }}>
-				<Story />
-			</div>
-		),
-	],
+	render: () => (
+		<div className={styles.storyContainer}>
+			<DsVerticalTabs>
+				<DsVerticalTabs.List>
+					{sampleItems.map((item) => (
+						<DsVerticalTabs.Tab key={item.id} value={item.id} disabled={item.disabled}>
+							<FilterTabContent item={item} />
+						</DsVerticalTabs.Tab>
+					))}
+				</DsVerticalTabs.List>
+			</DsVerticalTabs>
+		</div>
+	),
 };
 
 export const WithDisabledItems: Story = {
-	args: {
-		items: sampleItemsWithDisabled,
-		selectedItem: sampleItemsWithDisabled[1],
-	},
-	decorators: [
-		(Story) => (
-			<div style={{ width: '364px', height: '400px', border: '1px solid #e0e0e0' }}>
-				<Story />
-			</div>
-		),
-	],
+	render: () => (
+		<div className={styles.storyContainer}>
+			<DsVerticalTabs value="running">
+				<DsVerticalTabs.List>
+					{sampleItemsWithDisabled.map((item) => (
+						<DsVerticalTabs.Tab key={item.id} value={item.id} disabled={item.disabled}>
+							<FilterTabContent item={item} />
+						</DsVerticalTabs.Tab>
+					))}
+				</DsVerticalTabs.List>
+			</DsVerticalTabs>
+		</div>
+	),
 };
 
 export const Interactive: Story = {
-	render: function Render(args) {
-		const [selected, setSelected] = useState<VerticalTabItem>(sampleItems[0]);
+	render: function Render() {
+		const [selectedId, setSelectedId] = useState<string>('status');
+
+		const handleValueChange = (details: { value: string | null }) => {
+			if (details.value) setSelectedId(details.value);
+		};
+
+		const selectedItem = sampleItems.find((item) => item.id === selectedId);
 
 		return (
-			<div style={{ width: '364px', height: '400px', border: '1px solid #e0e0e0' }}>
-				<DsVerticalTabs {...args} items={sampleItems} selectedItem={selected} onSelect={setSelected} />
-				<div style={{ padding: '16px', borderTop: '1px solid #e0e0e0', background: '#f5f5f5' }}>
-					<p style={{ margin: 0, fontSize: '14px', color: '#666' }}>
-						Selected: <strong>{selected.label}</strong>
+			<div className={styles.storyContainer}>
+				<DsVerticalTabs value={selectedId} onValueChange={handleValueChange}>
+					<DsVerticalTabs.List>
+						{sampleItems.map((item) => (
+							<DsVerticalTabs.Tab key={item.id} value={item.id} disabled={item.disabled}>
+								<FilterTabContent item={item} />
+							</DsVerticalTabs.Tab>
+						))}
+					</DsVerticalTabs.List>
+				</DsVerticalTabs>
+				<div className={styles.interactiveFooter}>
+					<p className={styles.interactiveText}>
+						Selected: <strong>{selectedItem?.label}</strong>
 					</p>
 				</div>
 			</div>
@@ -110,44 +177,54 @@ export const Interactive: Story = {
 };
 
 export const LongLabels: Story = {
-	args: {
-		items: [
+	render: () => {
+		const items: TabItem[] = [
 			{ id: '1', label: 'Very Long Navigation Item Label That Might Overflow', count: 99 },
 			{ id: '2', label: 'Another Really Long Label For Testing Purposes' },
 			{ id: '3', label: 'Short', count: 1 },
-		],
-		selectedItem: { id: '1', label: 'Very Long Navigation Item Label That Might Overflow', count: 99 },
-	},
-	decorators: [
-		(Story) => (
-			<div style={{ width: '364px', height: '200px', border: '1px solid #e0e0e0' }}>
-				<Story />
+		];
+		return (
+			<div className={styles.storyContainerShort}>
+				<DsVerticalTabs value="1">
+					<DsVerticalTabs.List>
+						{items.map((item) => (
+							<DsVerticalTabs.Tab key={item.id} value={item.id} disabled={item.disabled}>
+								<FilterTabContent item={item} />
+							</DsVerticalTabs.Tab>
+						))}
+					</DsVerticalTabs.List>
+				</DsVerticalTabs>
 			</div>
-		),
-	],
+		);
+	},
 };
 
 export const HighCounts: Story = {
-	args: {
-		items: [
+	render: () => {
+		const items: TabItem[] = [
 			{ id: 'status', label: 'Status', count: 999 },
 			{ id: 'category', label: 'Category', count: 1000 },
 			{ id: 'version', label: 'Version', count: 12345 },
-		],
-		selectedItem: { id: 'status', label: 'Status', count: 999 },
-	},
-	decorators: [
-		(Story) => (
-			<div style={{ width: '364px', height: '200px', border: '1px solid #e0e0e0' }}>
-				<Story />
+		];
+		return (
+			<div className={styles.storyContainerShort}>
+				<DsVerticalTabs value="status">
+					<DsVerticalTabs.List>
+						{items.map((item) => (
+							<DsVerticalTabs.Tab key={item.id} value={item.id} disabled={item.disabled}>
+								<FilterTabContent item={item} />
+							</DsVerticalTabs.Tab>
+						))}
+					</DsVerticalTabs.List>
+				</DsVerticalTabs>
 			</div>
-		),
-	],
+		);
+	},
 };
 
 export const Scrollable: Story = {
-	args: {
-		items: [
+	render: () => {
+		const items: TabItem[] = [
 			{ id: '1', label: 'Item 1', count: 1 },
 			{ id: '2', label: 'Item 2', count: 2 },
 			{ id: '3', label: 'Item 3', count: 3 },
@@ -158,14 +235,19 @@ export const Scrollable: Story = {
 			{ id: '8', label: 'Item 8', count: 8 },
 			{ id: '9', label: 'Item 9', count: 9 },
 			{ id: '10', label: 'Item 10', count: 10 },
-		],
-		selectedItem: { id: '5', label: 'Item 5', count: 5 },
-	},
-	decorators: [
-		(Story) => (
-			<div style={{ width: '364px', height: '300px', border: '1px solid #e0e0e0' }}>
-				<Story />
+		];
+		return (
+			<div className={styles.storyContainerMedium}>
+				<DsVerticalTabs value="5">
+					<DsVerticalTabs.List>
+						{items.map((item) => (
+							<DsVerticalTabs.Tab key={item.id} value={item.id} disabled={item.disabled}>
+								<FilterTabContent item={item} />
+							</DsVerticalTabs.Tab>
+						))}
+					</DsVerticalTabs.List>
+				</DsVerticalTabs>
 			</div>
-		),
-	],
+		);
+	},
 };

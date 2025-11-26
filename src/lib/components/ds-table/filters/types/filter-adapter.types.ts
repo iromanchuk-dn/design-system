@@ -76,6 +76,28 @@ export interface FilterAdapter<TData, TFilterValue, TCellValue = unknown> {
 }
 
 /**
+ * Filter navigation item used to render filter tabs in the UI
+ */
+export interface FilterNavItem {
+	/**
+	 * Unique identifier for the filter (matches FilterAdapter.id)
+	 */
+	id: string;
+	/**
+	 * Display label for the filter tab
+	 */
+	label: string;
+	/**
+	 * Optional count badge to display active filters
+	 */
+	count?: number;
+	/**
+	 * Whether this filter is disabled
+	 */
+	disabled?: boolean;
+}
+
+/**
  * Filter state managed by useTableFilters hook
  */
 export interface FilterState<TValue> {
