@@ -42,13 +42,10 @@
 	text-align: center;
 }
 
-.emptyStateContent {
-	position: fixed;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 100%;
-	padding: 0.85rem 0.75rem;
+.emptyStateVirtualized {
+	position: absolute;
+	inset: 0;
+	top: var(--ds-table-header-height);
 }
 
 .virtualized {
