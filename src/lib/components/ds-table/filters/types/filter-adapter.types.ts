@@ -2,6 +2,9 @@ import { ReactNode } from 'react';
 import { Row } from '@tanstack/react-table';
 import { ChipItem } from '@design-system/ui';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type AnyAdapter = FilterAdapter<any, any, any>;
+
 /**
  * Base filter adapter interface that all filters must implement
  * This provides a consistent contract for filter behavior
@@ -54,14 +57,9 @@ export interface FilterAdapter<TData, TFilterValue, TCellValue = unknown> {
 	/**
 	 * Calculate how many active filters are applied
 	 * Used for the count indicator in filter navigation
+	 * Can also be used to check if filter is active (count > 0)
 	 */
-	getActiveCount: (value: TFilterValue) => number;
-
-	/**
-	 * Check if the filter has any active values
-	 * Used to determine if "Clear all" should be enabled
-	 */
-	hasActiveFilters: (value: TFilterValue) => boolean;
+	getActiveFiltersCount: (value: TFilterValue) => number;
 
 	/**
 	 * Reset filter to initial state

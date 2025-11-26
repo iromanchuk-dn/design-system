@@ -86,7 +86,7 @@ export function useTableFilters<TData, TValue>(
 	const filterNavItems: FilterNavItem[] = filterAdapters.map((adapter) => ({
 		id: adapter.id,
 		label: adapter.label,
-		count: adapter.getActiveCount(filterState[adapter.id]),
+		count: adapter.getActiveFiltersCount(filterState[adapter.id]),
 	}));
 
 	// Enhance column definitions with filter functions and renderers
@@ -124,7 +124,7 @@ export function useTableFilters<TData, TValue>(
 		filterAdapters.forEach((adapter) => {
 			const value = filterState[adapter.id];
 
-			if (adapter.hasActiveFilters(value)) {
+			if (adapter.getActiveFiltersCount(value) > 0) {
 				filters.push({
 					id: adapter.id,
 					value: value,
@@ -181,7 +181,7 @@ export function useTableFilters<TData, TValue>(
 		}));
 
 		// Update column filters
-		if (!adapter.hasActiveFilters(newValue)) {
+		if (adapter.getActiveFiltersCount(newValue) === 0) {
 			setColumnFilters((prev) => prev.filter((cf) => cf.id !== filterKey));
 		} else {
 			setColumnFilters((prev) =>

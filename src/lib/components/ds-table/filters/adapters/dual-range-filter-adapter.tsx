@@ -128,7 +128,7 @@ export function createDualRangeFilterAdapter<TData>(
 			};
 		},
 
-		getActiveCount: (value) => {
+		getActiveFiltersCount: (value) => {
 			let count = 0;
 			Object.values(value).forEach((range) => {
 				if (range.from !== undefined || range.to !== undefined) {
@@ -136,10 +136,6 @@ export function createDualRangeFilterAdapter<TData>(
 				}
 			});
 			return count;
-		},
-
-		hasActiveFilters: (value) => {
-			return Object.values(value).some((range) => range.from !== undefined || range.to !== undefined);
 		},
 
 		renderFilter: (value, onChange) => {

@@ -43,11 +43,11 @@ import DsStatusBadge from '../../../ds-status-badge/ds-status-badge';
 import { DsStatus } from '../../../ds-status-badge/ds-status-badge.types';
 import { IconType } from '../../../ds-icon/ds-icon.types';
 import {
+	AnyAdapter,
 	CheckboxFilterItem,
 	createCheckboxFilterAdapter,
 	createDualRangeFilterAdapter,
 	createFilterAdapter,
-	FilterAdapter,
 } from '../../filters';
 import { LastEditedFilter, LastEditedFilterValue } from './components/last-edited-filter/last-edited-filter';
 import { LastEditedCell } from './components/last-edited-cell/last-edited-cell';
@@ -342,14 +342,10 @@ export const lastEditedFilterAdapter = createFilterAdapter<
 
 		return currentValue;
 	},
-	getActiveCount: (value) => {
-		let count = 0;
-		if (value.editors.length > 0) count += value.editors.length;
+	getActiveFiltersCount: (value) => {
+		let count = value.editors.length;
 		if (value.timeRange) count += 1;
 		return count;
-	},
-	hasActiveFilters: (value) => {
-		return value.editors.length > 0 || value.timeRange !== null;
 	},
 	renderFilter: (value, onChange) => (
 		<LastEditedFilter value={value} onChange={onChange} availableEditors={availableEditors} />
@@ -366,4 +362,4 @@ export const workflowFilters = [
 	statusFilterAdapter,
 	runningCompletedFilterAdapter,
 	lastEditedFilterAdapter,
-] as const as FilterAdapter<Workflow, unknown>[];
+] satisfies AnyAdapter[];

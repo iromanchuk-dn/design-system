@@ -358,8 +358,7 @@ createCustomFilterAdapter({
   filterFn: (row, columnId, filterValue) => boolean,
   toChips: (value) => FilterChipItem[],
   fromChip: (chip, currentValue) => newValue,
-  getActiveCount: (value) => number,
-  hasActiveFilters: (value) => boolean,
+  getActiveFiltersCount: (value) => number,              // 0 means none active
   renderFilter: (value, onChange) => ReactNode,
   cellRenderer?: (value) => ReactNode,           // Optional
 });
@@ -440,11 +439,11 @@ This story demonstrates the complete filter system with:
    \`\`\`
 
 3. **What's Handled Automatically**:
-   - ✅ Filter state management
-   - ✅ Chip generation and deletion
-   - ✅ Nav item counts (updates in real-time)
-   - ✅ Column enhancement with filter functions
-   - ✅ Type-safe filter values
+   - Filter state management
+   - Chip generation and deletion
+   - Nav item counts (updates in real-time)
+   - Column enhancement with filter functions
+   - Type-safe filter values
 
 #### Filter Modal Layout Pattern:
 
@@ -454,8 +453,8 @@ The modal uses a two-column layout with DsModal + DsVerticalTabs:
 // State for selected filter tab
 const [selectedFilterId, setSelectedFilterId] = useState<string>(filterNavItems[0]?.id);
 
-const handleValueChange = (details: { value: string | null }) => {
-  if (details.value) setSelectedFilterId(details.value);
+const handleValueChange = (value: string | null) => {
+  if (value) setSelectedFilterId(value);
 };
 
 <DsModal open={open} onOpenChange={setOpen}>
@@ -533,9 +532,9 @@ To add a new filter, just add one adapter to \`workflowFilters\` array. No other
 			setIsOpen(open);
 		};
 
-		const handleValueChange = (details: { value: string | null }) => {
-			if (details.value) {
-				setSelectedFilterId(details.value);
+		const handleValueChange = (value: string | null) => {
+			if (value) {
+				setSelectedFilterId(value);
 			}
 		};
 

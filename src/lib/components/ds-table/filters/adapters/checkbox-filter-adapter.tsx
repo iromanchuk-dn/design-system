@@ -97,14 +97,9 @@ export function createCheckboxFilterAdapter<TData, TValue = string>(
 			return currentValue.filter((item) => item.value !== chip.metadata?.value);
 		},
 
-		getActiveCount: (selectedItems) => {
-			// Count = number of selected items
+		getActiveFiltersCount: (selectedItems) => {
+			// Count = number of selected items (0 means none selected)
 			return selectedItems.length;
-		},
-
-		hasActiveFilters: (selectedItems) => {
-			// Filter is active when items are selected
-			return selectedItems.length > 0;
 		},
 
 		renderFilter: (value, onChange) => {

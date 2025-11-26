@@ -35,12 +35,7 @@ export interface FilterAdapterConfig<TData, TFilterValue, TCellValue = unknown> 
 	/**
 	 * Calculate active filter count
 	 */
-	getActiveCount: FilterAdapter<TData, TFilterValue, TCellValue>['getActiveCount'];
-
-	/**
-	 * Check if filter has active values
-	 */
-	hasActiveFilters: FilterAdapter<TData, TFilterValue, TCellValue>['hasActiveFilters'];
+	getActiveFiltersCount: FilterAdapter<TData, TFilterValue, TCellValue>['getActiveFiltersCount'];
 
 	/**
 	 * Render the filter UI
@@ -97,14 +92,9 @@ export interface FilterAdapterConfig<TData, TFilterValue, TCellValue = unknown> 
  *     return updatedValue;
  *   },
  *
- *   getActiveCount: (value) => {
- *     // Count active filters
+ *   getActiveFiltersCount: (value) => {
+ *     // Count active filters (0 means none active)
  *     return count;
- *   },
- *
- *   hasActiveFilters: (value) => {
- *     // Check if filter is active
- *     return isActive;
  *   },
  *
  *   renderFilter: (value, onChange) => (
@@ -134,8 +124,7 @@ export function createFilterAdapter<TData, TFilterValue, TCellValue = unknown>(
 		cellRenderer: config.cellRenderer,
 		toChips: config.toChips,
 		fromChip: config.fromChip,
-		getActiveCount: config.getActiveCount,
-		hasActiveFilters: config.hasActiveFilters,
+		getActiveFiltersCount: config.getActiveFiltersCount,
 		reset: () => config.initialValue,
 		renderFilter: config.renderFilter,
 	};

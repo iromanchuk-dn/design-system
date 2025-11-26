@@ -27,11 +27,15 @@ import styles from './ds-vertical-tabs.module.scss';
  * ```
  */
 const DsVerticalTabs = ({ value, onValueChange, className, style, children }: DsVerticalTabsRootProps) => {
+	const handleValueChange = (details: { value: string | null }) => {
+		onValueChange?.(details.value);
+	};
+
 	return (
 		<Tabs.Root
 			orientation="vertical"
 			value={value}
-			onValueChange={onValueChange}
+			onValueChange={handleValueChange}
 			className={className}
 			style={style}
 		>
