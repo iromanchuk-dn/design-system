@@ -111,7 +111,7 @@ export const DsRadioGroupLegacy: React.FC<DsRadioGroupLegacyProps> = ({
 );
 
 /**
- * Design system RadioGroup component (Compound Component Pattern)
+ * Design system RadioGroup component
  *
  * @example
  * <DsRadioGroup.Root value={value} onValueChange={setValue}>

@@ -24,12 +24,12 @@
 		}
 	}
 
-	&:has([data-state='checked']:focus) {
+	&:has([data-state='checked']:focus-visible) {
 		border-radius: 4px;
 		border-color: var(--color-primary-700-net-1);
 	}
 
-	&:has([data-state='unchecked']:focus) {
+	&:has([data-state='unchecked']:focus-visible) {
 		border-color: var(--color-primary-800);
 	}
 

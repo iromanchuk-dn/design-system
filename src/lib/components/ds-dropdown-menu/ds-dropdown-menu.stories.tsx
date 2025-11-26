@@ -26,28 +26,44 @@ const meta: Meta = {
 		sideOffset: {
 			control: 'number',
 			description: 'The distance in pixels from the trigger',
-			defaultValue: 0,
-			table: { category: 'Content' },
+			table: {
+				category: 'Content',
+				defaultValue: {
+					summary: '0',
+				},
+			},
 		},
 		align: {
 			control: 'select',
 			options: ['start', 'center', 'end'],
 			description: 'The preferred alignment against the trigger',
-			defaultValue: 'center',
-			table: { category: 'Content' },
+			table: {
+				category: 'Content',
+				defaultValue: {
+					summary: 'center',
+				},
+			},
 		},
 		side: {
 			control: 'select',
 			options: ['top', 'right', 'bottom', 'left'],
 			description: 'The preferred side of the trigger to render against',
-			defaultValue: 'bottom',
-			table: { category: 'Content' },
+			table: {
+				category: 'Content',
+				defaultValue: {
+					summary: 'bottom',
+				},
+			},
 		},
 		disablePortal: {
 			control: 'boolean',
 			description: 'Whether to disable rendering in a portal',
-			defaultValue: false,
-			table: { category: 'Content' },
+			table: {
+				category: 'Content',
+				defaultValue: {
+					summary: 'false',
+				},
+			},
 		},
 		// Item component props
 		disabled: {

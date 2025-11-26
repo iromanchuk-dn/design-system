@@ -334,7 +334,7 @@ export const DsDropdownMenuLegacy: React.FC<DsDropdownMenuLegacyProps> = ({
 };
 
 /**
- * Compound DsDropdownMenu component (New Pattern)
+ * Design system  DsDropdownMenu component
  *
  * @example
  * <DsDropdownMenu.Root>
