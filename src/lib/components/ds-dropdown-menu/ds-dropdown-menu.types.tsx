@@ -1,4 +1,5 @@
 import { CSSProperties, MouseEvent, ReactNode } from 'react';
+import type { Menu } from '@ark-ui/react/menu';
 import { IconType } from '../ds-icon';
 
 /**
@@ -90,74 +91,47 @@ export interface DsDropdownMenuLegacyProps {
 /**
  * Props for the DsDropdownMenu Root component
  */
-export interface DsDropdownMenuRootProps {
-	/**
-	 * Whether the dropdown is open (controlled)
-	 */
-	open?: boolean;
+export interface DsDropdownMenuRootProps extends Pick<Menu.RootProps, 'open' | 'children'> {
 	/**
 	 * Callback when open state changes
 	 */
 	onOpenChange?: (open: boolean) => void;
 	/**
-	 * The children to render (Trigger, Content, etc.)
+	 * Callback when an item is selected
 	 */
-	children: ReactNode;
+	onSelect?: (value: string) => void;
+	/**
+	 * Callback when the highlighted item changes
+	 */
+	onHighlightChange?: (value: string | null) => void;
 }
 
 /**
  * Props for the DsDropdownMenu Trigger component
  */
-export interface DsDropdownMenuTriggerProps {
-	/**
-	 * Use the provided child element as the trigger
-	 */
-	asChild?: boolean;
-	/**
-	 * The trigger element
-	 */
-	children: ReactNode;
-	/**
-	 * Optional CSS class name
-	 */
-	className?: string;
-	/**
-	 * Optional inline styles
-	 */
-	style?: CSSProperties;
-}
+export type DsDropdownMenuTriggerProps = Menu.TriggerProps;
 
 /**
  * Props for the DsDropdownMenu Content component
  */
-export interface DsDropdownMenuContentProps {
+export interface DsDropdownMenuContentProps
+	extends Pick<Menu.ContentProps, 'children' | 'className' | 'style'> {
 	/**
 	 * Whether to render in place instead of using portals
 	 * @default false
 	 */
 	disablePortal?: boolean;
-	/**
-	 * The content to render
-	 */
-	children: ReactNode;
-	/**
-	 * Optional CSS class name
-	 */
-	className?: string;
-	/**
-	 * Optional inline styles
-	 */
-	style?: CSSProperties;
 }
 
 /**
  * Props for the DsDropdownMenu Item component
  */
-export interface DsDropdownMenuItemProps {
+export interface DsDropdownMenuItemProps extends Omit<Menu.ItemProps, 'value'> {
 	/**
-	 * Whether the item is disabled
+	 * Optional unique value for the menu item
+	 * If not provided, a stable ID will be generated automatically
 	 */
-	disabled?: boolean;
+	value?: string;
 	/**
 	 * Whether the item is selected (shows check indicator)
 	 */
@@ -168,27 +142,6 @@ export interface DsDropdownMenuItemProps {
 	 * @default false
 	 */
 	preventClose?: boolean;
-	/**
-	 * Optional unique value for the menu item
-	 * If not provided, a stable ID will be generated automatically
-	 */
-	value?: string;
-	/**
-	 * Click handler
-	 */
-	onClick?: (e: MouseEvent<HTMLElement>) => void;
-	/**
-	 * The item content
-	 */
-	children: ReactNode;
-	/**
-	 * Optional CSS class name
-	 */
-	className?: string;
-	/**
-	 * Optional inline styles
-	 */
-	style?: CSSProperties;
 }
 
 /**
@@ -230,11 +183,7 @@ export interface DsDropdownMenuActionsProps {
 /**
  * Props for the DsDropdownMenu Group component
  */
-export interface DsDropdownMenuGroupProps {
-	/**
-	 * The group content (GroupLabel + Items)
-	 */
-	children: ReactNode;
+export interface DsDropdownMenuGroupProps extends Menu.ItemGroupProps {
 	/**
 	 * Whether the group is collapsed
 	 */
@@ -243,33 +192,12 @@ export interface DsDropdownMenuGroupProps {
 	 * Callback when collapse state changes
 	 */
 	onCollapsedChange?: (collapsed: boolean) => void;
-	/**
-	 * Optional CSS class name
-	 */
-	className?: string;
-	/**
-	 * Optional inline styles
-	 */
-	style?: CSSProperties;
 }
 
 /**
  * Props for the DsDropdownMenu GroupLabel component
  */
-export interface DsDropdownMenuGroupLabelProps {
-	/**
-	 * The label text or content
-	 */
-	children: ReactNode;
-	/**
-	 * Optional CSS class name
-	 */
-	className?: string;
-	/**
-	 * Optional inline styles
-	 */
-	style?: CSSProperties;
-}
+export type DsDropdownMenuGroupLabelProps = Menu.ItemGroupLabelProps;
 
 /**
  * Props for the DsDropdownMenu GroupContent component
@@ -292,13 +220,4 @@ export interface DsDropdownMenuGroupContentProps {
 /**
  * Props for the DsDropdownMenu Separator component
  */
-export interface DsDropdownMenuSeparatorProps {
-	/**
-	 * Optional CSS class name
-	 */
-	className?: string;
-	/**
-	 * Optional inline styles
-	 */
-	style?: CSSProperties;
-}
+export type DsDropdownMenuSeparatorProps = Menu.SeparatorProps;

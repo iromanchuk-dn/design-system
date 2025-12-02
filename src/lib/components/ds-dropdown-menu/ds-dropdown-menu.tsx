@@ -34,7 +34,13 @@ const GroupContext = createContext<GroupContextValue | null>(null);
 /**
  * Root component - manages dropdown state
  */
-const Root: React.FC<DsDropdownMenuRootProps> = ({ open, onOpenChange, children }) => {
+const Root: React.FC<DsDropdownMenuRootProps> = ({
+	open,
+	onOpenChange,
+	onSelect,
+	onHighlightChange,
+	children,
+}) => {
 	const [internalOpen, setInternalOpen] = useState(false);
 
 	const isControlled = open !== undefined;
@@ -54,7 +60,13 @@ const Root: React.FC<DsDropdownMenuRootProps> = ({ open, onOpenChange, children 
 	};
 
 	return (
-		<Menu.Root open={isOpen} onOpenChange={handleOpenChange} positioning={positioning}>
+		<Menu.Root
+			open={isOpen}
+			onOpenChange={handleOpenChange}
+			onSelect={(details: { value: string }) => onSelect?.(details.value)}
+			onHighlightChange={(details) => onHighlightChange?.(details.highlightedValue)}
+			positioning={positioning}
+		>
 			{children}
 		</Menu.Root>
 	);
@@ -63,13 +75,7 @@ const Root: React.FC<DsDropdownMenuRootProps> = ({ open, onOpenChange, children 
 /**
  * Trigger component - wraps the trigger element
  */
-const Trigger: React.FC<DsDropdownMenuTriggerProps> = ({ asChild, children, className, style, ...props }) => {
-	return (
-		<Menu.Trigger asChild={asChild} className={className} style={style} {...props}>
-			{children}
-		</Menu.Trigger>
-	);
-};
+const Trigger: React.FC<DsDropdownMenuTriggerProps> = Menu.Trigger;
 
 /**
  * Content component - wraps the dropdown content
@@ -101,20 +107,13 @@ const Item: React.FC<DsDropdownMenuItemProps> = ({
 	selected,
 	preventClose = false,
 	value,
-	onClick,
+	onSelect,
 	children,
 	className,
 	style,
 }) => {
 	const generatedId = useId();
 	const itemValue = value ?? generatedId;
-
-	const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
-		if ((e.key === 'Enter' || e.key === ' ') && onClick) {
-			e.preventDefault();
-			onClick(e as unknown as React.MouseEvent<HTMLElement>);
-		}
-	};
 
 	return (
 		<Menu.Item
@@ -129,8 +128,7 @@ const Item: React.FC<DsDropdownMenuItemProps> = ({
 			)}
 			style={style}
 			value={itemValue}
-			onClick={onClick}
-			onKeyDown={handleKeyDown}
+			onSelect={onSelect}
 		>
 			{children}
 			{selected && <DsIcon className={styles.indicator} icon="check" />}
@@ -159,8 +157,6 @@ const Actions: React.FC<DsDropdownMenuActionsProps> = ({ children, className, st
 			style={style}
 			role="menu"
 			aria-label="Menu actions"
-			tabIndex={-1}
-			onKeyDown={(e) => e.stopPropagation()}
 		>
 			{children}
 		</div>
@@ -192,9 +188,9 @@ const Group: React.FC<DsDropdownMenuGroupProps> = ({
 
 	return (
 		<GroupContext.Provider value={{ collapsed, toggle }}>
-			<div className={classNames(styles.group, className)} style={style}>
+			<Menu.ItemGroup className={classNames(styles.group, className)} style={style}>
 				{children}
-			</div>
+			</Menu.ItemGroup>
 		</GroupContext.Provider>
 	);
 };
@@ -208,21 +204,13 @@ const GroupLabel: React.FC<DsDropdownMenuGroupLabelProps> = ({ children, classNa
 	if (!context) {
 		// If not inside a Group, just render static label
 		return (
-			<DsTypography
-				variant="body-sm-md"
-				className={classNames(styles.groupLabel, styles.groupLabelText, className)}
-				style={style}
-			>
-				{children}
-			</DsTypography>
+			<Menu.ItemGroupLabel className={classNames(styles.groupLabel, className)} style={style}>
+				<DsTypography variant="body-sm-md">{children}</DsTypography>
+			</Menu.ItemGroupLabel>
 		);
 	}
 
 	const { collapsed, toggle } = context;
-
-	const handleClick = () => {
-		toggle();
-	};
 
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>) => {
 		if (e.key === 'Enter' || e.key === ' ') {
@@ -232,21 +220,23 @@ const GroupLabel: React.FC<DsDropdownMenuGroupLabelProps> = ({ children, classNa
 	};
 
 	return (
-		<button
-			type="button"
-			className={classNames(styles.groupLabel, className)}
-			style={style}
-			onClick={handleClick}
-			onKeyDown={handleKeyDown}
-		>
-			<DsTypography variant="body-sm-md">{children}</DsTypography>
-			<DsIcon
-				icon="keyboard_arrow_down"
-				className={classNames(styles.groupLabelIcon, {
-					[styles.groupLabelIconRotated]: !collapsed,
-				})}
-			/>
-		</button>
+		<Menu.ItemGroupLabel asChild>
+			<button
+				type="button"
+				className={classNames(styles.groupLabel, styles.groupLabelCollapsible, className)}
+				style={style}
+				onClick={toggle}
+				onKeyDown={handleKeyDown}
+			>
+				<DsTypography variant="body-sm-md">{children}</DsTypography>
+				<DsIcon
+					icon="keyboard_arrow_down"
+					className={classNames(styles.groupLabelIcon, {
+						[styles.groupLabelIconRotated]: !collapsed,
+					})}
+				/>
+			</button>
+		</Menu.ItemGroupLabel>
 	);
 };
 
@@ -382,11 +372,11 @@ export const DsDropdownMenuLegacy: React.FC<DsDropdownMenuLegacyProps> = ({
  *     <DsDropdownMenu.Search>
  *       <DsTextInput placeholder="Search..." />
  *     </DsDropdownMenu.Search>
- *     <DsDropdownMenu.Item onClick={...}>Item 1</DsDropdownMenu.Item>
+ *     <DsDropdownMenu.Item onSelect={...}>Item 1</DsDropdownMenu.Item>
  *     <DsDropdownMenu.Group>
  *       <DsDropdownMenu.GroupLabel>Group Name</DsDropdownMenu.GroupLabel>
  *       <DsDropdownMenu.GroupContent>
- *         <DsDropdownMenu.Item onClick={...}>Item 2</DsDropdownMenu.Item>
+ *         <DsDropdownMenu.Item onSelect={...}>Item 2</DsDropdownMenu.Item>
  *       </DsDropdownMenu.GroupContent>
  *     </DsDropdownMenu.Group>
  *     <DsDropdownMenu.Separator />

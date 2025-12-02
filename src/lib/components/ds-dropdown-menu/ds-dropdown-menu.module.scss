@@ -7,6 +7,10 @@
 	flex-direction: column;
 	max-height: var(--available-height, 400px);
 	overflow-y: auto;
+
+	&:focus-visible {
+		outline-offset: 2px;
+	}
 }
 
 .search {
@@ -69,17 +73,21 @@
 .groupLabel {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
 	padding: var(--spacing-3xs) var(--spacing-xs);
 	background-color: var(--color-background);
-	width: 100%;
-	text-align: left;
-	cursor: pointer;
-	border: none;
-	transition: background-color 0.15s ease;
+	outline-offset: -1px;
 
-	&:hover {
-		background-color: var(--color-background-action-hover-weak);
+	&Collapsible {
+		justify-content: space-between;
+		width: 100%;
+		text-align: left;
+		cursor: pointer;
+		border: none;
+		transition: background-color 0.15s ease;
+
+		&:hover {
+			background-color: var(--color-background-action-hover-weak);
+		}
 	}
 }
 

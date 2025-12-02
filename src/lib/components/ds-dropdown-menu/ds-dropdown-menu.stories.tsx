@@ -21,7 +21,7 @@ export const Default: Story = {
 		docs: {
 			description: {
 				story:
-					'A basic dropdown menu with action items. Each item can have an icon and onClick handler. Items can be disabled. Use separators to divide different action groups.',
+					'A basic dropdown menu with action items. Each item can have an icon and onSelect handler. Items can be disabled. Use separators to divide different action groups.',
 			},
 		},
 	},
@@ -38,20 +38,20 @@ export const Default: Story = {
 					<DsIcon icon="more_vert" />
 				</DsDropdownMenu.Trigger>
 				<DsDropdownMenu.Content>
-					<DsDropdownMenu.Item onClick={handleEdit}>
+					<DsDropdownMenu.Item onSelect={handleEdit}>
 						<DsIcon icon="edit" />
 						<span>Edit</span>
 					</DsDropdownMenu.Item>
-					<DsDropdownMenu.Item onClick={handleDuplicate}>
+					<DsDropdownMenu.Item onSelect={handleDuplicate}>
 						<DsIcon icon="content_copy" />
 						<span>Duplicate</span>
 					</DsDropdownMenu.Item>
-					<DsDropdownMenu.Item onClick={handleShare}>
+					<DsDropdownMenu.Item onSelect={handleShare}>
 						<DsIcon icon="share" />
 						<span>Share</span>
 					</DsDropdownMenu.Item>
 					<DsDropdownMenu.Separator />
-					<DsDropdownMenu.Item onClick={handleDelete} className="danger">
+					<DsDropdownMenu.Item onSelect={handleDelete} className="danger">
 						<DsIcon icon="delete" />
 						<span>Delete</span>
 					</DsDropdownMenu.Item>
@@ -110,7 +110,7 @@ export const SelectableList: Story = {
 						<DsDropdownMenu.Item
 							key={option.value}
 							selected={selected === option.value}
-							onClick={() => setSelected(option.value)}
+							onSelect={() => setSelected(option.value)}
 						>
 							{option.label}
 						</DsDropdownMenu.Item>
@@ -193,8 +193,12 @@ export const CheckboxList: Story = {
 						/>
 					</DsDropdownMenu.Search>
 					{filteredItems.map((item) => (
-						<DsDropdownMenu.Item key={item.id} preventClose onClick={() => toggleSelection(item.id)}>
-							<DsCheckbox checked={selected.has(item.id)} onCheckedChange={() => toggleSelection(item.id)} />
+						<DsDropdownMenu.Item key={item.id} preventClose onSelect={() => toggleSelection(item.id)}>
+							<DsCheckbox
+								tabIndex={-1}
+								checked={selected.has(item.id)}
+								onCheckedChange={() => toggleSelection(item.id)}
+							/>
 							<div className="item-content">
 								<DsTypography className="item-label" variant="body-sm-reg">
 									{item.label}
@@ -210,8 +214,9 @@ export const CheckboxList: Story = {
 							<DsDropdownMenu.GroupLabel>Group Name</DsDropdownMenu.GroupLabel>
 							<DsDropdownMenu.GroupContent>
 								{filteredGroupedItems.map((item) => (
-									<DsDropdownMenu.Item key={item.id} preventClose onClick={() => toggleSelection(item.id)}>
+									<DsDropdownMenu.Item key={item.id} preventClose onSelect={() => toggleSelection(item.id)}>
 										<DsCheckbox
+											tabIndex={-1}
 											checked={selected.has(item.id)}
 											onCheckedChange={() => toggleSelection(item.id)}
 										/>
@@ -307,7 +312,7 @@ export const RadioList: Story = {
 							<DsDropdownMenu.Item
 								key={option.value}
 								preventClose
-								onClick={() => setTempSelected(option.value)}
+								onSelect={() => setTempSelected(option.value)}
 								className={tempSelected === option.value ? 'radio-selected' : ''}
 							>
 								<DsRadioGroup.Item value={option.value} id={option.value} />

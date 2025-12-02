@@ -1,19 +1,14 @@
-import React, { CSSProperties, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import * as RadioGroupPrimitive from '@radix-ui/react-radio-group';
 
 /**
  * Props for the DsRadioGroup Root component
  */
 export interface DsRadioGroupRootProps
-	extends Omit<React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>, 'children'> {
-	/**
-	 * The selected value
-	 */
-	value?: string;
-	/**
-	 * The default selected value
-	 */
-	defaultValue?: string;
+	extends Pick<
+		RadioGroupPrimitive.RadioGroupProps,
+		'value' | 'defaultValue' | 'disabled' | 'name' | 'required' | 'className' | 'style'
+	> {
 	/**
 	 * Event handler called when the selected value changes
 	 */
@@ -22,29 +17,13 @@ export interface DsRadioGroupRootProps
 	 * The children to render (Radio items)
 	 */
 	children: ReactNode;
-	/**
-	 * Additional CSS class names
-	 */
-	className?: string;
-	/**
-	 * Additional styles to apply to the component
-	 */
-	style?: CSSProperties;
 }
 
 /**
  * Props for the DsRadioGroup Item component
  */
 export interface DsRadioGroupItemProps
-	extends Omit<React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>, 'children'> {
-	/**
-	 * The value of this radio item
-	 */
-	value: string;
-	/**
-	 * Whether this radio item is disabled
-	 */
-	disabled?: boolean;
+	extends Pick<RadioGroupPrimitive.RadioGroupItemProps, 'value' | 'disabled' | 'className' | 'style' | 'id'> {
 	/**
 	 * Optional label text for the radio item
 	 */
@@ -53,18 +32,6 @@ export interface DsRadioGroupItemProps
 	 * Optional additional info text displayed below the label
 	 */
 	labelInfo?: string;
-	/**
-	 * Additional CSS class names
-	 */
-	className?: string;
-	/**
-	 * Additional styles to apply to the component
-	 */
-	style?: CSSProperties;
-	/**
-	 * Optional ID for the radio item (for label association)
-	 */
-	id?: string;
 }
 
 /**
