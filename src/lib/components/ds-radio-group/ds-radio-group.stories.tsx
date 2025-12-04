@@ -10,44 +10,10 @@ const meta: Meta = {
 		layout: 'centered',
 	},
 	tags: ['autodocs'],
-	argTypes: {
-		// Root component props
-		value: {
-			control: 'text',
-			description: 'Controlled selected value',
-			table: { category: 'Root' },
-		},
-		defaultValue: {
-			control: 'text',
-			description: 'Default selected value for uncontrolled usage',
-			table: { category: 'Root' },
-		},
-		onValueChange: {
-			action: 'onValueChange',
-			description: 'Callback when selected value changes',
-			table: { category: 'Root' },
-		},
-		// Item component props
-		label: {
-			control: 'text',
-			description: 'Optional label text for the radio item',
-			table: { category: 'Item' },
-		},
-		labelInfo: {
-			control: 'text',
-			description: 'Optional additional info text displayed below the label',
-			table: { category: 'Item' },
-		},
-		disabled: {
-			control: 'boolean',
-			description: 'Whether the radio item is disabled',
-			table: { category: 'Item' },
-		},
-	},
 };
 
 export default meta;
-type Story = StoryObj;
+type Story = StoryObj<typeof DsRadioGroup>;
 
 export const Default: Story = {
 	parameters: {
@@ -151,7 +117,7 @@ export const CustomComposition: Story = {
 		docs: {
 			description: {
 				story:
-					'For maximum flexibility, Item components without labels can be composed with custom markup. Useful for complex layouts or integration with other components.',
+					'For maximum flexibility, Item components can accept children for custom layouts. Useful for complex layouts or integration with other components.',
 			},
 		},
 	},
@@ -160,20 +126,18 @@ export const CustomComposition: Story = {
 
 		return (
 			<DsRadioGroup.Root value={value} onValueChange={setValue}>
-				<div className={styles.customItem}>
-					<DsRadioGroup.Item value="custom1" id="custom1" />
-					<label htmlFor="custom1" className={styles.customLabel}>
+				<DsRadioGroup.Item value="custom1" className={styles.customItem}>
+					<div className={styles.customLabel}>
 						<div className={styles.customLabelTitle}>Custom Layout 1</div>
 						<div className={styles.customLabelDescription}>With custom HTML structure</div>
-					</label>
-				</div>
-				<div className={styles.customItem}>
-					<DsRadioGroup.Item value="custom2" id="custom2" />
-					<label htmlFor="custom2" className={styles.customLabel}>
+					</div>
+				</DsRadioGroup.Item>
+				<DsRadioGroup.Item value="custom2" className={styles.customItem}>
+					<div className={styles.customLabel}>
 						<div className={styles.customLabelTitle}>Custom Layout 2</div>
 						<div className={styles.customLabelDescription}>Complete control over rendering</div>
-					</label>
-				</div>
+					</div>
+				</DsRadioGroup.Item>
 			</DsRadioGroup.Root>
 		);
 	},
