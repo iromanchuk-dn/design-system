@@ -62,8 +62,8 @@ const DsTextInput: FC<DsTextInputProps> = ({
 					placeholder={placeholder}
 					disabled={disabled}
 					onBlur={onBlur}
-					onChange={handleChange}
 					onKeyDown={onKeyDown}
+					onChange={handleChange}
 					tabIndex={tabIndex}
 				/>
 			</InputWrapper>
