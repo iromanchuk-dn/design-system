@@ -243,6 +243,24 @@ export interface DsDataTableProps<TData, TValue> {
 	selectable?: boolean;
 
 	/**
+	 * Enable row selection conditionally. Can be a boolean or a function that receives row data and returns whether it can be selected.
+	 * When undefined, defaults to the value of `selectable`.
+	 * @example
+	 * ```tsx
+	 * // Disable selection for rows where status is 'archived'
+	 * enableRowSelection={(rowData) => rowData.status !== 'archived'}
+	 *
+	 * // Limit selection to max 3 rows (note: use state to track current selection)
+	 * enableRowSelection={(rowData) => {
+	 *   // This will be called for each row during render
+	 *   const selectedIds = Object.keys(rowSelection).filter(id => rowSelection[id]);
+	 *   return selectedIds.includes(rowData.id) || selectedIds.length < 3;
+	 * }}
+	 * ```
+	 */
+	enableRowSelection?: boolean | ((rowData: TData) => boolean);
+
+	/**
 	 * Whether to show the select/deselect all checkbox in the header
 	 * @default true
 	 */

@@ -49,6 +49,7 @@ const DsTable = <TData extends { id: string }, TValue>({
 	expandable = false,
 	renderExpandedRow,
 	selectable = false,
+	enableRowSelection,
 	showSelectAllCheckbox = true,
 	onSelectionChange,
 	onSortingChange,
@@ -124,7 +125,12 @@ const DsTable = <TData extends { id: string }, TValue>({
 			columnVisibility,
 			rowSelection,
 		},
-		enableRowSelection: selectable,
+		enableRowSelection:
+			enableRowSelection !== undefined
+				? typeof enableRowSelection === 'function'
+					? (row) => enableRowSelection(row.original)
+					: enableRowSelection
+				: selectable,
 	});
 
 	useImperativeHandle(
@@ -209,6 +215,7 @@ const DsTable = <TData extends { id: string }, TValue>({
 		rowSize,
 		expandable,
 		selectable,
+		enableRowSelection,
 		reorderable,
 		showSelectAllCheckbox,
 		onRowClick,
