@@ -70,7 +70,6 @@ const DsSelect = ({
 				return;
 			}
 
-			console.log(details.value);
 			// "Select All" clicked in multi select mode.
 			const isSelectAllClicked = details.value.includes(SELECT_ALL_VALUE);
 
