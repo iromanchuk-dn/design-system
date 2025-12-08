@@ -4,8 +4,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 8px;
-	padding: 8px 12px;
+	gap: var(--spacing-xs);
+	padding: var(--spacing-xs) var(--spacing-sm);
 	border: 1px solid var(--neutral-4);
 	border-radius: 4px;
 	background: var(--white);
