@@ -124,7 +124,7 @@ const DsTable = <TData extends { id: string }, TValue>({
 			columnVisibility,
 			rowSelection,
 		},
-		enableRowSelection: selectable,
+		enableRowSelection: typeof selectable === 'function' ? (row) => selectable(row.original) : selectable,
 	});
 
 	useImperativeHandle(
@@ -237,7 +237,10 @@ const DsTable = <TData extends { id: string }, TValue>({
 						style={
 							virtualized
 								? ({
-										'--ds-table-columns-template': createColumnsGridTemplate({ columns, selectable }),
+										'--ds-table-columns-template': createColumnsGridTemplate({
+											columns,
+											selectable: !!selectable,
+										}),
 									} as React.CSSProperties)
 								: undefined
 						}

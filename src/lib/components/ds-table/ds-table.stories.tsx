@@ -414,6 +414,48 @@ export const ProgrammaticRowSelection: Story = {
 	},
 };
 
+export const MaxSelectionLimit: Story = {
+	name: 'Max N Selections',
+	args: {
+		showSelectAllCheckbox: false,
+		onSelectionChange: (selectedRows) => console.log('Selected rows:', selectedRows),
+	},
+	render: function Render(args) {
+		const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
+		const maxSelections = 2;
+
+		const selectedCount = Object.keys(rowSelection).filter((id) => rowSelection[id]).length;
+
+		const handleSelectionChange = (selection: Record<string, boolean>) => {
+			setRowSelection(selection);
+			args.onSelectionChange?.(selection);
+		};
+
+		return (
+			<div>
+				<div className={styles.programmaticSelectionDemo}>
+					<h4 className={styles.programmaticSelectionDemo__title}>Max Selection Limit Demo</h4>
+					<p className={styles.programmaticSelectionDemo__description}>
+						You can select at most {maxSelections} rows. Once the limit is reached, checkboxes for other rows
+						are disabled.
+					</p>
+					<p className={styles.programmaticSelectionDemo__selectedRows}>
+						Selected: {selectedCount} / {maxSelections}
+					</p>
+				</div>
+
+				<DsTable
+					{...args}
+					onSelectionChange={handleSelectionChange}
+					selectable={(rowData) => {
+						return rowSelection[rowData.id] || selectedCount < maxSelections;
+					}}
+				/>
+			</div>
+		);
+	},
+};
+
 export const Reorderable: Story = {
 	args: {
 		data: defaultData.slice(0, 5),
