@@ -1,9 +1,9 @@
-import React from 'react';
+import type React from 'react';
 import * as RadixDialog from '@radix-ui/react-dialog';
 import { Root as VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import classNames from 'classnames';
 import styles from './ds-dialog.module.scss';
-import { DsDialogProps } from './ds-dialog.types';
+import type { DsDialogProps } from './ds-dialog.types';
 
 export const DsDialog: React.FC<DsDialogProps> = ({
 	open,

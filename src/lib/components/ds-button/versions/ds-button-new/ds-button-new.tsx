@@ -1,7 +1,8 @@
 import classNames from 'classnames';
-import React, { Children, isValidElement } from 'react';
+import type React from 'react';
+import { Children, isValidElement } from 'react';
 import styles from './ds-button-new.module.scss';
-import { DsButtonProps } from './ds-button-new.types';
+import type { DsButtonProps } from './ds-button-new.types';
 import DsIcon from '../../../ds-icon/ds-icon';
 
 const isIconOnly = (children: React.ReactNode) => {

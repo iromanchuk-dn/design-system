@@ -1,8 +1,9 @@
-import React, { useId } from 'react';
+import type React from 'react';
+import { useId } from 'react';
 import * as CheckboxPrimitive from '@radix-ui/react-checkbox';
 import classNames from 'classnames';
 import styles from './ds-checkbox.module.scss';
-import { DsCheckboxProps } from './ds-checkbox.types';
+import type { DsCheckboxProps } from './ds-checkbox.types';
 import { DsIcon } from '../ds-icon';
 
 /**

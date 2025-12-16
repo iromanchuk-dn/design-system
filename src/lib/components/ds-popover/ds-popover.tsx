@@ -1,8 +1,8 @@
-import React from 'react';
+import type React from 'react';
 import * as Popover from '@radix-ui/react-popover';
 import classNames from 'classnames';
 import styles from './ds-popover.module.scss';
-import { DsPopoverProps } from './ds-popover.types';
+import type { DsPopoverProps } from './ds-popover.types';
 
 const DsPopover: React.FC<DsPopoverProps> = ({
 	trigger,

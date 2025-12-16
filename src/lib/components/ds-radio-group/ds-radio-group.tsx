@@ -1,9 +1,9 @@
-import React from 'react';
+import type React from 'react';
 import * as RadioGroupPrimitive from '@radix-ui/react-radio-group';
 import { RadioGroup } from '@ark-ui/react/radio-group';
 import classNames from 'classnames';
 import styles from './ds-radio-group.module.scss';
-import {
+import type {
 	DsRadioGroupItemProps,
 	DsRadioGroupLegacyProps,
 	DsRadioGroupRootProps,

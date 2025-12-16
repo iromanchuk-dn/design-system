@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import type React from 'react';
+import { useState } from 'react';
 import { Link, useLocation } from '@tanstack/react-router';
 import classNames from 'classnames';
 import styles from './ds-breadcrumb.module.scss';
-import { DsBreadcrumbProps } from './ds-breadcrumb.types';
+import type { DsBreadcrumbProps } from './ds-breadcrumb.types';
 import { DsIcon } from '../ds-icon';
 import { DsDropdownMenu } from '../ds-dropdown-menu';
 import { DsTextInput } from '../ds-text-input/index';

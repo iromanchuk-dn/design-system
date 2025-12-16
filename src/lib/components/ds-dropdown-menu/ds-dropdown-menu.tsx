@@ -1,4 +1,5 @@
-import React, { createContext, Fragment, useContext, useState } from 'react';
+import type React from 'react';
+import { createContext, Fragment, useContext, useState } from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Menu } from '@ark-ui/react/menu';
 import { Portal } from '@ark-ui/react/portal';
@@ -7,7 +8,7 @@ import styles from './ds-dropdown-menu.module.scss';
 import { DsIcon } from '../ds-icon';
 import DsTypography from '../ds-typography/ds-typography';
 import DsTextInput from '../ds-text-input/ds-text-input';
-import {
+import type {
 	DsDropdownMenuActionsProps,
 	DsDropdownMenuContentProps,
 	DsDropdownMenuHeaderProps,
