@@ -7,7 +7,7 @@ This monorepo is structured as any other standard multi-package repository you'r
 - `@drivenets/design-system`: The core design system package.
 - `@drivenets/eslint-plugin-design-system`: An ESLint plugin for enforcing design system rules (deprecated components, best practices, etc.).
 - `@drivenets/vite-plugin-design-system`: A Vite plugin for integrating the design system into Vite projects (injecting styles and assets).
-- `@drivenets/commitlint-plugin-design-system`: An internal Commitlint plugin for enforcing commit message conventions related to the design system.
+- `@drivenets/commitlint-plugin-design-system`: An internal Commitlint plugin for enforcing commit message conventions related to the design system..
 
 ## Storybook Deployment
 
