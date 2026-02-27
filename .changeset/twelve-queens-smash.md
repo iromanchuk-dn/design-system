@@ -2,4 +2,4 @@
 '@drivenets/design-system': patch
 ---
 
-Fix table expandable and selectable columns width
+Fix DsTable expandable and selectable columns width
