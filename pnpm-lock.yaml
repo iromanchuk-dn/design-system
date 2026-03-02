@@ -57,6 +57,12 @@ importers:
       '@commitlint/types':
         specifier: ^20.4.0
         version: 20.4.0
+      '@cspell/cspell-bundled-dicts':
+        specifier: ^9.7.0
+        version: 9.7.0
+      '@cspell/dict-mime-types':
+        specifier: ^1.0.0
+        version: 1.0.0
       '@drivenets/commitlint-plugin-design-system':
         specifier: workspace:*
         version: link:packages/commitlint-plugin
@@ -820,6 +826,9 @@ packages:
       '@cspell/dict-html': ^4.0.14
       '@cspell/dict-html-symbol-entities': ^4.0.5
       '@cspell/dict-typescript': ^3.2.3
+
+  '@cspell/dict-mime-types@1.0.0':
+    resolution: {integrity: sha512-rTH9D37iez34SzPx5ZigDhnj+n3RHaMNKPbftcpNiMgZgr5gzzA6w9XGyncvPPFkXJR3pU+7wmJUjAAaOYgwEw==}
 
   '@cspell/dict-monkeyc@1.0.12':
     resolution: {integrity: sha512-MN7Vs11TdP5mbdNFQP5x2Ac8zOBm97ARg6zM5Sb53YQt/eMvXOMvrep7+/+8NJXs0jkp70bBzjqU4APcqBFNAw==}
@@ -3965,6 +3974,7 @@ packages:
   git-raw-commits@4.0.0:
     resolution: {integrity: sha512-ICsMM1Wk8xSGMowkOmPrzo2Fgmfo4bMHLNX6ytHjajRJUqvHOw/TFapQ+QG75c3X/tTDDhOSRPGC52dDbNM8FQ==}
     engines: {node: '>=16'}
+    deprecated: This package is no longer maintained. For the JavaScript API, please use @conventional-changelog/git-client instead.
     hasBin: true
 
   glob-parent@5.1.2:
@@ -6486,6 +6496,8 @@ snapshots:
       '@cspell/dict-html': 4.0.14
       '@cspell/dict-html-symbol-entities': 4.0.5
       '@cspell/dict-typescript': 3.2.3
+
+  '@cspell/dict-mime-types@1.0.0': {}
 
   '@cspell/dict-monkeyc@1.0.12': {}
 
