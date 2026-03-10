@@ -10,7 +10,7 @@ const meta: Meta<typeof DsDropdownMenuLegacy> = {
 	parameters: {
 		layout: 'centered',
 	},
-	tags: ['autodocs', 'deprecated'],
+	tags: ['deprecated'],
 	argTypes: {
 		children: {
 			control: 'text',
