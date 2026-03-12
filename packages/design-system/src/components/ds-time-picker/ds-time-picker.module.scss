@@ -1,0 +1,13 @@
+.input {
+	::-webkit-calendar-picker-indicator {
+		display: none;
+	}
+
+	::-webkit-date-and-time-value {
+		text-align: left;
+	}
+}
+
+.popoverContent {
+	z-index: 10000; // TODO: it has to be bigger than ds-date-picker's z-index. Let's make make global css vars for both.
+}
