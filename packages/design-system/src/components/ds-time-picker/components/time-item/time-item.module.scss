@@ -1,12 +1,15 @@
+$time-item-height: 32px;
+$time-item-width: 48px;
+
 .container {
 	display: flex;
-	width: 48px;
-	height: 32px;
+	width: $time-item-width;
+	height: $time-item-height;
 	flex-shrink: 0;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	border-radius: 4px;
+	border-radius: 8px;
 	background: transparent;
 	color: var(--color-font-main);
 
@@ -23,13 +26,11 @@
 	&:not(.selected, .disabled) {
 		&:hover {
 			border: 1px solid var(--color-border);
-			border-radius: 8px;
 			background: var(--color-background-action-hover-weak);
 		}
 
 		&:focus-visible {
 			border: 2px solid var(--color-border-action-secondary);
-			border-radius: 8px;
 			background: var(--color-background-action-hover-weak);
 		}
 	}
