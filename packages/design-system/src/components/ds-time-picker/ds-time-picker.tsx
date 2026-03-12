@@ -146,7 +146,7 @@ const DsTimePicker = (props: DsTimePickerProps) => {
 
 			<Wrapper>
 				<Popover.Positioner>
-					<Popover.Content className={styles.popoverContent}>
+					<Popover.Content {...slotProps?.popover}>
 						<TimeScroller open={isOpen} {...timeScrollerAdapter(value, setValue, min, max)} />
 					</Popover.Content>
 				</Popover.Positioner>

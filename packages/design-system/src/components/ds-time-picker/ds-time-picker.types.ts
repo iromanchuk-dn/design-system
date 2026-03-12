@@ -1,5 +1,6 @@
 import type { RefObject } from 'react';
 import type { DsTextInputProps } from '../ds-text-input';
+import type { PopoverContentProps } from '@ark-ui/react/popover';
 
 export interface DsTimePickerProps {
 	ref?: RefObject<HTMLDivElement>;
@@ -34,4 +35,5 @@ export interface DsTimePickerLocale {
 
 export interface DsTimePickerSlotProps {
 	input?: DsTextInputProps['slots'];
+	popover?: PopoverContentProps;
 }
