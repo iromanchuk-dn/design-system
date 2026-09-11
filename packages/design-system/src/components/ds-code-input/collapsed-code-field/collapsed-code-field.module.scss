@@ -25,13 +25,3 @@
 		color: var(--font-placeholder);
 	}
 }
-
-.iconButton {
-	@include input.iconButton;
-}
-
-.adornment {
-	display: flex;
-	align-items: center;
-	flex-shrink: 0;
-}

@@ -2,6 +2,7 @@ import type { ChangeEvent, FocusEvent, KeyboardEvent, ReactNode, Ref } from 'rea
 import classNames from 'classnames';
 import type { CodeInputSize } from '../ds-code-input.types';
 import styles from './collapsed-code-field.module.scss';
+import { DsStack } from '../../ds-stack';
 
 export interface CollapsedCodeFieldProps {
 	id?: string;
@@ -78,7 +79,9 @@ const CollapsedCodeField = ({
 				onBlur={onBlur}
 				onKeyDown={handleKeyDown}
 			/>
-			<div className={styles.adornment}>{adornment}</div>
+			<DsStack direction="row" alignItems="center" flex="none">
+				{adornment}
+			</DsStack>
 		</div>
 	);
 };
