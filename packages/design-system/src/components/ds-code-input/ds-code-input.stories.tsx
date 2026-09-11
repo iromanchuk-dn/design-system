@@ -83,12 +83,13 @@ export const ReadOnly: Story = {
 };
 
 /**
- * Disabled blocks the panel outright.
+ * Disabled still expands, so a long value stays searchable, but neither surface accepts
+ * edits.
  */
 export const Disabled: Story = {
 	args: {
 		disabled: true,
-		defaultValue: 'Status = Active AND trigger = Scheduled',
+		defaultValue: 'Status = Active\nAND trigger = Scheduled',
 	},
 };
 

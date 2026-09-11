@@ -34,7 +34,7 @@ export interface DsCodeInputProps {
 	 */
 	placeholder?: string;
 	/**
-	 * Whether the input is disabled. Disabling also blocks the panel.
+	 * Whether the input is disabled. The panel still opens so long values stay searchable.
 	 * @default false
 	 */
 	disabled?: boolean;

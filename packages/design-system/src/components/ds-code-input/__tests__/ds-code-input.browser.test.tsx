@@ -169,11 +169,19 @@ describe('DsCodeInput', () => {
 		expect(onExpandChange).toHaveBeenLastCalledWith(false);
 	});
 
-	it('does not open the panel when disabled', async () => {
+	it('still opens the panel when disabled, with a disabled editor', async () => {
 		await page.render(<DsCodeInput placeholder="Enter a query" defaultValue={query} disabled />);
 
-		await expect.element(getExpand()).toBeDisabled();
-		await expectPanelClosed();
+		await expect.element(getExpand()).toBeEnabled();
+		await expect.element(getField()).toBeDisabled();
+
+		await getExpand().click();
+
+		await expect.element(getCodeArea()).toBeVisible();
+		await expect.element(getCodeArea()).toBeDisabled();
+
+		await getSearch().fill('status');
+		expect(document.querySelectorAll('mark')).toHaveLength(2);
 	});
 
 	it('still opens the panel when read only, with a read-only editor', async () => {

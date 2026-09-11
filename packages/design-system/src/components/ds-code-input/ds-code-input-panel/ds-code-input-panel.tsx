@@ -6,6 +6,7 @@ import styles from './ds-code-input-panel.module.scss';
 
 export interface DsCodeInputPanelProps {
 	value: string;
+	disabled: boolean;
 	readOnly: boolean;
 	searchPlaceholder: string;
 	codeLabel: string;
@@ -23,6 +24,7 @@ export interface DsCodeInputPanelProps {
  */
 const DsCodeInputPanel = ({
 	value,
+	disabled,
 	readOnly,
 	searchPlaceholder,
 	codeLabel,
@@ -71,6 +73,7 @@ const DsCodeInputPanel = ({
 						className={styles.codeArea}
 						aria-label={codeLabel}
 						value={value}
+						disabled={disabled}
 						readOnly={readOnly}
 						spellCheck={false}
 						autoComplete="off"

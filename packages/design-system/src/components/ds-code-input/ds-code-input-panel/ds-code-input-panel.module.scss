@@ -81,7 +81,10 @@ $code-surface-min-height: calc(var(--body-line-height-small) + 2 * var(--standar
 		background: var(--form-control-selection-color, var(--background-secondary-hover));
 	}
 
-	&:read-only {
+	&:read-only,
+	&:disabled {
+		color: var(--font-main);
+		opacity: 1;
 		cursor: default;
 	}
 }

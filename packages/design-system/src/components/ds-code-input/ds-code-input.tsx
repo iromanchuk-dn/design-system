@@ -82,7 +82,7 @@ const DsCodeInput = ({
 	const currentValue = isValueControlled ? value : uncontrolledValue;
 
 	const isExpandedControlled = expanded !== undefined;
-	const isExpanded = disabled ? false : isExpandedControlled ? expanded : uncontrolledExpanded;
+	const isExpanded = isExpandedControlled ? expanded : uncontrolledExpanded;
 
 	const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
 		const newValue = event.target.value;
@@ -96,10 +96,6 @@ const DsCodeInput = ({
 	};
 
 	const handleOpenChange = (open: boolean) => {
-		if (disabled) {
-			return;
-		}
-
 		if (!isExpandedControlled) {
 			setUncontrolledExpanded(open);
 		}
@@ -141,7 +137,6 @@ const DsCodeInput = ({
 									size={toggleSizes[size]}
 									icon={isExpanded ? 'collapse_content' : 'expand_content'}
 									aria-label={isExpanded ? strings.collapse : strings.expand}
-									disabled={disabled}
 								/>
 							</DsPopover.Trigger>
 							{slots?.endAdornment}
@@ -158,6 +153,7 @@ const DsCodeInput = ({
 				{isExpanded && (
 					<DsCodeInputPanel
 						value={currentValue}
+						disabled={disabled}
 						readOnly={readOnly}
 						searchPlaceholder={strings.searchPlaceholder}
 						codeLabel={strings.codeLabel}
